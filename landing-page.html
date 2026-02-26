@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ataberk Hoca İngilizce | İlkokul İngilizce Etkinlikleri</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --teal-light: #CBF3F0;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --gray-100: #F7F7F7;
+  --gray-200: #E8E8E8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md: 0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg: 0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+  --shadow-glow-teal: 0 4px 30px rgba(46,196,182,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  color: var(--navy);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .brand-name {
+  font-family: 'Baloo 2', cursive;
+}
+
+/* ========== FLOATING EMOJIS ========== */
+.floating-emojis {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floating-emoji {
+  position: absolute;
+  font-size: 1.8rem;
+  opacity: 0.07;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.07; }
+  90% { opacity: 0.07; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(27,40,69,0.06);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  box-shadow: var(--shadow-soft);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 3px 12px rgba(255,107,53,0.25);
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+}
+
+.brand-name span {
+  color: var(--orange);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+  background: var(--cream);
+  color: var(--orange);
+}
+
+.nav-cta {
+  background: var(--navy) !important;
+  color: var(--white) !important;
+  padding: 10px 22px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease !important;
+}
+
+.nav-cta:hover {
+  background: var(--orange) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-orange);
+}
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.nav-hamburger span {
+  width: 24px;
+  height: 2.5px;
+  background: var(--navy);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 100px 40px 60px;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; right: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  border-radius: 0 0 0 80px;
+  z-index: 0;
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  border-radius: inherit;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-left {
+  animation: fadeInUp 0.8s ease;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--yellow-light);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+}
+
+.hero-badge::before {
+  content: '🎯';
+  font-size: 0.9rem;
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--navy);
+  margin-bottom: 18px;
+}
+
+.hero-title .highlight {
+  position: relative;
+  color: var(--orange);
+  display: inline-block;
+}
+
+.hero-title .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: var(--yellow);
+  opacity: 0.4;
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--gray-700);
+  line-height: 1.7;
+  margin-bottom: 30px;
+  font-weight: 500;
+  max-width: 480px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 14px 30px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+}
+
+.btn-primary:hover {
+  background: var(--orange-glow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-orange);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--navy);
+  border: 2px solid var(--gray-200);
+}
+
+.btn-secondary:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  transform: translateY(-2px);
+}
+
+/* Hero right - Interactive preview */
+.hero-right {
+  position: relative;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-preview {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 30px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.preview-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.preview-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.preview-dot:nth-child(1) { background: #FF5F57; }
+.preview-dot:nth-child(2) { background: #FFBD2E; }
+.preview-dot:nth-child(3) { background: #28CA41; }
+
+.preview-url {
+  flex: 1;
+  background: var(--gray-100);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-weight: 600;
+  text-align: center;
+}
+
+.preview-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.preview-card {
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: 18px 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--orange);
+}
+
+.preview-card-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.preview-card-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.preview-card-sub {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* Floating elements around hero preview */
+.hero-float {
+  position: absolute;
+  background: white;
+  border-radius: 14px;
+  padding: 10px 16px;
+  box-shadow: var(--shadow-md);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+  animation: floatBounce 3s ease-in-out infinite;
+}
+
+.hero-float-1 {
+  top: -15px;
+  right: -20px;
+  background: var(--teal);
+  color: white;
+  animation-delay: 0s;
+}
+
+.hero-float-2 {
+  bottom: 20px;
+  left: -25px;
+  background: var(--yellow);
+  color: var(--navy);
+  animation-delay: 1s;
+}
+
+.hero-float-3 {
+  bottom: -15px;
+  right: 40px;
+  background: var(--orange);
+  color: white;
+  animation-delay: 2s;
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Stats strip */
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+  padding-top: 25px;
+  border-top: 2px solid var(--gray-200);
+}
+
+.stat-item {
+  text-align: left;
+}
+
+.stat-number {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== FEATURES ========== */
+.section {
+  padding: 80px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 50px;
+}
+
+.section-badge {
+  display: inline-block;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--orange);
+  background: rgba(255,107,53,0.1);
+  padding: 4px 16px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  font-size: 1rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Feature cards */
+.features-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before { transform: scaleX(1); }
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 18px;
+}
+
+.feature-icon.orange { background: rgba(255,107,53,0.1); }
+.feature-icon.teal { background: rgba(46,196,182,0.1); }
+.feature-icon.yellow { background: rgba(255,200,87,0.15); }
+.feature-icon.navy { background: rgba(27,40,69,0.08); }
+.feature-icon.pink { background: rgba(255,107,107,0.1); }
+.feature-icon.purple { background: rgba(139,92,246,0.1); }
+
+.feature-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* ========== GRADES SECTION ========== */
+.grades-section {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+.grades-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='50' cy='50' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.grades-section .section-title { color: white; }
+.grades-section .section-desc { color: rgba(255,255,255,0.6); }
+.grades-section .section-badge { background: rgba(255,107,53,0.2); }
+
+.grades-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.grade-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.grade-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.grade-card:hover::after { transform: scaleX(1); }
+
+.grade-card:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.grade-emoji {
+  font-size: 3rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.grade-number {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.grade-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.grade-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.grade-topic {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.grade-card:hover .grade-topic {
+  background: rgba(255,200,87,0.15);
+  color: var(--yellow);
+  border-color: rgba(255,200,87,0.2);
+}
+
+.grade-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 10px 22px;
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.grade-btn:hover {
+  background: var(--orange-glow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-orange);
+}
+
+/* ========== SMARTBOARD SECTION ========== */
+.smartboard-section {
+  background: white;
+}
+
+.smartboard-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.smartboard-visual {
+  position: relative;
+}
+
+.smartboard-frame {
+  background: var(--navy);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.smartboard-frame::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 24px;
+  background: var(--gray-200);
+  border-radius: 0 0 12px 12px;
+}
+
+.smartboard-screen {
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.smartboard-screen-emoji {
+  font-size: 3rem;
+  animation: floatBounce 2s ease-in-out infinite;
+}
+
+.smartboard-screen-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem;
+  color: var(--navy);
+  text-align: center;
+}
+
+.smartboard-screen-sub {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+.smartboard-text h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.smartboard-text p {
+  font-size: 1rem;
+  color: var(--gray-500);
+  line-height: 1.7;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.check-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.check-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--gray-700);
+}
+
+.check-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(46,196,182,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ========== CTA ========== */
+.cta-section {
+  background: linear-gradient(135deg, var(--orange) 0%, #FF8A5C 50%, var(--yellow) 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-emoji {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.cta-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.cta-desc {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.btn-white {
+  background: white;
+  color: var(--orange);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  font-size: 1.1rem;
+  padding: 16px 36px;
+}
+
+.btn-white:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  background: var(--navy);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-brand {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.footer-brand span { color: var(--orange); }
+
+.footer-text {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover { color: var(--orange); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .hero-content { grid-template-columns: 1fr; gap: 40px; }
+  .hero-bg { display: none; }
+  .hero-title { font-size: 2.4rem; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .grades-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .smartboard-content { grid-template-columns: 1fr; }
+  .hero-float { display: none; }
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .section { padding: 60px 20px; }
+  .hero { padding: 90px 20px 40px; }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .features-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+  .hero-buttons { flex-direction: column; }
+  .btn { width: 100%; justify-content: center; }
+  .section-title { font-size: 1.7rem; }
+  .cta-title { font-size: 1.7rem; }
+}
+
+/* ========== SCROLL ANIMATIONS ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING EMOJIS -->
+<div class="floating-emojis" id="floatingEmojis"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#ozellikler">Özellikler</a></li>
+    <li><a href="#siniflar">Sınıflar</a></li>
+    <li><a href="#akilli-tahta">Akıllı Tahta</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="#siniflar" class="nav-cta">Hemen Başla →</a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">MEB Müfredatına Uyumlu • 2025-2026</div>
+      <h1 class="hero-title">
+        İngilizce Dersini<br>
+        <span class="highlight">Oyunla Öğret,</span><br>
+        Sınıfı Coştur! 🎮
+      </h1>
+      <p class="hero-subtitle">
+        İlkokul 2, 3 ve 4. sınıf İngilizce müfredatına uyumlu interaktif etkinlikler. 
+        Akıllı tahtadan aç, hemen oyna. Ders kitabındaki etkinliklerin dijital ve eğlenceli hali.
+      </p>
+      <div class="hero-buttons">
+        <a href="#siniflar" class="btn btn-primary">🚀 Etkinliklere Göz At</a>
+        <a href="#ozellikler" class="btn btn-secondary">📖 Nasıl Çalışır?</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">İnteraktif Etkinlik</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Sınıf Seviyesi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">%100</div>
+          <div class="stat-label">Ücretsiz</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-preview">
+        <div class="preview-header">
+          <div class="preview-dots">
+            <div class="preview-dot"></div>
+            <div class="preview-dot"></div>
+            <div class="preview-dot"></div>
+          </div>
+          <div class="preview-url">ataberkhocaingilizce.com</div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">🎲</span>
+            <div class="preview-card-title">Board Games</div>
+            <div class="preview-card-sub">Zar at, oyna!</div>
+          </div>
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">🧩</span>
+            <div class="preview-card-title">Eşleştirme</div>
+            <div class="preview-card-sub">Kelime + Resim</div>
+          </div>
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">⏰</span>
+            <div class="preview-card-title">Quiz Time</div>
+            <div class="preview-card-sub">Saati oku!</div>
+          </div>
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">🎯</span>
+            <div class="preview-card-title">Doğru/Yanlış</div>
+            <div class="preview-card-sub">Hızlı cevapla!</div>
+          </div>
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">🔤</span>
+            <div class="preview-card-title">Spelling</div>
+            <div class="preview-card-sub">Harfleri bul!</div>
+          </div>
+          <div class="preview-card" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='',150)">
+            <span class="preview-card-emoji">🏆</span>
+            <div class="preview-card-title">Yarışma</div>
+            <div class="preview-card-sub">Sınıf vs Sınıf</div>
+          </div>
+        </div>
+        <!-- Floating badges -->
+        <div class="hero-float hero-float-1">🖥️ Akıllı Tahta</div>
+        <div class="hero-float hero-float-2">✅ MEB Uyumlu</div>
+        <div class="hero-float hero-float-3">🎵 Sesli</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="ozellikler">
+  <div class="section-header reveal">
+    <div class="section-badge">✨ Özellikler</div>
+    <h2 class="section-title">Neden Ataberk Hoca İngilizce?</h2>
+    <p class="section-desc">
+      Ders kitabındaki statik etkinlikleri interaktif, eğlenceli ve ölçülebilir hale getiriyoruz.
+    </p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon orange">🎮</div>
+      <div class="feature-title">İnteraktif Oyunlar</div>
+      <div class="feature-desc">Board game, eşleştirme, quiz, spelling bee... Ders kitabındaki etkinliklerin dijital ve eğlenceli versiyonları.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon teal">🖥️</div>
+      <div class="feature-title">Akıllı Tahta Modu</div>
+      <div class="feature-desc">Tam ekran modu ile akıllı tahtadan mükemmel görünüm. Tek tıkla aç, sınıfça oyna.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon yellow">📋</div>
+      <div class="feature-title">MEB Müfredatı</div>
+      <div class="feature-desc">TYMM ve 2018 müfredatına %100 uyumlu. Ünite ünite, tema tema organize edilmiş içerikler.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon navy">🔊</div>
+      <div class="feature-title">Ses & Animasyon</div>
+      <div class="feature-desc">Ses efektleri, doğru/yanlış geri bildirimleri, konfeti ve ödül animasyonları ile motivasyon.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon pink">🔄</div>
+      <div class="feature-title">Sonsuz Tekrar</div>
+      <div class="feature-desc">Her oyunda sorular ve içerikler rastgele değişir. Aynı etkinliği tekrar tekrar oynayabilirsiniz.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon purple">💰</div>
+      <div class="feature-title">%100 Ücretsiz</div>
+      <div class="feature-desc">Tüm etkinlikler tamamen ücretsiz. Kayıt gerekmez, reklam yok. Aç ve oyna.</div>
+    </div>
+  </div>
+</section>
+
+<!-- GRADES -->
+<section class="section grades-section" id="siniflar">
+  <div class="section-header reveal">
+    <div class="section-badge">📚 Sınıflar</div>
+    <h2 class="section-title">Sınıfını Seç, Oynamaya Başla!</h2>
+    <p class="section-desc">Her sınıf seviyesi için MEB müfredatına uygun interaktif etkinlikler.</p>
+  </div>
+  <div class="grades-grid">
+    <div class="grade-card reveal">
+      <span class="grade-emoji">🌟</span>
+      <div class="grade-number">2. Sınıf</div>
+      <div class="grade-label">TYMM Yeni Müfredat • 6 Tema</div>
+      <div class="grade-topics">
+        <span class="grade-topic">School Life</span>
+        <span class="grade-topic">Classroom</span>
+        <span class="grade-topic">Family</span>
+        <span class="grade-topic">Homes</span>
+        <span class="grade-topic">City</span>
+      </div>
+      <button class="grade-btn">Etkinliklere Git →</button>
+    </div>
+    <div class="grade-card reveal">
+      <span class="grade-emoji">🚀</span>
+      <div class="grade-number">3. Sınıf</div>
+      <div class="grade-label">10 Ünite</div>
+      <div class="grade-topics">
+        <span class="grade-topic">Greetings</span>
+        <span class="grade-topic">Family</span>
+        <span class="grade-topic">Feelings</span>
+        <span class="grade-topic">Toys</span>
+        <span class="grade-topic">Transportation</span>
+      </div>
+      <button class="grade-btn">Etkinliklere Git →</button>
+    </div>
+    <div class="grade-card reveal">
+      <span class="grade-emoji">🏆</span>
+      <div class="grade-number">4. Sınıf</div>
+      <div class="grade-label">10 Ünite</div>
+      <div class="grade-topics">
+        <span class="grade-topic">Nationality</span>
+        <span class="grade-topic">Free Time</span>
+        <span class="grade-topic">My Day</span>
+        <span class="grade-topic">Jobs</span>
+        <span class="grade-topic">Food</span>
+      </div>
+      <button class="grade-btn">Etkinliklere Git →</button>
+    </div>
+  </div>
+</section>
+
+<!-- SMARTBOARD -->
+<section class="section smartboard-section" id="akilli-tahta">
+  <div class="smartboard-content">
+    <div class="smartboard-visual reveal">
+      <div class="smartboard-frame">
+        <div class="smartboard-screen">
+          <span class="smartboard-screen-emoji">🎲</span>
+          <div class="smartboard-screen-text">What Time Is It?</div>
+          <div class="smartboard-screen-sub">4. Sınıf • Unit 5 • My Day</div>
+        </div>
+      </div>
+    </div>
+    <div class="smartboard-text reveal">
+      <div class="section-badge">🖥️ Akıllı Tahta</div>
+      <h2>Aç ve Oyna.<br>Bu Kadar Basit.</h2>
+      <p>
+        Ders öncesi hazırlık yok, kurulum yok, kayıt yok. 
+        Akıllı tahtada tarayıcıyı aç, sınıfı seç, etkinliği başlat.
+      </p>
+      <ul class="check-list">
+        <li><span class="check-icon">✅</span> Tam ekran akıllı tahta modu</li>
+        <li><span class="check-icon">✅</span> İnternet olan her cihazda çalışır</li>
+        <li><span class="check-icon">✅</span> Uygulama indirme gerekmez</li>
+        <li><span class="check-icon">✅</span> Telefon ve tablette de çalışır</li>
+      </ul>
+      <a href="#siniflar" class="btn btn-primary">🚀 Hemen Dene</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta-section">
+  <div class="cta-content reveal">
+    <span class="cta-emoji">🎓</span>
+    <h2 class="cta-title">Dersinizi Eğlenceye Dönüştürün!</h2>
+    <p class="cta-desc">
+      Türkiye'deki binlerce İngilizce öğretmeni gibi siz de 
+      sınıfınızda interaktif etkinlikler kullanmaya başlayın.
+    </p>
+    <a href="#siniflar" class="btn btn-white">📚 Etkinlikleri Keşfet →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">İlkokul İngilizce Öğretmenleri İçin İnteraktif Etkinlik Platformu</p>
+  <div class="footer-links">
+    <a href="#">Ana Sayfa</a>
+    <a href="#siniflar">Sınıflar</a>
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#">İletişim</a>
+    <a href="#">Gizlilik Politikası</a>
+  </div>
+  <p class="footer-text" style="margin-top:20px;">© 2026 ataberkhocaingilizce — Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+// ===== FLOATING EMOJIS =====
+const emojis = ['📚','✏️','🎓','🇬🇧','🔤','🎯','⭐','🎲','🧩','📖','🏆','💡','🖥️','🎵','🌟'];
+const container = document.getElementById('floatingEmojis');
+
+for (let i = 0; i < 15; i++) {
+  const el = document.createElement('div');
+  el.className = 'floating-emoji';
+  el.textContent = emojis[i % emojis.length];
+  el.style.left = Math.random() * 100 + '%';
+  el.style.animationDuration = (15 + Math.random() * 20) + 's';
+  el.style.animationDelay = (Math.random() * 15) + 's';
+  el.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
+  container.appendChild(el);
+}
+
+// ===== NAVBAR SCROLL =====
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+// ===== SCROLL REVEAL =====
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, index * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+reveals.forEach(el => observer.observe(el));
+
+// ===== SMOOTH SCROLL =====
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>

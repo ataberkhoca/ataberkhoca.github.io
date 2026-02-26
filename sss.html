@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sıkça Sorulan Sorular | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --teal-light: #CBF3F0;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --gray-100: #F7F7F7;
+  --gray-200: #E8E8E8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md: 0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg: 0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  color: var(--navy);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .brand-name {
+  font-family: 'Baloo 2', cursive;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(27,40,69,0.06);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled { box-shadow: var(--shadow-soft); }
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 3px 12px rgba(255,107,53,0.25);
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.brand-name span { color: var(--orange); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+  background: var(--cream);
+  color: var(--orange);
+}
+
+.nav-cta {
+  background: var(--navy) !important;
+  color: var(--white) !important;
+  padding: 10px 22px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+}
+
+.nav-cta:hover {
+  background: var(--orange) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-orange);
+}
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+.nav-hamburger span {
+  width: 24px; height: 2.5px;
+  background: var(--navy);
+  border-radius: 2px;
+}
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 110px 40px 50px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.page-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.breadcrumb a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(255,255,255,0.25); }
+.breadcrumb .current { color: var(--yellow); }
+
+.page-hero-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  display: block;
+  animation: floatBounce 3s ease-in-out infinite;
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.page-hero h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.page-hero h1 .highlight {
+  color: var(--orange);
+}
+
+.page-hero-desc {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.page-hero-badges {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ========== SECTIONS ========== */
+.section {
+  padding: 80px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 50px;
+}
+
+.section-badge {
+  display: inline-block;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--orange);
+  background: rgba(255,107,53,0.1);
+  padding: 4px 16px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  font-size: 1rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* ========== CATEGORY FILTER ========== */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 2px solid var(--gray-200);
+  background: white;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+  box-shadow: 0 4px 12px rgba(27,40,69,0.2);
+}
+
+.filter-btn .count {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: rgba(27,40,69,0.08);
+  padding: 2px 7px;
+  border-radius: 50px;
+  color: var(--gray-500);
+}
+
+.filter-btn.active .count {
+  background: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+}
+
+/* ========== FAQ CONTAINER ========== */
+.faq-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Category heading */
+.faq-category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  margin-top: 40px;
+}
+
+.faq-category:first-child {
+  margin-top: 0;
+}
+
+.faq-category-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.faq-category-icon.genel { background: rgba(255,107,53,0.1); }
+.faq-category-icon.teknik { background: rgba(46,196,182,0.1); }
+.faq-category-icon.mufredat { background: rgba(255,200,87,0.15); }
+
+.faq-category h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+/* ========== ACCORDION ========== */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.faq-item {
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(255,107,53,0.2);
+}
+
+.faq-item.open {
+  border-color: var(--orange);
+  box-shadow: 0 4px 20px rgba(255,107,53,0.08);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.faq-question:hover {
+  background: rgba(255,249,240,0.5);
+}
+
+.faq-question-text {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.faq-item.open .faq-question-text {
+  color: var(--orange);
+}
+
+.faq-toggle {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.faq-toggle svg {
+  width: 14px; height: 14px;
+  stroke: var(--gray-500);
+  stroke-width: 2.5;
+  fill: none;
+  transition: all 0.3s ease;
+}
+
+.faq-item.open .faq-toggle {
+  background: var(--orange);
+  transform: rotate(45deg);
+}
+
+.faq-item.open .faq-toggle svg {
+  stroke: white;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-answer-inner {
+  padding: 0 22px 20px;
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  font-weight: 500;
+  line-height: 1.75;
+}
+
+.faq-answer-inner strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+/* ========== STILL HAVE QUESTIONS ========== */
+.help-banner {
+  max-width: 760px;
+  margin: 50px auto 0;
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border: 1px solid var(--gray-200);
+}
+
+.help-banner-icon {
+  width: 64px; height: 64px;
+  border-radius: 20px;
+  background: rgba(255,107,53,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.help-banner-text h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.help-banner-text p {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.help-banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.help-banner-link:hover {
+  gap: 10px;
+}
+
+/* ========== CTA ========== */
+.cta-section {
+  padding: 80px 40px;
+  background: linear-gradient(135deg, var(--orange) 0%, #FF8A5C 50%, var(--yellow) 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.cta-desc {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 14px 30px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-white {
+  background: white;
+  color: var(--orange);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  font-size: 1.1rem;
+  padding: 16px 36px;
+}
+.btn-white:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  background: var(--navy);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-brand {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 8px;
+}
+.footer-brand span { color: var(--orange); }
+
+.footer-text {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.footer-links a:hover { color: var(--orange); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .page-hero h1 { font-size: 2rem; }
+  .help-banner { flex-direction: column; text-align: center; padding: 28px; }
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .section { padding: 60px 20px; }
+  .page-hero { padding: 100px 20px 40px; }
+  .page-hero h1 { font-size: 1.7rem; }
+  .section-title { font-size: 1.7rem; }
+  .faq-question { padding: 16px 18px; }
+  .faq-answer-inner { padding: 0 18px 18px; }
+  .category-filter { gap: 6px; }
+  .filter-btn { font-size: 0.78rem; padding: 8px 14px; }
+  .help-banner { margin-top: 30px; }
+}
+
+/* ========== SCROLL ANIMATIONS ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="landing-page.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="landing-page.html">Ana Sayfa</a></li>
+    <li><a href="landing-page.html#siniflar">Sınıflar</a></li>
+    <li><a href="landing-page.html#ozellikler">Özellikler</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="landing-page.html#siniflar" class="nav-cta">Etkinliklere Git →</a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <nav class="breadcrumb">
+      <a href="landing-page.html">Ana Sayfa</a>
+      <span class="sep">›</span>
+      <span class="current">SSS</span>
+    </nav>
+    <span class="page-hero-emoji">❓</span>
+    <h1>Sıkça Sorulan <span class="highlight">Sorular</span></h1>
+    <p class="page-hero-desc">
+      Platform hakkında merak ettiklerinizin yanıtlarını burada bulabilirsiniz.
+    </p>
+    <div class="page-hero-badges">
+      <span class="hero-chip">📋 Genel</span>
+      <span class="hero-chip">🖥️ Teknik</span>
+      <span class="hero-chip">📚 Müfredat</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="section">
+  <div class="faq-container">
+
+    <!-- CATEGORY FILTER -->
+    <div class="category-filter reveal">
+      <button class="filter-btn active" data-filter="all">Tümü <span class="count">12</span></button>
+      <button class="filter-btn" data-filter="genel">📋 Genel <span class="count">5</span></button>
+      <button class="filter-btn" data-filter="teknik">🖥️ Teknik <span class="count">4</span></button>
+      <button class="filter-btn" data-filter="mufredat">📚 Müfredat <span class="count">3</span></button>
+    </div>
+
+    <!-- GENEL -->
+    <div class="faq-category reveal" data-cat="genel">
+      <div class="faq-category-icon genel">📋</div>
+      <h3>Genel</h3>
+    </div>
+    <div class="faq-list" data-cat="genel">
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">ataberkhocaingilizce nedir?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            ataberkhocaingilizce, ilkokul İngilizce öğretmenleri için tasarlanmış <strong>ücretsiz bir interaktif etkinlik platformudur</strong>. Ders kitaplarındaki etkinlikleri dijital, eğlenceli ve ölçülebilir hale getirerek sınıf içi kullanımı kolaylaştırır. Board game, eşleştirme, quiz, spelling bee gibi çeşitli oyun formatlarında etkinlikler sunar.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Platform ücretsiz mi?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Evet, tamamen ücretsizdir.</strong> Hiçbir etkinlik için ücret talep edilmez. Kayıt veya üyelik gerekmez. Reklam da yoktur. Platformun amacı, her öğretmenin eşit şekilde erişebileceği kaliteli dijital materyaller sunmaktır.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Kayıt veya üyelik gerekiyor mu?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Hayır, hiçbir kayıt gerekmez.</strong> Siteye girin, sınıf seviyenizi seçin ve etkinliği başlatın. E-posta, şifre veya herhangi bir kişisel bilgi istenmez.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Etkinlikleri kimler kullanabilir?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Etkinlikler öncelikle <strong>ilkokul İngilizce öğretmenleri</strong> için tasarlanmıştır. Ancak veliler, özel ders öğretmenleri veya evde çocuklarıyla çalışmak isteyen herkes de kullanabilir. İçerikler ilkokul seviyesine uygundur.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Yeni etkinlikler ne sıklıkla ekleniyor?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Yeni etkinlikler <strong>düzenli olarak eklenmektedir</strong>. Öncelikli olarak aktif eğitim-öğretim yılının müfredatına uygun içerikler hazırlanmakta, ardından diğer sınıf seviyeleri için etkinlikler eklenmektedir. Güncellemeler için sosyal medya hesaplarını takip edebilirsiniz.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEKNİK -->
+    <div class="faq-category reveal" data-cat="teknik">
+      <div class="faq-category-icon teknik">🖥️</div>
+      <h3>Teknik</h3>
+    </div>
+    <div class="faq-list" data-cat="teknik">
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Akıllı tahtada çalışır mı?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Evet, tüm etkinlikler akıllı tahta için optimize edilmiştir.</strong> Tarayıcı üzerinden çalışır, ek bir uygulama veya eklenti gerekmez. Tam ekran modu ile akıllı tahtada mükemmel bir görünüm elde edersiniz. Dokunmatik ekranla da sorunsuz çalışır.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">İnternet bağlantısı gerekli mi?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Evet, aktif bir internet bağlantısı gereklidir.</strong> Etkinlikler web tarayıcısı üzerinden çalıştığı için internet erişimi şarttır. Ancak düşük bant genişliğinde bile sorunsuz çalışacak şekilde optimize edilmiştir.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Hangi cihazlarda çalışır?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Etkinlikler <strong>internet tarayıcısı olan her cihazda çalışır</strong>: akıllı tahta, bilgisayar, tablet ve telefon. Chrome, Firefox, Safari ve Edge gibi modern tarayıcıların tümü desteklenmektedir. Herhangi bir uygulama indirmenize gerek yoktur.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Etkinliklerde ses var mı?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Evet, etkinliklerde ses efektleri bulunmaktadır.</strong> Doğru-yanlış geri bildirimleri, tıklama sesleri ve ödül animasyonları ses ile desteklenir. Akıllı tahtanın veya bilgisayarın hoparlörlerinin açık olduğundan emin olmanız yeterlidir.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÜFREDAT -->
+    <div class="faq-category reveal" data-cat="mufredat">
+      <div class="faq-category-icon mufredat">📚</div>
+      <h3>Müfredat</h3>
+    </div>
+    <div class="faq-list" data-cat="mufredat">
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Etkinlikler MEB müfredatına uygun mu?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>Evet, tüm etkinlikler MEB müfredatına %100 uyumludur.</strong> 2. sınıf etkinlikleri 2025-2026 yılında uygulamaya giren Türkiye Yüzyılı Maarif Modeli'ne (TYMM), 3. ve 4. sınıf etkinlikleri ise 2018 müfredatına göre hazırlanmıştır. Her etkinlik, ilgili ünite/temanın kazanımlarını hedefler.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">TYMM nedir ve etkinlikleri nasıl etkiler?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>TYMM (Türkiye Yüzyılı Maarif Modeli)</strong>, MEB'in 2025-2026 eğitim-öğretim yılından itibaren kademeli olarak uygulamaya koyduğu yeni müfredat programıdır. İlk olarak 2. sınıflarda başlamış olup, gelecek yıl 3. sınıflara genişleyecektir. Platformdaki 2. sınıf etkinlikleri bu yeni modelin 6 temasına uygun olarak tasarlanmıştır.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-question-text">Hangi sınıf seviyeleri için etkinlik var?</span>
+          <div class="faq-toggle">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Şu anda <strong>2., 3. ve 4. sınıf</strong> seviyeleri için etkinlikler hazırlanmaktadır. Öncelik, TYMM'nin yeni uygulandığı 2. sınıf etkinliklerine verilmektedir. 3. ve 4. sınıf içerikleri de yakında eklenecektir. İlerleyen dönemlerde 5. sınıf ve üzeri için de içerik üretilmesi planlanmaktadır.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HELP BANNER -->
+    <div class="help-banner reveal">
+      <div class="help-banner-icon">💬</div>
+      <div class="help-banner-text">
+        <h4>Sorunuzun yanıtını bulamadınız mı?</h4>
+        <p>Aklınıza takılan her şeyi sormaktan çekinmeyin. Size en kısa sürede dönüş yapacağım.</p>
+        <a href="hakkimda.html#iletisim" class="help-banner-link">İletişime Geç →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-content reveal">
+    <h2 class="cta-title">Etkinlikleri Keşfetmeye Hazır mısınız?</h2>
+    <p class="cta-desc">Sınıfınızda hemen kullanabileceğiniz interaktif İngilizce etkinliklerini inceleyin.</p>
+    <a href="landing-page.html#siniflar" class="btn btn-white">📚 Etkinliklere Git →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">İlkokul İngilizce Öğretmenleri İçin İnteraktif Etkinlik Platformu</p>
+  <div class="footer-links">
+    <a href="landing-page.html">Ana Sayfa</a>
+    <a href="landing-page.html#siniflar">Sınıflar</a>
+    <a href="hakkimda.html">Hakkımda</a>
+    <a href="#">SSS</a>
+    <a href="hakkimda.html#iletisim">İletişim</a>
+  </div>
+  <p class="footer-text" style="margin-top:20px;">© 2026 ataberkhocaingilizce — Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => { entry.target.classList.add('visible'); }, index * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ===== ACCORDION =====
+function toggleFaq(questionEl) {
+  const item = questionEl.parentElement;
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(openItem => {
+    openItem.classList.remove('open');
+    openItem.querySelector('.faq-answer').style.maxHeight = '0';
+  });
+
+  // Open clicked (if it wasn't already open)
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
+// ===== CATEGORY FILTER =====
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Update active state
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filter = btn.dataset.filter;
+
+    // Show/hide categories and their FAQ lists
+    document.querySelectorAll('.faq-category').forEach(cat => {
+      const catType = cat.dataset.cat;
+      const faqList = cat.nextElementSibling;
+
+      if (filter === 'all' || catType === filter) {
+        cat.style.display = 'flex';
+        faqList.style.display = 'flex';
+      } else {
+        cat.style.display = 'none';
+        faqList.style.display = 'none';
+      }
+    });
+
+    // Close all open items
+    document.querySelectorAll('.faq-item.open').forEach(item => {
+      item.classList.remove('open');
+      item.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+  });
+});
+</script>
+</body>
+</html>
