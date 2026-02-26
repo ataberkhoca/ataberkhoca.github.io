@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Life Etkinlikleri | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --teal-light: #CBF3F0;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --gray-100: #F7F7F7;
+  --gray-200: #E8E8E8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md: 0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg: 0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+  --shadow-glow-teal: 0 4px 30px rgba(46,196,182,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  color: var(--navy);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .brand-name {
+  font-family: 'Baloo 2', cursive;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(27,40,69,0.06);
+  transition: all 0.3s ease;
+}
+.navbar.scrolled { box-shadow: var(--shadow-soft); }
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-logo {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 3px 12px rgba(255,107,53,0.25);
+}
+.brand-name { font-size: 1.25rem; font-weight: 800; color: var(--navy); line-height: 1.1; }
+.brand-name span { color: var(--orange); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 8px; list-style: none;
+}
+.nav-links a {
+  text-decoration: none; font-weight: 600; font-size: 0.9rem;
+  color: var(--gray-700); padding: 8px 16px; border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.nav-links a:hover { background: var(--cream); color: var(--orange); }
+.nav-cta {
+  background: var(--navy) !important; color: var(--white) !important;
+  padding: 10px 22px !important; border-radius: 12px !important; font-weight: 700 !important;
+}
+.nav-cta:hover { background: var(--orange) !important; transform: translateY(-1px); box-shadow: var(--shadow-glow-orange); }
+
+.nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+.nav-hamburger span { width: 24px; height: 2.5px; background: var(--navy); border-radius: 2px; }
+
+/* ========== PAGE HERO ========== */
+.page-hero {
+  padding: 110px 40px 50px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.page-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.page-hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+
+.breadcrumb {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 20px; font-size: 0.85rem; font-weight: 600;
+}
+.breadcrumb a { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(255,255,255,0.25); }
+.breadcrumb .current { color: var(--yellow); }
+
+.page-hero-emoji {
+  font-size: 3.5rem; margin-bottom: 12px; display: block;
+  animation: floatBounce 3s ease-in-out infinite;
+}
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.page-hero h1 { font-size: 2.6rem; font-weight: 800; color: white; line-height: 1.15; margin-bottom: 10px; }
+.page-hero h1 .highlight { color: var(--orange); }
+.page-hero-desc { font-size: 1.05rem; color: rgba(255,255,255,0.65); font-weight: 500; line-height: 1.6; margin-bottom: 20px; }
+
+.page-hero-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; font-weight: 700; padding: 6px 14px; border-radius: 50px;
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.hero-chip.active { background: rgba(255,107,53,0.2); color: var(--orange); border-color: rgba(255,107,53,0.3); }
+
+/* ========== VOCABULARY STRIP ========== */
+.vocab-strip {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 16px 40px;
+  overflow: hidden;
+  position: relative;
+}
+.vocab-strip::before, .vocab-strip::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+}
+.vocab-strip::before { left: 0; background: linear-gradient(90deg, white, transparent); }
+.vocab-strip::after { right: 0; background: linear-gradient(-90deg, white, transparent); }
+
+.vocab-scroll {
+  display: flex; gap: 12px;
+  animation: scrollWords 25s linear infinite;
+  width: max-content;
+}
+.vocab-scroll:hover { animation-play-state: paused; }
+
+@keyframes scrollWords {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.vocab-word {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 6px 14px; border-radius: 50px;
+  background: var(--cream); color: var(--navy);
+  border: 1px solid var(--gray-200);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.vocab-word:hover { background: rgba(255,107,53,0.08); color: var(--orange); border-color: rgba(255,107,53,0.2); cursor: default; }
+.vocab-word .en { color: var(--orange); }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
+
+/* ========== ACTIVITIES SECTION ========== */
+.section { padding: 70px 40px; position: relative; z-index: 1; }
+
+.section-header { text-align: center; max-width: 600px; margin: 0 auto 50px; }
+.section-badge {
+  display: inline-block; font-family: 'Baloo 2', cursive;
+  font-size: 0.85rem; font-weight: 700; color: var(--orange);
+  background: rgba(255,107,53,0.1); padding: 4px 16px; border-radius: 50px; margin-bottom: 12px;
+}
+.section-title { font-size: 2.2rem; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 12px; }
+.section-desc { font-size: 1rem; color: var(--gray-500); font-weight: 500; line-height: 1.6; }
+
+/* ========== ACTIVITY CARDS ========== */
+.activities-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.activity-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.activity-card.active {
+  cursor: pointer;
+}
+
+.activity-card.active:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+.activity-card.coming {
+  opacity: 0.7;
+}
+
+/* Renkli üst bant */
+.activity-card-banner {
+  height: 8px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+}
+.activity-card.coming .activity-card-banner {
+  background: var(--gray-200);
+}
+.activity-card.teal .activity-card-banner {
+  background: linear-gradient(90deg, var(--teal), #6EE7E7);
+}
+.activity-card.purple .activity-card-banner {
+  background: linear-gradient(90deg, #8B5CF6, #C4B5FD);
+}
+
+.activity-card-body { padding: 26px 24px; }
+
+.activity-type-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 50px;
+  margin-bottom: 14px;
+}
+.badge-memory { background: rgba(255,107,53,0.1); color: var(--orange); }
+.badge-quiz { background: rgba(46,196,182,0.1); color: var(--teal); }
+.badge-drag { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+.badge-coming { background: var(--gray-100); color: var(--gray-500); }
+
+.activity-emoji { font-size: 2.8rem; margin-bottom: 12px; display: block; }
+
+.activity-title {
+  font-size: 1.2rem; font-weight: 800; color: var(--navy);
+  margin-bottom: 6px; line-height: 1.2;
+}
+
+.activity-desc {
+  font-size: 0.85rem; color: var(--gray-500); font-weight: 500;
+  line-height: 1.6; margin-bottom: 18px;
+}
+
+/* Özellik etiketleri */
+.activity-features {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
+}
+.feature-tag {
+  font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 6px;
+  background: var(--cream); color: var(--gray-700); border: 1px solid var(--gray-200);
+}
+
+/* Zorluk göstergesi */
+.activity-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 14px; border-top: 1px solid var(--gray-200); margin-bottom: 16px;
+}
+.difficulty {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 700; color: var(--gray-500);
+}
+.difficulty-dots { display: flex; gap: 3px; }
+.difficulty-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gray-200);
+}
+.difficulty-dot.filled { background: var(--orange); }
+.difficulty-dot.filled.teal { background: var(--teal); }
+.difficulty-dot.filled.purple { background: #8B5CF6; }
+
+.play-count {
+  font-size: 0.75rem; font-weight: 700; color: var(--gray-500);
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* Butonlar */
+.activity-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px;
+  background: var(--orange); color: white; border: none;
+  border-radius: 12px; font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  text-decoration: none; transition: all 0.2s ease;
+}
+.activity-btn:hover { background: var(--orange-glow); transform: translateY(-2px); box-shadow: var(--shadow-glow-orange); }
+.activity-btn.teal { background: var(--teal); }
+.activity-btn.teal:hover { background: #25B0A4; box-shadow: var(--shadow-glow-teal); }
+.activity-btn.purple { background: #8B5CF6; }
+.activity-btn.purple:hover { background: #7C3AED; box-shadow: 0 4px 20px rgba(139,92,246,0.4); }
+.activity-btn.disabled {
+  background: var(--gray-200); color: var(--gray-500);
+  cursor: default; pointer-events: none;
+}
+
+/* ========== COMING SOON SECTION ========== */
+.coming-section {
+  background: var(--navy);
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.coming-section::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='50' cy='50' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+.coming-content { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+.coming-title { font-size: 1.8rem; font-weight: 800; color: white; margin-bottom: 10px; }
+.coming-desc { font-size: 0.95rem; color: rgba(255,255,255,0.5); font-weight: 500; line-height: 1.6; margin-bottom: 24px; }
+
+.coming-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.coming-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; font-weight: 700; padding: 8px 16px; border-radius: 50px;
+  background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  background: var(--navy); padding: 40px; text-align: center;
+  position: relative; z-index: 1;
+}
+.footer-brand { font-family: 'Baloo 2', cursive; font-size: 1.3rem; font-weight: 800; color: white; margin-bottom: 8px; }
+.footer-brand span { color: var(--orange); }
+.footer-text { font-size: 0.85rem; color: rgba(255,255,255,0.4); font-weight: 500; margin-bottom: 16px; }
+.footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+.footer-links a { font-size: 0.85rem; color: rgba(255,255,255,0.5); text-decoration: none; font-weight: 600; transition: color 0.2s ease; }
+.footer-links a:hover { color: var(--orange); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .activities-grid { grid-template-columns: 1fr 1fr; }
+  .page-hero h1 { font-size: 2rem; }
+}
+@media (max-width: 600px) {
+  .navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .section { padding: 60px 20px; }
+  .page-hero { padding: 100px 20px 40px; }
+  .page-hero h1 { font-size: 1.7rem; }
+  .activities-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .vocab-strip { padding: 16px 20px; }
+}
+
+/* ========== SCROLL ANIMATIONS ========== */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="2-sinif.html" class="nav-cta">← Temalara Dön</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <nav class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a>
+      <span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a>
+      <span class="sep">›</span>
+      <span class="current">School Life</span>
+    </nav>
+    <span class="page-hero-emoji">🏫</span>
+    <h1>School Life <span class="highlight">Etkinlikleri</span></h1>
+    <p class="page-hero-desc">
+      Okul hayatı temasına ait interaktif etkinlikler. Selamlama, tanışma, okul yerleri ve haftanın günleri.
+    </p>
+    <div class="page-hero-badges">
+      <span class="hero-chip active">📋 Tema 1</span>
+      <span class="hero-chip">🏫 School Life</span>
+      <span class="hero-chip">⏱️ 11 Ders Saati</span>
+      <span class="hero-chip">💰 Ücretsiz</span>
+    </div>
+  </div>
+</section>
+
+<!-- VOCAB STRIP -->
+<div class="vocab-strip">
+  <div class="vocab-scroll">
+    <span class="vocab-word"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span>
+    <span class="vocab-word"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span>
+    <span class="vocab-word"><span class="en">Student</span><span class="sep">•</span>Öğrenci</span>
+    <span class="vocab-word"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span>
+    <span class="vocab-word"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span>
+    <span class="vocab-word"><span class="en">Gym</span><span class="sep">•</span>Spor Salonu</span>
+    <span class="vocab-word"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span>
+    <span class="vocab-word"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span>
+    <span class="vocab-word"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span>
+    <span class="vocab-word"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span>
+    <span class="vocab-word"><span class="en">Friday</span><span class="sep">•</span>Cuma</span>
+    <span class="vocab-word"><span class="en">Principal</span><span class="sep">•</span>Müdür</span>
+    <span class="vocab-word"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span>
+    <span class="vocab-word"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span>
+    <!-- Tekrar (sonsuz döngü için) -->
+    <span class="vocab-word"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span>
+    <span class="vocab-word"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span>
+    <span class="vocab-word"><span class="en">Student</span><span class="sep">•</span>Öğrenci</span>
+    <span class="vocab-word"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span>
+    <span class="vocab-word"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span>
+    <span class="vocab-word"><span class="en">Gym</span><span class="sep">•</span>Spor Salonu</span>
+    <span class="vocab-word"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span>
+    <span class="vocab-word"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span>
+    <span class="vocab-word"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span>
+    <span class="vocab-word"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span>
+    <span class="vocab-word"><span class="en">Friday</span><span class="sep">•</span>Cuma</span>
+    <span class="vocab-word"><span class="en">Principal</span><span class="sep">•</span>Müdür</span>
+    <span class="vocab-word"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span>
+    <span class="vocab-word"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span>
+  </div>
+</div>
+
+<!-- ACTIVITIES -->
+<section class="section" id="etkinlikler">
+  <div class="section-header reveal">
+    <div class="section-badge">🎮 Etkinlikler</div>
+    <h2 class="section-title">School Life Oyunları</h2>
+    <p class="section-desc">Her etkinlik MEB TYMM müfredatının Tema 1 kazanımlarına uygun olarak hazırlanmıştır.</p>
+  </div>
+
+  <div class="activities-grid">
+
+    <!-- KART 1: Memory Match — AKTİF -->
+    <div class="activity-card active reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-memory">🃏 Memory Match</div>
+        <span class="activity-emoji">🧠</span>
+        <div class="activity-title">School Life Memory Match</div>
+        <div class="activity-desc">
+          Okul hayatı kelimelerini eşleştir! Kartları çevir, çiftleri bul. Hafızanı test et.
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">👥 Takım Modu</span>
+          <span class="feature-tag">⏱️ Süre Sayacı</span>
+          <span class="feature-tag">🎵 Sesli</span>
+          <span class="feature-tag">🖥️ Akıllı Tahta</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot"></div>
+            </div>
+          </div>
+          <div class="play-count">⭐ Yeni</div>
+        </div>
+        <a href="school-life-memory-match.html" class="activity-btn">🚀 Oynamaya Başla</a>
+      </div>
+    </div>
+
+    <!-- KART 2: Quiz — YAKINDA -->
+    <div class="activity-card coming teal reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-quiz">❓ Quiz</div>
+        <span class="activity-emoji">🎯</span>
+        <div class="activity-title">School Life Quiz</div>
+        <div class="activity-desc">
+          Hızlı sorular, hızlı cevaplar! Okul hayatı kelimelerini ne kadar iyi biliyorsun?
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">⚡ Hızlı Tur</span>
+          <span class="feature-tag">🏆 Skor</span>
+          <span class="feature-tag">🖥️ Akıllı Tahta</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled teal"></div>
+              <div class="difficulty-dot"></div>
+              <div class="difficulty-dot"></div>
+            </div>
+          </div>
+          <div class="play-count">🔜 Yakında</div>
+        </div>
+        <button class="activity-btn disabled">🔜 Yakında Geliyor</button>
+      </div>
+    </div>
+
+    <!-- KART 3: Sürükle Bırak — YAKINDA -->
+    <div class="activity-card coming purple reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-drag">🖱️ Sürükle & Bırak</div>
+        <span class="activity-emoji">🏷️</span>
+        <div class="activity-title">Okul Yerlerini Etiketle</div>
+        <div class="activity-desc">
+          Okuldaki yerleri doğru isimlerle etiketle. Sürükle, bırak, öğren!
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">🖱️ Dokunmatik</span>
+          <span class="feature-tag">🗺️ Görsel</span>
+          <span class="feature-tag">🖥️ Akıllı Tahta</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled purple"></div>
+              <div class="difficulty-dot filled purple"></div>
+              <div class="difficulty-dot filled purple"></div>
+            </div>
+          </div>
+          <div class="play-count">🔜 Yakında</div>
+        </div>
+        <button class="activity-btn disabled">🔜 Yakında Geliyor</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMING SOON -->
+<section class="coming-section">
+  <div class="coming-content reveal">
+    <div class="coming-title">🚀 Daha Fazlası Geliyor!</div>
+    <p class="coming-desc">School Life teması için yeni etkinlikler hazırlanıyor. Yakında eklenecek oyunlar:</p>
+    <div class="coming-chips">
+      <span class="coming-chip">🎲 Word Blast</span>
+      <span class="coming-chip">🔤 Spelling Game</span>
+      <span class="coming-chip">⚔️ 1v1 Kelime Savaşı</span>
+      <span class="coming-chip">🎵 Dinleme Aktivitesi</span>
+      <span class="coming-chip">🏆 Takım Yarışması</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">İlkokul İngilizce Öğretmenleri İçin İnteraktif Etkinlik Platformu</p>
+  <div class="footer-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="2-sinif.html">2. Sınıf</a>
+    <a href="index.html#ozellikler">Özellikler</a>
+    <a href="#">İletişim</a>
+  </div>
+  <p class="footer-text" style="margin-top:20px;">© 2026 ataberkhocaingilizce — Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => { entry.target.classList.add('visible'); }, index * 100);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
