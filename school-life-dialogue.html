@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İlk Gün: Diyalog Oyunu | School Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --teal: #2EC4B6;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --gray-200: #E8E8E8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --green: #22C55E;
+  --green-light: #DCFCE7;
+  --red: #EF4444;
+  --red-light: #FEE2E2;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md: 0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg: 0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Quicksand',sans-serif; color:var(--navy); background:var(--cream); overflow-x:hidden; -webkit-font-smoothing:antialiased; min-height:100vh; }
+h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
+
+.navbar { position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:70px; display:flex;align-items:center;justify-content:space-between; background:rgba(255,255,255,0.92);backdrop-filter:blur(20px); border-bottom:1px solid rgba(27,40,69,0.06);transition:all .3s; }
+.navbar.scrolled { box-shadow:var(--shadow-soft); }
+.nav-brand { display:flex;align-items:center;gap:10px;text-decoration:none; }
+.nav-logo { width:42px;height:42px;background:linear-gradient(135deg,var(--orange),var(--yellow));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 3px 12px rgba(255,107,53,.25); }
+.brand-name { font-size:1.25rem;font-weight:800;color:var(--navy);line-height:1.1; }
+.brand-name span { color:var(--orange); }
+.nav-links { display:flex;align-items:center;gap:8px;list-style:none; }
+.nav-links a { text-decoration:none;font-weight:600;font-size:.9rem;color:var(--gray-700);padding:8px 16px;border-radius:10px;transition:all .2s; }
+.nav-links a:hover { background:var(--cream);color:var(--orange); }
+.nav-cta { background:var(--navy)!important;color:var(--white)!important;padding:10px 22px!important;border-radius:12px!important;font-weight:700!important; }
+.nav-cta:hover { background:var(--orange)!important;transform:translateY(-1px);box-shadow:var(--shadow-glow-orange); }
+.nav-hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px; }
+.nav-hamburger span { width:24px;height:2.5px;background:var(--navy);border-radius:2px; }
+
+.game-header { padding:90px 40px 28px; background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%); position:relative;overflow:hidden;text-align:center; }
+.game-header::before { content:'';position:absolute;inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.game-header-content { position:relative;z-index:1; }
+.breadcrumb { display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-size:.8rem;font-weight:600; }
+.breadcrumb a { color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s; }
+.breadcrumb a:hover { color:var(--orange); }
+.breadcrumb .sep { color:rgba(255,255,255,.25); }
+.breadcrumb .current { color:var(--yellow); }
+.game-title { font-size:2rem;font-weight:800;color:#fff;margin-bottom:6px; }
+.game-title .hl { color:var(--orange); }
+.game-subtitle { font-size:.9rem;color:rgba(255,255,255,.55);font-weight:600; }
+
+.screen { display:none; }
+.screen.active { display:block; }
+
+.start-screen { padding:40px 20px 60px;max-width:760px;margin:0 auto;text-align:center; }
+.story-box { background:var(--white);border-radius:var(--radius-xl); padding:36px 32px;margin-bottom:32px; box-shadow:var(--shadow-soft);border:2px solid var(--gray-200); position:relative;overflow:hidden; }
+.story-box::before { content:'';position:absolute;top:0;left:0;right:0;height:5px; background:linear-gradient(90deg,var(--orange),var(--yellow),var(--teal)); }
+.story-emoji { font-size:3.5rem;margin-bottom:12px;display:block;animation:bob 2s ease-in-out infinite; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.story-title { font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:10px; }
+.story-text { font-size:1rem;color:var(--gray-700);line-height:1.7;font-weight:500;max-width:520px;margin:0 auto; }
+.story-text strong { color:var(--orange); }
+
+.diff-label { font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:16px; }
+.diff-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px; }
+.diff-card { background:var(--white);border-radius:var(--radius-lg);padding:22px 16px; cursor:pointer;transition:all .25s;border:3px solid var(--gray-200);text-align:center; }
+.diff-card:hover { transform:translateY(-4px);box-shadow:var(--shadow-md); }
+.diff-card.selected { border-color:var(--orange);background:rgba(255,107,53,.04); }
+.diff-card .di { font-size:2rem;margin-bottom:8px;display:block; }
+.diff-card .dn { font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:4px; }
+.diff-card .dd { font-size:.78rem;color:var(--gray-500);font-weight:600;line-height:1.4; }
+.diff-card .db { display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700; }
+.diff-card[data-d="easy"] .db { background:#DCFCE7;color:#16A34A; }
+.diff-card[data-d="medium"] .db { background:#FEF3C7;color:#D97706; }
+.diff-card[data-d="hard"] .db { background:#FEE2E2;color:#DC2626; }
+
+.start-btn { display:inline-flex;align-items:center;gap:10px; font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800; padding:16px 40px;border-radius:var(--radius-lg);border:none; background:var(--orange);color:var(--white);cursor:pointer; box-shadow:0 4px 15px rgba(255,107,53,.3);transition:all .25s; }
+.start-btn:hover { background:var(--orange-glow);transform:translateY(-2px);box-shadow:var(--shadow-glow-orange); }
+
+.game-screen { max-width:860px;margin:0 auto;padding:32px 20px 60px; }
+.prog-wrap { display:flex;align-items:center;gap:14px;margin-bottom:24px; }
+.prog-label { font-size:.82rem;font-weight:700;color:var(--gray-500);white-space:nowrap; }
+.prog-track { flex:1;height:10px;background:var(--gray-200);border-radius:10px;overflow:hidden; }
+.prog-fill { height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:10px;transition:width .5s ease; }
+.prog-score { font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--orange);white-space:nowrap; }
+
+.loc-strip { display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px;align-items:center; }
+.loc-item { display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;opacity:.3;transition:all .3s; }
+.loc-item.active { opacity:1; }
+.loc-item.done { opacity:.65; }
+.loc-icon { width:44px;height:44px;border-radius:12px; display:flex;align-items:center;justify-content:center;font-size:1.3rem; border:2.5px solid var(--gray-200);background:var(--white);transition:all .3s; }
+.loc-item.active .loc-icon { border-color:var(--orange);background:rgba(255,107,53,.08);transform:scale(1.1); }
+.loc-item.done .loc-icon { border-color:var(--green);background:var(--green-light); }
+.loc-name { font-size:.62rem;font-weight:700;color:var(--gray-500);text-align:center;max-width:52px; }
+.loc-item.active .loc-name { color:var(--orange); }
+.loc-line { width:18px;height:2px;background:var(--gray-200);flex-shrink:0;transition:background .3s; }
+.loc-line.done { background:var(--green); }
+
+.scene-card { background:var(--white);border-radius:var(--radius-xl); overflow:hidden;box-shadow:var(--shadow-md); margin-bottom:16px;border:2px solid var(--gray-200); }
+.scene-bg { height:170px;position:relative; display:flex;align-items:flex-end;justify-content:center;overflow:hidden; }
+.bg-gate      { background:linear-gradient(180deg,#87CEEB 0%,#B0E2FF 55%,#90EE90 100%); }
+.bg-corridor  { background:linear-gradient(180deg,#FFF5E6 0%,#F0D9B5 55%,#C8A870 100%); }
+.bg-office    { background:linear-gradient(180deg,#E8EAF6 0%,#C5CAE9 55%,#9FA8DA 100%); }
+.bg-garden    { background:linear-gradient(180deg,#87CEEB 0%,#A8E6A3 45%,#2E8B57 100%); }
+.bg-classroom { background:linear-gradient(180deg,#FFFDE7 0%,#FFF9C4 55%,#F9A825 100%); }
+.bg-canteen   { background:linear-gradient(180deg,#FCE4EC 0%,#F8BBD0 55%,#E91E8C 100%); }
+.bg-playground{ background:linear-gradient(180deg,#E3F2FD 0%,#BBDEFB 45%,#42A5F5 100%); }
+.scene-ground { position:absolute;bottom:0;left:0;right:0;height:48px; background:rgba(255,255,255,.22);backdrop-filter:blur(4px); }
+.scene-chars { position:absolute;bottom:0;left:0;right:0; display:flex;align-items:flex-end;justify-content:space-evenly; padding:0 32px; }
+.s-char { display:flex;flex-direction:column;align-items:center; }
+.s-char-emoji { font-size:3rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.15)); }
+.s-char-label { font-size:.62rem;font-weight:800; background:var(--navy);color:var(--white); padding:2px 7px;border-radius:20px;margin-top:2px;white-space:nowrap; }
+
+.bubble-wrap { padding:20px 24px 0; }
+.bubble { background:var(--navy);color:var(--white); border-radius:var(--radius-lg);border-bottom-left-radius:4px; padding:15px 20px;display:inline-block;max-width:100%;position:relative; }
+.bubble::after { content:'';position:absolute;bottom:-11px;left:26px; border:11px solid transparent;border-top-color:var(--navy);border-bottom:0; }
+.bubble-who { font-size:.7rem;font-weight:700;opacity:.55;margin-bottom:3px; }
+.bubble-says { font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800; }
+
+.hint-box { display:flex;align-items:flex-start;gap:8px; margin:14px 24px 0; background:#FFFBEB; border:1.5px solid rgba(255,200,87,.5); border-radius:var(--radius-md); padding:10px 14px; }
+.hint-icon { font-size:1rem;flex-shrink:0;margin-top:1px; }
+.hint-text { font-size:.82rem;font-weight:700;color:#7A5C00;line-height:1.5; }
+
+.opts-wrap { padding:18px 24px 22px; }
+.opts-list { display:flex;flex-direction:column;gap:10px; }
+.opt-btn { display:flex;align-items:center;gap:14px; padding:13px 18px;border-radius:var(--radius-md); border:2.5px solid var(--gray-200);background:var(--white); cursor:pointer;transition:all .2s; font-family:'Quicksand',sans-serif;font-weight:700;font-size:.97rem; color:var(--navy);text-align:left;width:100%; }
+.opt-btn:hover:not(:disabled) { border-color:var(--orange);background:rgba(255,107,53,.04);transform:translateX(4px); }
+.opt-letter { width:30px;height:30px;border-radius:9px;flex-shrink:0; display:flex;align-items:center;justify-content:center; font-family:'Baloo 2',cursive;font-weight:800;font-size:.88rem; background:var(--cream);color:var(--navy);transition:all .2s; }
+.opt-btn:hover:not(:disabled) .opt-letter { background:var(--orange);color:var(--white); }
+.opt-btn.correct { border-color:var(--green);background:var(--green-light);animation:popIn .4s ease; }
+.opt-btn.correct .opt-letter { background:var(--green);color:var(--white); }
+.opt-btn.wrong { border-color:var(--red);background:var(--red-light);animation:shake .4s ease; }
+.opt-btn.wrong .opt-letter { background:var(--red);color:var(--white); }
+.opt-btn:disabled { cursor:default; }
+@keyframes popIn { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+.feedback { margin-top:12px;padding:11px 18px;border-radius:var(--radius-md); font-weight:700;font-size:.9rem; opacity:0;transform:translateY(5px);transition:all .3s; }
+.feedback.show { opacity:1;transform:translateY(0); }
+.feedback.good { background:var(--green-light);color:#15803D; }
+.feedback.bad  { background:var(--red-light);color:#B91C1C; }
+
+.end-screen { max-width:580px;margin:0 auto;padding:40px 20px 80px;text-align:center; }
+.end-card { background:var(--white);border-radius:var(--radius-xl); padding:48px 36px;box-shadow:var(--shadow-lg); border:2px solid var(--gray-200);position:relative;overflow:hidden; }
+.end-card::before { content:'';position:absolute;top:0;left:0;right:0;height:5px; background:linear-gradient(90deg,var(--orange),var(--yellow),var(--teal)); }
+.end-trophy { font-size:4rem;margin-bottom:12px;display:block;animation:bob 1.5s ease-in-out infinite; }
+.end-title { font-size:2rem;font-weight:800;color:var(--navy);margin-bottom:6px; }
+.end-sub { font-size:.95rem;color:var(--gray-500);font-weight:600;margin-bottom:24px; }
+.end-stars { font-size:2.5rem;margin-bottom:20px;letter-spacing:4px; }
+.end-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px; }
+.end-stat { background:var(--cream);border-radius:var(--radius-md);padding:14px 10px; }
+.end-stat-n { font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;color:var(--orange); }
+.end-stat-l { font-size:.7rem;font-weight:700;color:var(--gray-500);margin-top:2px; }
+.end-msg { background:rgba(255,107,53,.06);border-radius:var(--radius-md); padding:14px 18px;margin-bottom:28px; font-size:.88rem;font-weight:600;color:var(--navy);line-height:1.6; border-left:4px solid var(--orange);text-align:left; }
+.end-btns { display:flex;gap:12px;justify-content:center;flex-wrap:wrap; }
+.end-btn { display:inline-flex;align-items:center;gap:8px; font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800; padding:13px 26px;border-radius:var(--radius-md);border:none;cursor:pointer; transition:all .22s;text-decoration:none; }
+.end-btn-p { background:var(--orange);color:var(--white);box-shadow:0 4px 15px rgba(255,107,53,.3); }
+.end-btn-p:hover { background:var(--orange-glow);transform:translateY(-2px); }
+.end-btn-s { background:var(--cream);color:var(--navy);border:2px solid var(--gray-200); }
+.end-btn-s:hover { border-color:var(--orange);color:var(--orange);transform:translateY(-2px); }
+
+#confBox { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200; }
+.conf { position:absolute;top:-20px;animation:fall linear forwards; }
+@keyframes fall { to{transform:translateY(110vh) rotate(720deg);opacity:0;} }
+
+@media(max-width:600px) {
+  .navbar{padding:0 20px;} .nav-links{display:none;} .nav-hamburger{display:flex;}
+  .game-header{padding:80px 20px 24px;} .game-title{font-size:1.5rem;}
+  .diff-grid{grid-template-columns:1fr;} .scene-bg{height:130px;}
+  .bubble-says{font-size:1.15rem;} .end-card{padding:32px 20px;}
+}
+</style>
+</head>
+<body>
+<div id="confBox"></div>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="index.html#siniflar">Sınıflar</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="2-sinif.html" class="nav-cta">2. Sınıf →</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="game-header">
+  <div class="game-header-content">
+    <div class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+      <a href="school-life.html">School Life</a><span class="sep">›</span>
+      <span class="current">Diyalog Oyunu</span>
+    </div>
+    <div class="game-title">🏫 <span class="hl">First Day</span> at School</div>
+    <div class="game-subtitle">Theme 1: School Life · Greetings & Introductions · Dialogue Game</div>
+  </div>
+</div>
+
+<div class="screen active" id="scr-start">
+  <div class="start-screen">
+    <div class="story-box">
+      <span class="story-emoji">🎒</span>
+      <div class="story-title">It's Your First Day!</div>
+      <div class="story-text">
+        You are a <strong>new pupil</strong> at school today. Walk through the school and meet new people. Choose the <strong>right words</strong> to say hello! 👋
+      </div>
+    </div>
+    <div class="diff-label">Seviyeni seç:</div>
+    <div class="diff-grid">
+      <div class="diff-card selected" data-d="easy" onclick="pickDiff(this)">
+        <span class="di">🌱</span>
+        <div class="dn">Supporting</div>
+        <div class="dd">3 seçenek · ipucu var</div>
+        <span class="db">Başlangıç</span>
+      </div>
+      <div class="diff-card" data-d="medium" onclick="pickDiff(this)">
+        <span class="di">⭐</span>
+        <div class="dn">Standard</div>
+        <div class="dd">4 seçenek · ipucu var</div>
+        <span class="db">Standart</span>
+      </div>
+      <div class="diff-card" data-d="hard" onclick="pickDiff(this)">
+        <span class="di">🔥</span>
+        <div class="dn">Expansion</div>
+        <div class="dd">4 seçenek · ipucu yok</div>
+        <span class="db">İleri</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🚀 Start the Day!</button>
+  </div>
+</div>
+
+<div class="screen" id="scr-game">
+  <div class="game-screen">
+    <div class="prog-wrap">
+      <span class="prog-label" id="progLabel">Stop 1 / 7</span>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <span class="prog-score" id="progScore">✓ 0</span>
+    </div>
+    <div class="loc-strip" id="locStrip"></div>
+    <div class="scene-card">
+      <div class="scene-bg" id="sceneBg">
+        <div class="scene-ground"></div>
+        <div class="scene-chars" id="sceneChars"></div>
+      </div>
+      <div class="bubble-wrap">
+        <div class="bubble">
+          <div class="bubble-who" id="bubbleWho"></div>
+          <div class="bubble-says" id="bubbleSays"></div>
+        </div>
+      </div>
+      <div class="hint-box" id="hintBox">
+        <span class="hint-icon">💡</span>
+        <span class="hint-text" id="hintText"></span>
+      </div>
+      <div class="opts-wrap">
+        <div class="opts-list" id="optsList"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="scr-end">
+  <div class="end-screen">
+    <div class="end-card">
+      <span class="end-trophy" id="endTrophy">🏆</span>
+      <div class="end-title" id="endTitle">Perfect!</div>
+      <div class="end-sub" id="endSub">Okuldaki ilk gününü tamamladın!</div>
+      <div class="end-stars" id="endStars">⭐⭐⭐</div>
+      <div class="end-stats">
+        <div class="end-stat"><div class="end-stat-n" id="endCorrect">0</div><div class="end-stat-l">Doğru</div></div>
+        <div class="end-stat"><div class="end-stat-n" id="endTotal">0</div><div class="end-stat-l">Toplam</div></div>
+        <div class="end-stat"><div class="end-stat-n" id="endPct">0%</div><div class="end-stat-l">Puan</div></div>
+      </div>
+      <div class="end-msg" id="endMsg"></div>
+      <div class="end-btns">
+        <button class="end-btn end-btn-p" onclick="restartGame()">🔄 Tekrar Oyna</button>
+        <a href="school-life.html" class="end-btn end-btn-s">← School Life</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var STOPS = [
+  {
+    name: 'School Gate', icon: '🚪', bg: 'bg-gate',
+    chars: [{ emoji: '👩‍🏫', label: 'Mrs. Hopkins' }],
+    easy: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Good morning! 🌞', hint: 'Öğretmen seni sabah selamlıyor. Sen de aynı şekilde geri selamlayabilirsin!', correct: 'Good morning!', opts: ['Good morning!', 'Goodbye!', 'Thank you!'] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Hello! 👋', hint: 'Biri sana merhaba dedi. İngilizce nasıl merhaba diyebilirsin?', correct: 'Hi!', opts: ['Hi!', 'Sorry!', 'See you!'] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Welcome to school! 🏫', hint: 'Öğretmen seni okula hoş geldin diye karşılıyor. Ona teşekkür etmek güzel olur!', correct: 'Thank you!', opts: ['Thank you!', 'Goodbye!', 'Good morning!'] }
+    ],
+    medium: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Good morning, everyone!', hint: 'Öğretmen herkese günaydın dedi. Ona ismiyle geri selamlamak daha kibar olur.', correct: 'Good morning, Mrs. Hopkins!', opts: ['Good morning, Mrs. Hopkins!', 'See you tomorrow!', "I'm fine, thanks!", 'Goodbye!'] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Hello! Are you a new pupil?', hint: 'Öğretmen yeni öğrenci olup olmadığını soruyor. Evet ya da hayır diyip kendini tanıtabilirsin.', correct: "Yes! I'm a new pupil.", opts: ["Yes! I'm a new pupil.", "No, I'm a teacher.", 'Goodbye!', "It's Monday today."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Hi! How are you today?', hint: 'Öğretmen nasıl olduğunu soruyor. İngilizce olarak durumunu ifade etmelisin.', correct: "I'm fine, thanks! And you?", opts: ["I'm fine, thanks! And you?", 'Goodbye, teacher!', "It's Monday.", "I'm a pupil."] }
+    ],
+    hard: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Good morning! Welcome to school. What is your name?', hint: null, correct: "Good morning! My name is Ali. Nice to meet you!", opts: ["Good morning! My name is Ali. Nice to meet you!", "Good morning! I'm tired.", "Hello! She's a teacher.", "Hi! It's Monday today."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: "Hello! I'm Mrs. Hopkins. I'm your English teacher.", hint: null, correct: "Hello, Mrs. Hopkins! I'm Ali. Nice to meet you!", opts: ["Hello, Mrs. Hopkins! I'm Ali. Nice to meet you!", "Hi! Goodbye, teacher.", "Good morning! It's a school.", "Hello! I'm in the garden."] }
+    ]
+  },
+  {
+    name: 'Corridor', icon: '🏛️', bg: 'bg-corridor',
+    chars: [{ emoji: '👦', label: 'New friend' }, { emoji: '🧒', label: 'You' }],
+    easy: [
+      { who: 'Yeni bir arkadaşın diyor ki:', says: "Hi! What's your name? 😊", hint: 'Arkadaşın adını soruyor. Adını İngilizce olarak söylemelisin.', correct: 'My name is Ali.', opts: ['My name is Ali.', "I'm fine!", 'See you!'] },
+      { who: 'Yeni bir arkadaşın diyor ki:', says: 'Hello! 😊', hint: 'Arkadaşın seni selamlıyor. Sen de ona İngilizce selam verebilirsin!', correct: 'Hi!', opts: ['Hi!', 'Goodbye!', 'Thank you!'] },
+      { who: 'Yeni bir arkadaşın diyor ki:', says: 'Are you a new pupil? 🎒', hint: 'Arkadaşın yeni öğrenci olup olmadığını soruyor. Evet ya da hayır ile cevap ver.', correct: 'Yes, I am!', opts: ['Yes, I am!', "No, I'm a teacher.", "I'm fine!"] }
+    ],
+    medium: [
+      { who: 'Yeni bir arkadaşın diyor ki:', says: "Hi! What's your name?", hint: 'Arkadaşın adını soruyor. Adını söylemenin yanı sıra onu tanımaktan mutlu olduğunu da ifade edebilirsin.', correct: "Hi! I'm Ali. Nice to meet you!", opts: ["Hi! I'm Ali. Nice to meet you!", 'Goodbye! See you!', "I'm fine, thanks!", "It's Monday."] },
+      { who: 'Yeni bir arkadaşın diyor ki:', says: "Hello! Who's she?", hint: 'Arkadaşın yanındaki kişinin kim olduğunu soruyor. Öğretmenini tanıtabilirsin.', correct: "She's Mrs. Hopkins. She's my English teacher.", opts: ["She's Mrs. Hopkins. She's my English teacher.", "She's in the library.", "She's a pupil.", "He's a teacher."] },
+      { who: 'Yeni bir arkadaşın diyor ki:', says: 'Excuse me! Can I sit here?', hint: 'Arkadaşın yanına oturmak için izin istiyor. Ona nazikçe cevap verebilirsin.', correct: 'Sure! Welcome!', opts: ['Sure! Welcome!', 'Goodbye!', "It's Monday.", "I'm fine."] }
+    ],
+    hard: [
+      { who: 'Yeni bir arkadaşın diyor ki:', says: "Hello! I'm Emma. What's your name?", hint: null, correct: "Hello Emma! I'm Ali. Nice to meet you!", opts: ["Hello Emma! I'm Ali. Nice to meet you!", "Hello! I'm fine thanks.", "Hi! See you tomorrow!", "Good morning! I'm seven."] },
+      { who: 'Yeni bir arkadaşın diyor ki:', says: "Hi! Who's he? Is he your teacher?", hint: null, correct: "Yes! He's Mr. Aras. He's the headmaster.", opts: ["Yes! He's Mr. Aras. He's the headmaster.", "He's in the garden.", "He's a pupil.", "No, she's a teacher."] }
+    ]
+  },
+  {
+    name: 'Office', icon: '🏢', bg: 'bg-office',
+    chars: [{ emoji: '👨‍💼', label: 'Headmaster' }],
+    easy: [
+      { who: 'Okul müdürü diyor ki:', says: 'Hello! Who are you? 😊', hint: 'Müdür kim olduğunu soruyor. Kendini kısaca tanıtabilirsin.', correct: "I'm a new pupil!", opts: ["I'm a new pupil!", "I'm in the garden.", 'Goodbye!'] },
+      { who: 'Okul müdürü diyor ki:', says: 'Good morning! 😊', hint: 'Müdür sana günaydın dedi. Sen de onu selamlayabilirsin!', correct: 'Good morning!', opts: ['Good morning!', 'Goodbye!', 'See you!'] },
+      { who: 'Okul müdürü diyor ki:', says: 'Welcome to our school! 🏫', hint: 'Müdür seni okula hoş geldin diye karşıladı. Teşekkür etmek güzel olur!', correct: 'Thank you!', opts: ['Thank you!', "I'm a teacher.", 'Goodbye!'] }
+    ],
+    medium: [
+      { who: 'Okul müdürü diyor ki:', says: "Hello there! Who's she?", hint: 'Müdür yanındaki öğretmeni soruyor. Öğretmenini tam olarak tanıtman gerekiyor.', correct: "She's Mrs. Hopkins. She's my English teacher.", opts: ["She's Mrs. Hopkins. She's my English teacher.", "She's in the library.", "She's a pupil.", "He's a teacher."] },
+      { who: 'Okul müdürü diyor ki:', says: "Good morning! What's your name?", hint: 'Müdür adını soruyor. Hem selam ver hem de adını söyle.', correct: "Good morning! My name is Ali.", opts: ["Good morning! My name is Ali.", "Hello! I'm in the garden.", "Good morning! I'm a teacher.", "Hi! It's Monday today."] },
+      { who: 'Okul müdürü diyor ki:', says: 'Are you a new pupil here?', hint: 'Müdür yeni öğrenci olup olmadığını soruyor. Cevapla ve adını da söyleyebilirsin.', correct: "Yes, I am! I'm Ali.", opts: ["Yes, I am! I'm Ali.", "No, I'm the headmaster.", "Yes! I'm a teacher.", "No! I'm in the library."] }
+    ],
+    hard: [
+      { who: 'Okul müdürü diyor ki:', says: "Good morning! I'm Mr. Aras. I'm the headmaster.", hint: null, correct: "Good morning, Mr. Aras! I'm Ali. Nice to meet you!", opts: ["Good morning, Mr. Aras! I'm Ali. Nice to meet you!", "Hi Mr. Aras! I'm fine thanks.", "Hello! Goodbye Mr. Aras!", "Good morning! Where is the garden?"] },
+      { who: 'Okul müdürü diyor ki:', says: "Hello! Who is your English teacher?", hint: null, correct: "She's Mrs. Hopkins. She's in the classroom.", opts: ["She's Mrs. Hopkins. She's in the classroom.", "He's Mr. Aras. He's the headmaster.", "She's in the garden. She's a pupil.", "It's the library. She's a teacher."] }
+    ]
+  },
+  {
+    name: 'Garden', icon: '🌳', bg: 'bg-garden',
+    chars: [{ emoji: '👧', label: 'Emma' }, { emoji: '🧒', label: 'You' }],
+    easy: [
+      { who: 'Emma soruyor:', says: 'Where is the library? 📚', hint: 'Emma kütüphanenin nerede olduğunu soruyor. Ona yönünü gösterebilirsin.', correct: "It's over there!", opts: ["It's over there!", "I'm fine!", 'Good morning!'] },
+      { who: 'Öğretmen soruyor:', says: 'Where is Emma? 🌳', hint: 'Öğretmen Emma\'nın nerede olduğunu soruyor. Emma\'nın bulunduğu yeri söylemelisin.', correct: 'She is in the garden.', opts: ['She is in the garden.', 'She is a pupil.', 'She is fine.'] },
+      { who: 'Emma soruyor:', says: 'Is this the playground? 🛝', hint: 'Emma buranın oyun alanı olup olmadığını soruyor. Evet ya da hayır ile doğru yeri söyle.', correct: 'No! It is the garden.', opts: ['No! It is the garden.', 'Yes, it is!', "I'm fine!"] }
+    ],
+    medium: [
+      { who: 'Öğretmen soruyor:', says: 'Where is Emma?', hint: 'Öğretmen Emma\'nın nerede olduğunu soruyor. Yeri tam olarak belirtmelisin.', correct: 'She is in the garden.', opts: ['She is in the garden.', 'She is in the library.', "She is a pupil.", "She is fine."] },
+      { who: 'Emma soruyor:', says: 'Where is the sports hall?', hint: 'Emma spor salonunun nerede olduğunu soruyor. Ona yeri tarif etmeye çalış.', correct: "It's next to the garden.", opts: ["It's next to the garden.", "It's Monday today.", "She is in the garden.", "I'm a pupil."] },
+      { who: 'Öğretmen soruyor:', says: "Where is the headmaster's room?", hint: 'Öğretmen müdür odasının nerede olduğunu soruyor. Eğer bilmiyorsan bunu da nazikçe söyleyebilirsin.', correct: "It's in the school, next to the library.", opts: ["It's in the school, next to the library.", "She's in the garden.", "It's Monday today.", "I'm a new pupil."] }
+    ],
+    hard: [
+      { who: 'Öğretmen soruyor:', says: "Excuse me! Where is the headmaster's room?", hint: null, correct: "Excuse me! I don't know. Sorry!", opts: ["Excuse me! I don't know. Sorry!", "It's Monday today.", "She is in the garden.", "I'm a new pupil."] },
+      { who: 'Emma soruyor:', says: 'Where is the canteen? I am hungry!', hint: null, correct: "It's over there, next to the lunch hall!", opts: ["It's over there, next to the lunch hall!", "She's in the garden.", "It's Monday. I'm fine.", "He's in the library."] }
+    ]
+  },
+  {
+    name: 'Classroom', icon: '📖', bg: 'bg-classroom',
+    chars: [{ emoji: '👩‍🏫', label: 'Mrs. Hopkins' }, { emoji: '🧒', label: 'You' }],
+    easy: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'How are you today? 😊', hint: 'Öğretmen nasıl olduğunu soruyor. İyi olduğunu söyleyebilirsin!', correct: "I'm fine, thanks!", opts: ["I'm fine, thanks!", 'Goodbye!', "It's Monday."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Sit down, please! 🪑', hint: 'Öğretmen oturmanı istiyor. Bunu anladığını nazikçe belirtebilirsin.', correct: 'OK, thank you!', opts: ['OK, thank you!', 'Goodbye!', "I'm fine!"] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Look at the board, please! 📋', hint: 'Öğretmen tahtaya bakmanı istiyor. Bunu anladığını İngilizce ifade et.', correct: 'OK, Mrs. Hopkins!', opts: ['OK, Mrs. Hopkins!', 'Goodbye!', "I'm in the garden."] }
+    ],
+    medium: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'How are you? 😊', hint: 'Öğretmen nasıl olduğunu soruyor. İyiyim derken aynı soruyu ona da sorabilirsin.', correct: "I'm fine, thanks! And you?", opts: ["I'm fine, thanks! And you?", "I'm fine. Goodbye!", 'Hello! See you!', "It's Monday today."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: "What's your name? Are you a new pupil?", hint: 'Öğretmen adını ve yeni öğrenci olup olmadığını soruyor. Her ikisini de cevapla.', correct: "I'm Ali. Yes, I'm a new pupil!", opts: ["I'm Ali. Yes, I'm a new pupil!", "I'm fine. No, I'm a teacher.", "My name is Ali. She's in the garden.", "It's Monday. I'm fine."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Come to the board, please!', hint: 'Öğretmen tahtaya gelmeni istiyor. Tamam derken kibar bir ifade kullanabilirsin.', correct: 'OK! Coming, Mrs. Hopkins!', opts: ['OK! Coming, Mrs. Hopkins!', 'Goodbye, teacher!', "It's Monday!", "I'm in the garden."] }
+    ],
+    hard: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Good morning class! How are you all today?', hint: null, correct: "We're fine, thank you Mrs. Hopkins!", opts: ["We're fine, thank you Mrs. Hopkins!", "I'm fine. And you?", "Good morning! It's Monday.", "Hello! Nice to meet you!"] },
+      { who: 'Mrs. Hopkins diyor ki:', says: "Open your books, please! What page is it?", hint: null, correct: "OK Mrs. Hopkins! I don't know the page.", opts: ["OK Mrs. Hopkins! I don't know the page.", "Goodbye! It's the garden.", "It's Monday, Mrs. Hopkins!", "I'm fine. She's a pupil."] }
+    ]
+  },
+  {
+    name: 'Canteen', icon: '🍽️', bg: 'bg-canteen',
+    chars: [{ emoji: '👦', label: 'Ali' }, { emoji: '🧒', label: 'You' }],
+    easy: [
+      { who: 'Ali soruyor:', says: 'What day is it today? 📅', hint: 'Ali bugünün gününü soruyor. Hangi gün olduğunu İngilizce olarak söyleyebilirsin.', correct: "It's Monday today.", opts: ["It's Monday today.", "I'm fine, thanks!", 'Goodbye!'] },
+      { who: 'Ali soruyor:', says: 'Is it Monday today? 📅', hint: 'Ali bugünün pazartesi olup olmadığını soruyor. Evet ya da hayır ile cevap ver.', correct: 'Yes, it is!', opts: ['Yes, it is!', "No, it is Friday.", "I'm fine!"] },
+      { who: 'Ali soruyor:', says: 'Is today a school day? 🏫', hint: 'Ali bugünün okul günü olup olmadığını soruyor. Evet ya da hayır diyebilirsin.', correct: 'Yes, it is!', opts: ['Yes, it is!', 'No, it is Sunday.', "I'm fine, thanks!"] }
+    ],
+    medium: [
+      { who: 'Ali soruyor:', says: 'What day of the week is it today?', hint: 'Ali haftanın hangi günü olduğunu soruyor. Günü tam olarak söylemelisin.', correct: "It's Monday today.", opts: ["It's Monday today.", "It's a classroom.", "I'm seven years old.", "She is in the garden."] },
+      { who: 'Ali soruyor:', says: "What day is it? Is it a weekend?", hint: 'Ali hangi gün olduğunu ve hafta sonu olup olmadığını soruyor. Her ikisini de cevapla.', correct: "It's Monday. No, it isn't a weekend.", opts: ["It's Monday. No, it isn't a weekend.", "It's Sunday. Yes, it is!", "It's Friday. I'm fine.", "It's Monday. Yes, it is a weekend."] },
+      { who: 'Ali soruyor:', says: "What day is it today? Do we have English?", hint: 'Ali günü ve İngilizce dersinin olup olmadığını soruyor. İkisini de yanıtlayabilirsin.', correct: "It's Monday. Yes, we have English!", opts: ["It's Monday. Yes, we have English!", "It's Friday. No, we don't.", "It's Monday. She's a teacher.", "It's Tuesday. I'm a pupil."] }
+    ],
+    hard: [
+      { who: 'Ali soruyor:', says: 'What day is it today? Is it a school day?', hint: null, correct: "It's Monday today. Yes, it is a school day!", opts: ["It's Monday today. Yes, it is a school day!", "It's Monday. No, it isn't a school day.", "It's Friday today. Yes, it is!", "It's Tuesday. I'm a pupil."] },
+      { who: 'Ali soruyor:', says: "What day is it? And where is Mrs. Hopkins?", hint: null, correct: "It's Monday. She's in the classroom!", opts: ["It's Monday. She's in the classroom!", "It's Friday. She's a pupil.", "It's Monday. He's the headmaster.", "She's fine. It's the garden."] }
+    ]
+  },
+  {
+    name: 'Playground', icon: '🛝', bg: 'bg-playground',
+    chars: [{ emoji: '👧', label: 'Emma' }, { emoji: '👦', label: 'Ali' }, { emoji: '🧒', label: 'You' }],
+    easy: [
+      { who: 'Herkes diyor ki:', says: 'Goodbye! See you tomorrow! 👋', hint: 'Arkadaşların sana hoşça kal dedi. Sen de onlara aynı şekilde veda edebilirsin!', correct: 'Goodbye! See you tomorrow!', opts: ['Goodbye! See you tomorrow!', 'Good morning!', "I'm fine!"] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Goodbye everyone! 👋', hint: 'Öğretmen herkese hoşça kal dedi. Sen de ona İngilizce veda edebilirsin.', correct: 'Goodbye, Mrs. Hopkins!', opts: ['Goodbye, Mrs. Hopkins!', 'Good morning!', "I'm fine!"] },
+      { who: 'Ali soruyor:', says: 'See you tomorrow? 😊', hint: 'Ali yarın görüşüp görüşmeyeceğinizi soruyor. Evet diyip veda edebilirsin.', correct: 'Yes! See you tomorrow!', opts: ['Yes! See you tomorrow!', 'No! Good morning!', "I'm in the garden."] }
+    ],
+    medium: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Goodbye everyone! See you tomorrow!', hint: 'Öğretmen herkese hoşça kal dedi. Ona ismiyle veda etmek daha kibar olur.', correct: 'Goodbye, Mrs. Hopkins! See you tomorrow!', opts: ['Goodbye, Mrs. Hopkins! See you tomorrow!', 'Hello Mrs. Hopkins!', "I'm fine thanks!", "It's Monday today."] },
+      { who: 'Emma diyor ki:', says: "It was nice to meet you today! Bye!", hint: 'Emma tanışmaktan memnun olduğunu söylüyor ve veda ediyor. Sen de benzer bir şey söyleyebilirsin.', correct: "Nice to meet you too, Emma! Goodbye!", opts: ["Nice to meet you too, Emma! Goodbye!", "Good morning, Emma!", "I'm fine! See you Monday.", "Hello! It's the garden."] },
+      { who: 'Ali diyor ki:', says: "Today was great! See you tomorrow?", hint: 'Ali bugünün güzel geçtiğini söylüyor ve yarın görüşüp görüşmeyeceğinizi soruyor.', correct: "Yes! See you tomorrow, Ali!", opts: ["Yes! See you tomorrow, Ali!", "No! Goodbye Mrs. Hopkins.", "Yes! It's Monday.", "Hello! I'm fine."] }
+    ],
+    hard: [
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Well done everyone! Goodbye! See you tomorrow!', hint: null, correct: "Thank you, Mrs. Hopkins! Goodbye! See you tomorrow!", opts: ["Thank you, Mrs. Hopkins! Goodbye! See you tomorrow!", "Goodbye! I'm a new pupil!", "Good morning Mrs. Hopkins!", "Thank you! It's Monday!"] },
+      { who: 'Emma ve Ali diyor ki:', says: "Today was fun! Are you coming to school tomorrow?", hint: null, correct: "Yes! See you tomorrow!", opts: ["Yes! See you tomorrow!", "No! It's Sunday. Goodbye.", "Yes! She's Mrs. Hopkins.", "No! It's the garden tomorrow."] }
+    ]
+  }
+];
+
+var diff = 'easy';
+var stopIdx = 0;
+var score = 0;
+var locked = false;
+var picked = [];
+
+function pickDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  diff = el.dataset.d;
+}
+
+function startGame() {
+  stopIdx = 0; score = 0; locked = false;
+  picked = STOPS.map(function(s) {
+    var pool = s[diff];
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
+  showScreen('scr-game');
+  buildStrip();
+  renderStop();
+}
+
+function buildStrip() {
+  var strip = document.getElementById('locStrip');
+  strip.innerHTML = '';
+  STOPS.forEach(function(stop, i) {
+    if (i > 0) {
+      var ln = document.createElement('div');
+      ln.className = 'loc-line'; ln.id = 'line' + i;
+      strip.appendChild(ln);
+    }
+    var item = document.createElement('div');
+    item.className = 'loc-item' + (i === 0 ? ' active' : '');
+    item.id = 'loc' + i;
+    item.innerHTML = '<div class="loc-icon">' + stop.icon + '</div><div class="loc-name">' + stop.name + '</div>';
+    strip.appendChild(item);
+  });
+}
+
+function updateStrip() {
+  STOPS.forEach(function(_, i) {
+    var item = document.getElementById('loc' + i);
+    if (item) item.className = 'loc-item' + (i < stopIdx ? ' done' : i === stopIdx ? ' active' : '');
+    if (i > 0) {
+      var ln = document.getElementById('line' + i);
+      if (ln) ln.className = 'loc-line' + (i <= stopIdx ? ' done' : '');
+    }
+  });
+}
+
+function renderStop() {
+  var stop = STOPS[stopIdx];
+  var data = picked[stopIdx];
+  locked = false;
+
+  var pct = Math.round((stopIdx / STOPS.length) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = 'Stop ' + (stopIdx + 1) + ' / ' + STOPS.length;
+  document.getElementById('progScore').textContent = '✓ ' + score;
+  updateStrip();
+
+  document.getElementById('sceneBg').className = 'scene-bg ' + stop.bg;
+  document.getElementById('sceneChars').innerHTML = stop.chars.map(function(c) {
+    return '<div class="s-char"><span class="s-char-emoji">' + c.emoji + '</span><span class="s-char-label">' + c.label + '</span></div>';
+  }).join('');
+
+  document.getElementById('bubbleWho').textContent = data.who;
+  document.getElementById('bubbleSays').textContent = data.says;
+
+  var hintBox = document.getElementById('hintBox');
+  if (diff === 'hard' || !data.hint) {
+    hintBox.style.display = 'none';
+  } else {
+    hintBox.style.display = 'flex';
+    document.getElementById('hintText').textContent = data.hint;
+  }
+
+  var opts = shuffle(data.opts.slice());
+  var letters = ['A','B','C','D'];
+  document.getElementById('optsList').innerHTML = opts.map(function(opt, i) {
+    return '<button class="opt-btn" data-opt="' + encodeURIComponent(opt) + '" data-correct="' + encodeURIComponent(data.correct) + '">' +
+      '<span class="opt-letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
+  }).join('');
+  document.getElementById('optsList').querySelectorAll('.opt-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      answer(this, decodeURIComponent(this.dataset.opt), decodeURIComponent(this.dataset.correct));
+    });
+  });
+
+  var fb = document.getElementById('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+}
+
+function answer(btn, chosen, correct) {
+  if (locked) return;
+  locked = true;
+  var all = document.querySelectorAll('.opt-btn');
+  all.forEach(function(b) { b.disabled = true; });
+  var fb = document.getElementById('feedback');
+  if (chosen === correct) {
+    btn.classList.add('correct'); score++;
+    document.getElementById('progScore').textContent = '✓ ' + score;
+    fb.className = 'feedback good show';
+    fb.textContent = '✅ Well done! That\'s the right thing to say!';
+  } else {
+    btn.classList.add('wrong');
+    all.forEach(function(b) { if (b.querySelector('span:last-child').textContent === correct) b.classList.add('correct'); });
+    fb.className = 'feedback bad show';
+    fb.innerHTML = '❌ Not quite! The right answer is: <strong>' + correct + '</strong>';
+  }
+  setTimeout(function() {
+    stopIdx++;
+    if (stopIdx >= STOPS.length) showEnd(); else renderStop();
+  }, 1900);
+}
+
+function showEnd() {
+  var total = STOPS.length;
+  var pct = Math.round((score / total) * 100);
+  document.getElementById('endTrophy').textContent = pct === 100 ? '🏆' : pct >= 70 ? '🌟' : '💪';
+  document.getElementById('endTitle').textContent = pct === 100 ? 'Perfect!' : pct >= 70 ? 'Well done!' : 'Good try!';
+  document.getElementById('endStars').textContent = pct === 100 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : '⭐';
+  document.getElementById('endCorrect').textContent = score;
+  document.getElementById('endTotal').textContent = total;
+  document.getElementById('endPct').textContent = pct + '%';
+  document.getElementById('endMsg').textContent = pct === 100
+    ? 'Harika! Okuldaki herkesle mükemmel bir şekilde konuştun. Gerçek bir İngilizce konuşmacısısın! 🌟'
+    : pct >= 70 ? 'Çok iyi! Bugün gerçekten güzel konuşmalar yaptın. Pratik yapmaya devam et! 💪'
+    : 'İyi deneme! Bazı konuşmalar zordu. Tekrar deneyelim! 🚶';
+  showScreen('scr-end');
+  if (pct >= 70) confetti();
+}
+
+function restartGame() { showScreen('scr-start'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+function confetti() {
+  var box = document.getElementById('confBox');
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#1B2845','#22C55E','#EF4444','#8B5CF6'];
+  for (var i = 0; i < 80; i++) {
+    var el = document.createElement('div');
+    el.className = 'conf';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (6 + Math.random() * 8) + 'px';
+    el.style.height = (6 + Math.random() * 8) + 'px';
+    el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    el.style.animationDelay = Math.random() * .8 + 's';
+    box.appendChild(el);
+  }
+  setTimeout(function() { box.innerHTML = ''; }, 4000);
+}
+
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+});
+</script>
+</body>
+</html>
