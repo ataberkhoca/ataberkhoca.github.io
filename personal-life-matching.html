@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Robix! — Body Parts | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --red: #EF4444;
+    --robot-blue: #4FC3F7;
+    --robot-silver: #B0BEC5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); }
+  .navbar-logo { font-size: 1.5rem; margin-right: 0.4rem; }
+
+  /* ── GAME HEADER ── */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 90px 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,107,53,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(46,196,182,0.1) 0%, transparent 50%);
+  }
+  .breadcrumb {
+    font-size: 0.8rem; color: rgba(255,255,255,0.6);
+    margin-bottom: 0.8rem; position: relative;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.4rem; font-weight: 800;
+    color: var(--white); position: relative;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .game-title .robot-icon { font-size: 2rem; margin-right: 0.3rem; }
+  .game-subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem; margin-top: 0.4rem; position: relative;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── START SCREEN ── */
+  .start-screen {
+    max-width: 680px; margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  .story-box {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 1.8rem;
+    border-left: 5px solid var(--robot-blue);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .story-robot { font-size: 3rem; flex-shrink: 0; }
+  .story-text { font-size: 1rem; line-height: 1.7; color: #444; }
+  .story-text strong { color: var(--navy); }
+
+  .difficulty-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--navy); text-align: center;
+    margin-bottom: 1rem;
+  }
+  .difficulty-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .diff-card {
+    background: var(--white);
+    border: 3px solid transparent;
+    border-radius: 16px;
+    padding: 1.2rem 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .diff-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .diff-card.selected { border-color: var(--orange); background: #FFF3EE; }
+  .diff-card.diff-supporting.selected { border-color: var(--green); background: #F0FFF4; }
+  .diff-card.diff-standard.selected { border-color: var(--orange); background: #FFF3EE; }
+  .diff-card.diff-expansion.selected { border-color: var(--navy); background: #EEF2FF; }
+  .diff-emoji { font-size: 2rem; margin-bottom: 0.4rem; }
+  .diff-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700; color: var(--navy);
+  }
+  .diff-desc { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+
+  .start-btn {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white);
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 700;
+    border: none; border-radius: 16px;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+    letter-spacing: 0.5px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+  .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── GAME SCREEN ── */
+  .game-screen {
+    max-width: 900px; margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: rgba(27,40,69,0.1);
+    border-radius: 99px; height: 10px;
+    margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--orange));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* Score badge */
+  .score-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .score-badge {
+    background: var(--navy);
+    color: var(--yellow);
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700;
+    padding: 0.4rem 1rem; border-radius: 99px;
+  }
+  .hint-box {
+    background: var(--yellow-light);
+    border-left: 4px solid var(--yellow);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem; color: #555;
+    flex: 1; margin: 0 1rem;
+    display: none;
+  }
+  .hint-box.visible { display: block; }
+  .pairs-count {
+    font-size: 0.9rem; color: #888; font-weight: 600;
+  }
+
+  /* Matching area */
+  .matching-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .column-label {
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.9rem; font-weight: 700;
+    color: var(--navy); opacity: 0.6;
+    text-align: center; margin-bottom: 0.5rem;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  .cards-column {
+    display: flex; flex-direction: column; gap: 0.7rem;
+  }
+
+  /* Image cards (left column) */
+  .img-card {
+    background: var(--white);
+    border: 3px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    min-height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.3rem;
+  }
+  .img-card .part-emoji { font-size: 2.2rem; }
+  .img-card .part-tr { font-size: 0.7rem; color: #aaa; }
+  .img-card:hover:not(.matched):not(.wrong-flash) {
+    border-color: var(--teal);
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(46,196,182,0.2);
+  }
+  .img-card.selected {
+    border-color: var(--orange);
+    background: #FFF3EE;
+    transform: translateX(6px);
+  }
+  .img-card.matched {
+    border-color: var(--green);
+    background: #F0FFF4;
+    cursor: default;
+    opacity: 0.75;
+  }
+  .img-card.wrong-flash {
+    border-color: var(--red);
+    background: #FFF5F5;
+    animation: shake 0.4s ease;
+  }
+
+  /* Word cards (right column) */
+  .word-card {
+    background: var(--white);
+    border: 3px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    min-height: 80px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .word-card .word-text {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--navy);
+  }
+  .word-card:hover:not(.matched):not(.wrong-flash) {
+    border-color: var(--orange);
+    transform: translateX(-4px);
+    box-shadow: 0 4px 16px rgba(255,107,53,0.2);
+  }
+  .word-card.selected {
+    border-color: var(--teal);
+    background: #F0FFFE;
+    transform: translateX(-6px);
+  }
+  .word-card.matched {
+    border-color: var(--green);
+    background: #F0FFF4;
+    cursor: default;
+    opacity: 0.75;
+  }
+  .word-card.wrong-flash {
+    border-color: var(--red);
+    background: #FFF5F5;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  /* Robix character panel */
+  .robix-panel {
+    position: fixed;
+    bottom: 1.5rem; right: 1.5rem;
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 1rem 1.2rem;
+    max-width: 220px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    z-index: 50;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .robix-avatar { font-size: 2.2rem; flex-shrink: 0; }
+  .robix-speech {
+    font-size: 0.8rem; color: rgba(255,255,255,0.9);
+    line-height: 1.4;
+  }
+  .robix-speech strong { color: var(--yellow); }
+
+  /* ── END SCREEN ── */
+  .end-screen {
+    max-width: 560px; margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    text-align: center;
+  }
+  .trophy { font-size: 5rem; margin-bottom: 1rem; animation: bounce 1s ease infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+
+  .stars-row { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .star { font-size: 2.5rem; filter: grayscale(1); transition: filter 0.4s; }
+  .star.lit { filter: none; }
+
+  .end-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2rem; font-weight: 800; color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+  .end-message { font-size: 1rem; color: #666; margin-bottom: 2rem; line-height: 1.6; }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: var(--white);
+    border-radius: 16px; padding: 1.2rem 0.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .stat-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2rem; font-weight: 800; color: var(--orange);
+  }
+  .stat-label { font-size: 0.75rem; color: #999; margin-top: 0.2rem; }
+
+  .end-buttons { display: flex; flex-direction: column; gap: 0.8rem; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); border: none; border-radius: 14px;
+    padding: 0.9rem 2rem;
+    font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    background: var(--white); color: var(--navy);
+    border: 2px solid #E5E7EB; border-radius: 14px;
+    padding: 0.8rem 2rem;
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--navy); background: #F8FAFF; }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 999;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .game-title { font-size: 1.6rem; }
+    .matching-area { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .img-card .part-emoji { font-size: 1.6rem; }
+    .word-card .word-text { font-size: 1rem; }
+    .robix-panel { max-width: 160px; bottom: 1rem; right: 0.8rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <span class="navbar-logo">📚</span>
+    ataberk<span>hoca</span>ingilizce
+  </a>
+</nav>
+
+<!-- GAME HEADER -->
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> ›
+    <a href="2-sinif.html">2. Sınıf</a> ›
+    <a href="personal-life.html">Personal Life</a> ›
+    Build Robix!
+  </div>
+  <h1 class="game-title"><span class="robot-icon">🤖</span>Build Robix!</h1>
+  <p class="game-subtitle">Match the body parts to help Robix!</p>
+</div>
+
+<!-- ══════════════ START SCREEN ══════════════ -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <div class="story-robot">🤖</div>
+      <div class="story-text">
+        <strong>Robix has a problem!</strong> All the body parts labels have fallen off!
+        Can you help Robix by matching each part to the correct word?
+        <br><br>
+        🇹🇷 <em>Robix'in vücut parçalarının etiketleri düştü! Her resmi doğru kelimeyle eşleştirerek Robix'e yardım et!</em>
+      </div>
+    </div>
+
+    <div class="difficulty-title">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-card diff-supporting" onclick="selectDifficulty('supporting', this)">
+        <div class="diff-emoji">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">4 vücut parçası<br>Türkçe ipucu var</div>
+      </div>
+      <div class="diff-card diff-standard" onclick="selectDifficulty('standard', this)">
+        <div class="diff-emoji">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">7 vücut parçası<br>Türkçe ipucu var</div>
+      </div>
+      <div class="diff-card diff-expansion" onclick="selectDifficulty('expansion', this)">
+        <div class="diff-emoji">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">10 vücut parçası<br>İpucu yok</div>
+      </div>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startGame()" disabled>
+      🚀 Oyunu Başlat!
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+    <div class="score-row">
+      <div class="score-badge">⭐ <span id="scoreDisplay">0</span> puan</div>
+      <div class="hint-box" id="hintBox">💡 <span id="hintText"></span></div>
+      <div class="pairs-count" id="pairsCount"></div>
+    </div>
+
+    <div class="matching-area">
+      <div>
+        <div class="column-label">🖼️ Resim</div>
+        <div class="cards-column" id="imgColumn"></div>
+      </div>
+      <div>
+        <div class="column-label">🔤 Kelime</div>
+        <div class="cards-column" id="wordColumn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Robix floating panel -->
+  <div class="robix-panel" id="robixPanel">
+    <div class="robix-avatar">🤖</div>
+    <div class="robix-speech" id="robixSpeech">
+      <strong>Robix:</strong> Find my body parts! 🔍
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ END SCREEN ══════════════ -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars-row">
+      <div class="star" id="star1">⭐</div>
+      <div class="star" id="star2">⭐</div>
+      <div class="star" id="star3">⭐</div>
+    </div>
+    <div class="end-title" id="endTitle">Well done!</div>
+    <div class="end-message" id="endMessage"></div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num" id="statScore">0</div>
+        <div class="stat-label">Puan</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statCorrect">0</div>
+        <div class="stat-label">Doğru</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statTime">0s</div>
+        <div class="stat-label">Süre</div>
+      </div>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="restartGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-secondary" onclick="goToStart()">🎯 Farklı Seviye</button>
+      <button class="btn-secondary" onclick="window.location.href='personal-life.html'">🏠 Tema Sayfasına Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+var allPairs = [
+  { id:'head',  emoji:'🗣️', label:'head',  tr:'kafa',   hint:'Şapkayı buraya takarsın — en tepede olan yer!' },
+  { id:'face',  emoji:'😊', label:'face',  tr:'yüz',    hint:'Gözlerin, burnun ve ağzın burada — aynaya baktığında gördüğün yer!' },
+  { id:'hair',  emoji:'💇', label:'hair',  tr:'saç',    hint:'Başının üstünü örten, taradığın şey!' },
+  { id:'eye',   emoji:'👁️', label:'eye',   tr:'göz',    hint:'Bununla görürsün — Robix\'in iki tane var!' },
+  { id:'ear',   emoji:'👂', label:'ear',   tr:'kulak',  hint:'Bununla duyarsın — müzik dinlemek için!' },
+  { id:'nose',  emoji:'👃', label:'nose',  tr:'burun',  hint:'Bununla kokları hissedersin — yüzünün ortasında!' },
+  { id:'mouth', emoji:'👄', label:'mouth', tr:'ağız',   hint:'Bununla konuşursun ve yersin — gülerken görünür!' },
+  { id:'arm',   emoji:'💪', label:'arm',   tr:'kol',    hint:'Omuzdan ele uzanan, taşıma yapan bölüm!' },
+  { id:'hand',  emoji:'🖐️', label:'hand',  tr:'el',     hint:'Kolunun ucunda — bununla yazarsın ve tutarsın!' },
+  { id:'leg',   emoji:'🦵', label:'leg',   tr:'bacak',  hint:'Bununla yürürsün ve koşarsun — iki tanesi var!' }
+];
+
+var difficultyConfig = {
+  supporting: { count: 4, showHint: true },
+  standard:   { count: 7, showHint: true },
+  expansion:  { count: 10, showHint: false }
+};
+
+var selectedDifficulty = null;
+var currentPairs = [];
+var selectedImg = null;
+var selectedWord = null;
+var matchedCount = 0;
+var score = 0;
+var wrongCount = 0;
+var startTime = null;
+
+// ── DIFFICULTY SELECTION ──
+function selectDifficulty(level, el) {
+  selectedDifficulty = level;
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('startBtn').disabled = false;
+}
+
+// ── SHUFFLE ──
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+// ── START GAME ──
+function startGame() {
+  var config = difficultyConfig[selectedDifficulty];
+  var shuffledAll = shuffle(allPairs);
+  currentPairs = shuffledAll.slice(0, config.count);
+
+  matchedCount = 0; score = 0; wrongCount = 0;
+  selectedImg = null; selectedWord = null;
+  startTime = Date.now();
+
+  showScreen('gameScreen');
+  renderCards(config);
+  updateProgress();
+  updateScore();
+  updatePairsCount();
+
+  // hint box visibility
+  if (config.showHint) {
+    document.getElementById('hintBox').classList.add('visible');
+    document.getElementById('hintText').textContent = 'Bir resme tıklayarak başla!';
+  } else {
+    document.getElementById('hintBox').classList.remove('visible');
+  }
+
+  setRobixSpeech("Find my body parts! 🔍");
+}
+
+// ── RENDER CARDS ──
+function renderCards(config) {
+  var imgCol = document.getElementById('imgColumn');
+  var wordCol = document.getElementById('wordColumn');
+  imgCol.innerHTML = '';
+  wordCol.innerHTML = '';
+
+  var shuffledImgs = shuffle(currentPairs);
+  var shuffledWords = shuffle(currentPairs);
+
+  shuffledImgs.forEach(function(pair) {
+    var div = document.createElement('div');
+    div.className = 'img-card';
+    div.setAttribute('data-id', pair.id);
+    div.innerHTML = '<div class="part-emoji">' + pair.emoji + '</div>' +
+                    (config.showHint ? '<div class="part-tr">' + pair.tr + '</div>' : '');
+    div.addEventListener('click', function() { onImgClick(pair.id, div, pair.hint, config.showHint); });
+    imgCol.appendChild(div);
+  });
+
+  shuffledWords.forEach(function(pair) {
+    var div = document.createElement('div');
+    div.className = 'word-card';
+    div.setAttribute('data-id', pair.id);
+    div.innerHTML = '<div class="word-text">' + pair.label + '</div>';
+    div.addEventListener('click', function() { onWordClick(pair.id, div); });
+    wordCol.appendChild(div);
+  });
+}
+
+// ── CARD CLICK LOGIC ──
+function onImgClick(id, el, hint, showHint) {
+  if (el.classList.contains('matched')) return;
+
+  // deselect previous
+  document.querySelectorAll('.img-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  selectedImg = id;
+  el.classList.add('selected');
+
+  if (showHint) {
+    document.getElementById('hintText').textContent = hint;
+  }
+
+  setRobixSpeech('Now find the word! 🤔');
+
+  if (selectedWord) checkMatch();
+}
+
+function onWordClick(id, el) {
+  if (el.classList.contains('matched')) return;
+
+  document.querySelectorAll('.word-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  selectedWord = id;
+  el.classList.add('selected');
+
+  setRobixSpeech('Good choice! Is it correct? 🤖');
+
+  if (selectedImg) checkMatch();
+}
+
+function checkMatch() {
+  if (!selectedImg || !selectedWord) return;
+
+  var imgEl  = document.querySelector('.img-card[data-id="' + selectedImg + '"]');
+  var wordEl = document.querySelector('.word-card[data-id="' + selectedWord + '"]');
+
+  if (selectedImg === selectedWord) {
+    // ✅ CORRECT
+    imgEl.classList.remove('selected');
+    wordEl.classList.remove('selected');
+    imgEl.classList.add('matched');
+    wordEl.classList.add('matched');
+    matchedCount++;
+    score += 10;
+    updateScore();
+    updateProgress();
+    updatePairsCount();
+    setRobixSpeech('Correct! ✅ +10 puan!');
+
+    if (matchedCount === currentPairs.length) {
+      setTimeout(showEndScreen, 800);
+    }
+  } else {
+    // ❌ WRONG
+    wrongCount++;
+    score = Math.max(0, score - 2);
+    updateScore();
+    imgEl.classList.remove('selected');
+    wordEl.classList.remove('selected');
+    imgEl.classList.add('wrong-flash');
+    wordEl.classList.add('wrong-flash');
+    setRobixSpeech('Try again! ❌');
+    setTimeout(function() {
+      imgEl.classList.remove('wrong-flash');
+      wordEl.classList.remove('wrong-flash');
+    }, 500);
+  }
+
+  selectedImg = null;
+  selectedWord = null;
+}
+
+// ── UI HELPERS ──
+function updateProgress() {
+  var pct = currentPairs.length > 0 ? (matchedCount / currentPairs.length) * 100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+function updateScore() {
+  document.getElementById('scoreDisplay').textContent = score;
+}
+function updatePairsCount() {
+  document.getElementById('pairsCount').textContent = matchedCount + ' / ' + currentPairs.length + ' eşleşme';
+}
+function setRobixSpeech(text) {
+  document.getElementById('robixSpeech').innerHTML = '<strong>Robix:</strong> ' + text;
+}
+
+// ── END SCREEN ──
+function showEndScreen() {
+  var elapsed = Math.round((Date.now() - startTime) / 1000);
+  var pct = score / (currentPairs.length * 10);
+  var stars = pct >= 0.9 ? 3 : pct >= 0.6 ? 2 : 1;
+
+  showScreen('endScreen');
+
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statCorrect').textContent = matchedCount;
+  document.getElementById('statTime').textContent = elapsed + 's';
+
+  var titles = ['Keep trying! 💪', 'Good job! 👏', 'Amazing! 🌟'];
+  var messages = [
+    'Robix\'e biraz yardım ettin! Tekrar dene, daha iyi yapabilirsin. 🤖',
+    'Güzel iş! Robix mutlu! Tekrar oynayarak daha yüksek puan alabilirsin. 🤖⭐',
+    'Mükemmel! Robix tamamen hazır! Sen harika bir öğrencisin! 🤖🎉'
+  ];
+  document.getElementById('endTitle').textContent = titles[stars - 1];
+  document.getElementById('endMessage').textContent = messages[stars - 1];
+  document.getElementById('trophyEmoji').textContent = stars === 3 ? '🏆' : stars === 2 ? '🥈' : '🥉';
+
+  // animate stars
+  for (var i = 1; i <= 3; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        if (idx <= stars) document.getElementById('star' + idx).classList.add('lit');
+      }, idx * 300);
+    })(i);
+  }
+
+  if (stars >= 2) launchConfetti();
+}
+
+// ── CONFETTI ──
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#4FC3F7','#FF6B8A'];
+  for (var i = 0; i < 60; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        el.style.animationDelay = '0s';
+        document.body.appendChild(el);
+        setTimeout(function() { el.remove(); }, 3500);
+      }, i * 40);
+    })(i);
+  }
+}
+
+// ── NAVIGATION ──
+function restartGame() {
+  // reset stars
+  for (var i = 1; i <= 3; i++) document.getElementById('star' + i).classList.remove('lit');
+  startGame();
+}
+function goToStart() {
+  for (var i = 1; i <= 3; i++) document.getElementById('star' + i).classList.remove('lit');
+  selectedDifficulty = null;
+  document.getElementById('startBtn').disabled = true;
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  showScreen('startScreen');
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>

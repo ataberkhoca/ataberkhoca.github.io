@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yiğit's Birthday Party! — Dialogue | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --green-light: #F0FFF4;
+    --red: #EF4444;
+    --red-light: #FFF5F5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 2rem; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); }
+
+  /* ── GAME HEADER ── */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 90px 2rem 2rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .game-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 50%, rgba(255,199,87,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 30%, rgba(255,107,53,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(46,196,182,0.1) 0%, transparent 45%);
+  }
+  .breadcrumb {
+    font-size: 0.8rem; color: rgba(255,255,255,0.6);
+    margin-bottom: 0.8rem; position: relative;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.4rem; font-weight: 800;
+    color: var(--white); position: relative;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .game-subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem; margin-top: 0.4rem; position: relative;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── START SCREEN ── */
+  .start-screen {
+    max-width: 680px; margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  .story-box {
+    background: var(--white); border-radius: 20px;
+    padding: 1.8rem; border-left: 5px solid var(--yellow);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .story-char { font-size: 3rem; flex-shrink: 0; }
+  .story-text { font-size: 1rem; line-height: 1.7; color: #444; }
+  .story-text strong { color: var(--navy); }
+
+  /* Stop preview */
+  .stops-preview {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 2rem;
+  }
+  .stop-pill {
+    background: var(--white); border: 2px solid #E5E7EB;
+    border-radius: 99px; padding: 0.4rem 0.9rem;
+    font-size: 0.85rem; font-weight: 600; color: var(--navy);
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+
+  .difficulty-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--navy); text-align: center; margin-bottom: 1rem;
+  }
+  .difficulty-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .diff-card {
+    background: var(--white); border: 3px solid transparent;
+    border-radius: 16px; padding: 1.2rem 0.8rem;
+    text-align: center; cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .diff-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .diff-card.selected.diff-supporting { border-color: var(--green); background: #F0FFF4; }
+  .diff-card.selected.diff-standard   { border-color: var(--orange); background: #FFF3EE; }
+  .diff-card.selected.diff-expansion  { border-color: var(--navy); background: #EEF2FF; }
+  .diff-emoji { font-size: 2rem; margin-bottom: 0.4rem; }
+  .diff-name { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy); }
+  .diff-desc { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+
+  .start-btn {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 700;
+    border: none; border-radius: 16px; padding: 1rem 2rem;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+  .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── GAME SCREEN ── */
+  .game-screen {
+    max-width: 720px; margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Journey bar */
+  .journey-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; margin-bottom: 2rem; flex-wrap: nowrap;
+    overflow-x: auto; padding-bottom: 0.3rem;
+  }
+  .journey-stop {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.3rem; flex-shrink: 0;
+  }
+  .journey-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 3px solid #E5E7EB;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; transition: all 0.3s;
+    position: relative;
+  }
+  .journey-dot.done   { border-color: var(--green); background: var(--green-light); }
+  .journey-dot.active { border-color: var(--orange); background: #FFF3EE; box-shadow: 0 0 0 4px rgba(255,107,53,0.2); }
+  .journey-label {
+    font-size: 0.6rem; font-weight: 700; color: #bbb;
+    text-align: center; max-width: 52px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .journey-label.active { color: var(--orange); }
+  .journey-label.done   { color: var(--green); }
+  .journey-line {
+    width: 28px; height: 3px; background: #E5E7EB;
+    margin-bottom: 18px; flex-shrink: 0; transition: background 0.3s;
+  }
+  .journey-line.done { background: var(--green); }
+
+  /* Score row */
+  .score-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.2rem;
+  }
+  .score-badge {
+    background: var(--navy); color: var(--yellow);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    padding: 0.4rem 1rem; border-radius: 99px;
+  }
+  .stop-label {
+    font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700;
+    color: var(--navy); opacity: 0.6;
+  }
+
+  /* ── SCENE CARD ── */
+  .scene-card {
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+  }
+
+  .scene-bg {
+    padding: 2rem 2rem 1.5rem;
+    position: relative; min-height: 160px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+
+  /* Per-stop background themes */
+  .bg-party    { background: linear-gradient(135deg, #FF6B8A 0%, #FF9A3C 100%); }
+  .bg-window   { background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); }
+  .bg-gifts    { background: linear-gradient(135deg, #9B59B6 0%, #E91E63 100%); }
+  .bg-mirror   { background: linear-gradient(135deg, #F5CBA7 0%, #E59866 100%); }
+  .bg-calendar { background: linear-gradient(135deg, #52BE80 0%, #1ABC9C 100%); }
+  .bg-wardrobe { background: linear-gradient(135deg, #5DADE2 0%, #2E86C1 100%); }
+
+  .scene-emoji { font-size: 4rem; margin-bottom: 0.5rem; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .scene-location {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.15); border-radius: 99px;
+    padding: 0.2rem 0.8rem; display: inline-block;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Chat bubbles */
+  .chat-area {
+    background: var(--white); padding: 1.2rem 1.5rem;
+  }
+
+  .bubble-wrap { display: flex; gap: 0.7rem; margin-bottom: 1rem; align-items: flex-end; }
+  .bubble-wrap.robix { flex-direction: row; }
+  .bubble-wrap.yigit { flex-direction: row-reverse; }
+
+  .bubble-avatar { font-size: 1.8rem; flex-shrink: 0; }
+
+  .bubble {
+    max-width: 75%; padding: 0.8rem 1.1rem;
+    border-radius: 18px; font-size: 1rem; line-height: 1.5;
+    font-family: 'Baloo 2', cursive; font-weight: 600;
+  }
+  .bubble-wrap.robix .bubble {
+    background: #F0F4FF; color: var(--navy);
+    border-bottom-left-radius: 4px;
+  }
+  .bubble-wrap.yigit .bubble {
+    background: var(--orange); color: var(--white);
+    border-bottom-right-radius: 4px;
+  }
+  .bubble-speaker {
+    font-size: 0.7rem; font-weight: 700; opacity: 0.6;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Hint */
+  .hint-box {
+    background: var(--yellow-light); border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 0.7rem 1rem;
+    font-size: 0.9rem; color: #555;
+    margin-bottom: 1rem; display: none;
+  }
+  .hint-box.visible { display: block; }
+
+  /* Options */
+  .options-grid {
+    display: flex; flex-direction: column; gap: 0.7rem;
+    padding: 0 1.5rem 1.5rem;
+    background: var(--white);
+    border-radius: 0 0 24px 24px;
+  }
+
+  .option-btn {
+    background: var(--cream); border: 3px solid #E5E7EB;
+    border-radius: 14px; padding: 0.85rem 1.2rem;
+    font-family: 'Baloo 2', cursive; font-size: 1.05rem; font-weight: 700;
+    color: var(--navy); cursor: pointer; transition: all 0.2s;
+    text-align: left; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .option-btn::before { content: '💬'; font-size: 1rem; }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--orange); background: #FFF3EE;
+    transform: translateX(4px);
+  }
+  .option-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .option-btn.correct::before { content: '✅'; }
+  .option-btn.wrong   { border-color: var(--red); background: var(--red-light); color: var(--red); animation: shake 0.4s ease; }
+  .option-btn.wrong::before   { content: '❌'; }
+  .option-btn:disabled { cursor: default; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  /* Next button */
+  .next-btn {
+    display: none; width: 100%;
+    background: linear-gradient(135deg, var(--teal), #26a69a);
+    color: var(--white); border: none; border-radius: 14px;
+    padding: 0.9rem 2rem; margin-top: 1rem;
+    font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(46,196,182,0.35);
+  }
+  .next-btn.visible { display: block; }
+  .next-btn:hover { transform: translateY(-2px); }
+
+  /* ── END SCREEN ── */
+  .end-screen {
+    max-width: 560px; margin: 0 auto;
+    padding: 3rem 1.5rem 5rem; text-align: center;
+  }
+  .trophy { font-size: 5rem; margin-bottom: 1rem; animation: bounce 1s ease infinite alternate; }
+  @keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-12px)} }
+  .stars-row { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .star { font-size: 2.5rem; filter: grayscale(1); transition: filter 0.4s; }
+  .star.lit { filter: none; }
+  .end-title {
+    font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800;
+    color: var(--navy); margin-bottom: 0.5rem;
+  }
+  .end-message { font-size: 1rem; color: #666; margin-bottom: 2rem; line-height: 1.6; }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: var(--white); border-radius: 16px; padding: 1.2rem 0.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .stat-num { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-label { font-size: 0.75rem; color: #999; margin-top: 0.2rem; }
+  .end-buttons { display: flex; flex-direction: column; gap: 0.8rem; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); border: none; border-radius: 14px; padding: 0.9rem 2rem;
+    font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    background: var(--white); color: var(--navy);
+    border: 2px solid #E5E7EB; border-radius: 14px; padding: 0.8rem 2rem;
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--navy); background: #F8FAFF; }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px; border-radius: 2px;
+    animation: confettiFall linear forwards; pointer-events: none; z-index: 999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 600px) {
+    .game-title { font-size: 1.7rem; }
+    .journey-line { width: 16px; }
+    .journey-dot  { width: 30px; height: 30px; font-size: 0.9rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+    .bubble { font-size: 0.9rem; }
+    .option-btn { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <span style="font-size:1.5rem;margin-right:0.4rem">📚</span>
+    ataberk<span>hoca</span>ingilizce
+  </a>
+</nav>
+
+<!-- GAME HEADER -->
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> ›
+    <a href="2-sinif.html">2. Sınıf</a> ›
+    <a href="personal-life.html">Personal Life</a> ›
+    Yiğit's Birthday Party!
+  </div>
+  <h1 class="game-title">🎂 Yiğit's Birthday Party!</h1>
+  <p class="game-subtitle">Talk to Robix at each stop of the party!</p>
+</div>
+
+<!-- ══════════════ START SCREEN ══════════════ -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <div class="story-char">🎉</div>
+      <div class="story-text">
+        <strong>Today is Yiğit's birthday!</strong> Robix is at the party and wants to
+        talk to Yiğit at every stop. Help Yiğit answer Robix's questions correctly
+        and enjoy the party together!
+        <br><br>
+        🇹🇷 <em>Bugün Yiğit'in doğum günü! Robix partinin her köşesinde Yiğit ile konuşmak istiyor.
+        Robix'in sorularını doğru cevaplayarak partiyi birlikte eğlenceli geçir!</em>
+      </div>
+    </div>
+
+    <div class="stops-preview">
+      <div class="stop-pill">🎈 Party Gate</div>
+      <div class="stop-pill">🌤️ Window</div>
+      <div class="stop-pill">🎁 Gift Table</div>
+      <div class="stop-pill">🪞 Mirror</div>
+      <div class="stop-pill">📅 Calendar</div>
+      <div class="stop-pill">👕 Wardrobe</div>
+    </div>
+
+    <div class="difficulty-title">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-card diff-supporting" onclick="selectDiff('supporting', this)">
+        <div class="diff-emoji">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">2 seçenek<br>Türkçe ipucu var</div>
+      </div>
+      <div class="diff-card diff-standard" onclick="selectDiff('standard', this)">
+        <div class="diff-emoji">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">3 seçenek<br>Türkçe ipucu var</div>
+      </div>
+      <div class="diff-card diff-expansion" onclick="selectDiff('expansion', this)">
+        <div class="diff-emoji">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">4 seçenek<br>İpucu yok</div>
+      </div>
+    </div>
+    <button class="start-btn" id="startBtn" onclick="startGame()" disabled>
+      🎉 Partiyi Başlat!
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+
+    <!-- Journey bar -->
+    <div class="journey-bar" id="journeyBar"></div>
+
+    <!-- Score -->
+    <div class="score-row">
+      <div class="score-badge">⭐ <span id="scoreDisplay">0</span> puan</div>
+      <div class="stop-label" id="stopLabel"></div>
+    </div>
+
+    <!-- Scene card -->
+    <div class="scene-card" id="sceneCard">
+      <div class="scene-bg" id="sceneBg">
+        <div class="scene-location" id="sceneLocation"></div>
+        <div class="scene-emoji" id="sceneEmoji"></div>
+      </div>
+      <div class="chat-area" id="chatArea"></div>
+      <div class="hint-box" id="hintBox">💡 <span id="hintText"></span></div>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+
+    <button class="next-btn" id="nextBtn" onclick="nextStop()"></button>
+
+  </div>
+</div>
+
+<!-- ══════════════ END SCREEN ══════════════ -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars-row">
+      <div class="star" id="star1">⭐</div>
+      <div class="star" id="star2">⭐</div>
+      <div class="star" id="star3">⭐</div>
+    </div>
+    <div class="end-title" id="endTitle">Well done!</div>
+    <div class="end-message" id="endMessage"></div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-num" id="statScore">0</div><div class="stat-label">Puan</div></div>
+      <div class="stat-box"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">Doğru</div></div>
+      <div class="stat-box"><div class="stat-num" id="statTime">0s</div><div class="stat-label">Süre</div></div>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="restartGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-secondary" onclick="goToStart()">🎯 Farklı Seviye</button>
+      <button class="btn-secondary" onclick="window.location.href='personal-life.html'">🏠 Tema Sayfasına Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════ DATA ══════════════
+// Each stop has separate variation pools per difficulty level.
+// Options are NOT pre-sorted — shuffle() is applied at runtime so correct answer position varies.
+
+var stops = [
+  {
+    id: 'party-gate',
+    location: '🎈 Party Gate',
+    emoji: '🎂',
+    bg: 'bg-party',
+    // supporting: 2 options, standard: 3 options, expansion: 4 options
+    // Each level has its own pool of 3 variations picked randomly
+    supporting: [
+      { robix: 'Happy birthday, Yiğit! How old are you?',
+        answer: 'I\'m 7!',
+        distractors: ['I\'m fine, thanks!'],
+        hint: 'Robix kaç yaşında olduğunu soruyor — sadece yaşını söyle!' },
+      { robix: 'Hello Yiğit! Is it your birthday today?',
+        answer: 'Yes, it is!',
+        distractors: ['No, it isn\'t!'],
+        hint: 'Robix doğum günün olup olmadığını soruyor — bugün doğum günün!' },
+      { robix: 'Hi Yiğit! Are you 7 years old?',
+        answer: 'Yes, I am!',
+        distractors: ['No, I\'m not!'],
+        hint: 'Robix 7 yaşında olup olmadığını soruyor — evet, 7 yaşındasın!' }
+    ],
+    standard: [
+      { robix: 'Happy birthday! How old are you today, Yiğit?',
+        answer: 'I\'m 7!',
+        distractors: ['I\'m fine, thanks!', 'Yes, I am!'],
+        hint: 'Robix kaç yaşında olduğunu soruyor — yaşını söyle!' },
+      { robix: 'Yiğit, is today a special day for you?',
+        answer: 'Yes! It\'s my birthday!',
+        distractors: ['No, it isn\'t!', 'I\'m 7!'],
+        hint: 'Robix bugünün sana özel bir gün olup olmadığını soruyor — doğum günün!' },
+      { robix: 'How old are you, Yiğit? Are you 8?',
+        answer: 'No! I\'m 7!',
+        distractors: ['Yes, I\'m 8!', 'I\'m fine!'],
+        hint: 'Robix 8 yaşında olup olmadığını soruyor — ama sen 7 yaşındasın!' }
+    ],
+    expansion: [
+      { robix: 'Yiğit, how old are you? Is it your birthday?',
+        answer: 'I\'m 7! Yes, it is!',
+        distractors: ['I\'m fine! No, it isn\'t!', 'I\'m 8! Yes, it is!', 'I\'m Monday! It\'s cold!'],
+        hint: '' },
+      { robix: 'Happy birthday! Are you 7 or 8 today?',
+        answer: 'I\'m 7 today!',
+        distractors: ['I\'m 8 today!', 'I\'m cold today!', 'I\'m Monday today!'],
+        hint: '' },
+      { robix: 'How old are you, Yiğit? And is today Saturday?',
+        answer: 'I\'m 7! Yes, it\'s Saturday!',
+        distractors: ['I\'m 8! No, it\'s Monday!', 'I\'m fine! It\'s cold!', 'I\'m 7! It\'s hot!'],
+        hint: '' }
+    ]
+  },
+  {
+    id: 'window',
+    location: '🌤️ Window',
+    emoji: '🌨️',
+    bg: 'bg-window',
+    supporting: [
+      { robix: 'Look outside, Yiğit! How\'s the weather?',
+        answer: 'It\'s cold!',
+        distractors: ['It\'s hot!'],
+        hint: 'Robix havayı soruyor — pencereden kar görüyorsun!' },
+      { robix: 'Is it snowing outside, Yiğit?',
+        answer: 'Yes, it is!',
+        distractors: ['No, it isn\'t!'],
+        hint: 'Robix kar yağıp yağmadığını soruyor — evet, kar yağıyor!' },
+      { robix: 'Is it hot or cold outside?',
+        answer: 'It\'s cold!',
+        distractors: ['It\'s hot!'],
+        hint: 'Pencereye bak — kış mevsimindeyiz, kar var!' }
+    ],
+    standard: [
+      { robix: 'How\'s the weather today, Yiğit?',
+        answer: 'It\'s cold and snowy!',
+        distractors: ['It\'s hot and sunny!', 'It\'s rainy!'],
+        hint: 'Robix bugünün havasını soruyor — pencerede kar var!' },
+      { robix: 'Is it a sunny day, Yiğit?',
+        answer: 'No, it\'s cold!',
+        distractors: ['Yes, it\'s sunny!', 'It\'s raining!'],
+        hint: 'Robix güneşli bir gün olup olmadığını soruyor — hayır, soğuk!' },
+      { robix: 'What\'s the weather like outside?',
+        answer: 'It\'s cold!',
+        distractors: ['It\'s hot!', 'It\'s Monday!'],
+        hint: 'Robix havanın nasıl olduğunu soruyor — kış günü soğuk hava!' }
+    ],
+    expansion: [
+      { robix: 'How\'s the weather, Yiğit? Is it a good day to play outside?',
+        answer: 'It\'s cold! No, it isn\'t!',
+        distractors: ['It\'s hot! Yes, it is!', 'It\'s rainy! No, it isn\'t!', 'It\'s fine! Yes, it is!'],
+        hint: '' },
+      { robix: 'Is it hot or cold today? What\'s the weather like?',
+        answer: 'It\'s cold and snowy today!',
+        distractors: ['It\'s hot and sunny today!', 'It\'s rainy and warm today!', 'It\'s windy and tall today!'],
+        hint: '' },
+      { robix: 'Yiğit, can I go outside without a coat today?',
+        answer: 'No! It\'s very cold!',
+        distractors: ['Yes! It\'s very hot!', 'Yes! It\'s Monday!', 'No! It\'s very tall!'],
+        hint: '' }
+    ]
+  },
+  {
+    id: 'gifts',
+    location: '🎁 Gift Table',
+    emoji: '🎁',
+    bg: 'bg-gifts',
+    supporting: [
+      { robix: 'What colour is your new scarf, Yiğit?',
+        answer: 'It\'s purple!',
+        distractors: ['It\'s blue!'],
+        hint: 'Robix atkının rengini soruyor — mor renk, mavi ile kırmızının karışımı!' },
+      { robix: 'Oh, a present! What have you got, Yiğit?',
+        answer: 'I\'ve got a scarf!',
+        distractors: ['I\'ve got a coat!'],
+        hint: 'Robix ne hediye aldığını soruyor — paketteki kıyafet atkı!' },
+      { robix: 'Is the scarf red or purple?',
+        answer: 'It\'s purple!',
+        distractors: ['It\'s red!'],
+        hint: 'Robix atkının kırmızı mı mor mu olduğunu soruyor — mor!' }
+    ],
+    standard: [
+      { robix: 'Wow, a gift! What have you got, Yiğit?',
+        answer: 'I\'ve got a purple scarf!',
+        distractors: ['I\'ve got a blue coat!', 'I\'ve got a red hat!'],
+        hint: 'Robix ne hediye aldığını soruyor — mor bir atkı!' },
+      { robix: 'What colour is the scarf, Yiğit?',
+        answer: 'It\'s purple!',
+        distractors: ['It\'s blue!', 'It\'s red!'],
+        hint: 'Robix atkının rengini soruyor — mavi ve kırmızının karışımı!' },
+      { robix: 'Is your new scarf green or purple?',
+        answer: 'It\'s purple!',
+        distractors: ['It\'s green!', 'It\'s blue!'],
+        hint: 'Robix atkının yeşil mi mor mu olduğunu soruyor — mor!' }
+    ],
+    expansion: [
+      { robix: 'What have you got and what colour is it?',
+        answer: 'I\'ve got a purple scarf!',
+        distractors: ['I\'ve got a blue coat!', 'I\'ve got a red dress!', 'I\'ve got a green hat!'],
+        hint: '' },
+      { robix: 'Yiğit, is the scarf blue or purple? And is it long?',
+        answer: 'It\'s purple and it\'s long!',
+        distractors: ['It\'s blue and it\'s short!', 'It\'s red and it\'s long!', 'It\'s purple and it\'s short!'],
+        hint: '' },
+      { robix: 'What colour is the scarf and who gave it to you?',
+        answer: 'It\'s purple! My mum gave it to me!',
+        distractors: ['It\'s blue! My dad gave it to me!', 'It\'s red! My friend gave it!', 'It\'s green! My teacher gave it!'],
+        hint: '' }
+    ]
+  },
+  {
+    id: 'mirror',
+    location: '🪞 Mirror',
+    emoji: '🧒',
+    bg: 'bg-mirror',
+    supporting: [
+      { robix: 'Is your friend tall or short, Yiğit?',
+        answer: 'She\'s short!',
+        distractors: ['She\'s tall!'],
+        hint: 'Robix arkadaşının boyunu soruyor — o kısa!' },
+      { robix: 'Yiğit, is your friend tall?',
+        answer: 'No, she isn\'t!',
+        distractors: ['Yes, she is!'],
+        hint: 'Robix arkadaşının uzun boylu olup olmadığını soruyor — hayır, kısa!' },
+      { robix: 'What colour hair has your friend got?',
+        answer: 'She\'s got dark hair!',
+        distractors: ['She\'s got blond hair!'],
+        hint: 'Robix arkadaşının saç rengini soruyor — koyu renk saçı var!' }
+    ],
+    standard: [
+      { robix: 'Is your friend tall, Yiğit?',
+        answer: 'No, she isn\'t. She\'s short!',
+        distractors: ['Yes, she is. She\'s tall!', 'She\'s cold!'],
+        hint: 'Arkadaşın kısa — Robix\'in sorusuna hayır ile cevap ver!' },
+      { robix: 'What colour eyes has your friend got?',
+        answer: 'She\'s got blue eyes!',
+        distractors: ['She\'s got green eyes!', 'She\'s got brown eyes!'],
+        hint: 'Robix arkadaşının göz rengini soruyor — mavi gözleri var!' },
+      { robix: 'What does your friend look like, Yiğit?',
+        answer: 'She\'s short with dark hair!',
+        distractors: ['She\'s tall with blond hair!', 'She\'s short with blond hair!'],
+        hint: 'Robix arkadaşının nasıl göründüğünü soruyor — kısa boylu, koyu saçlı!' }
+    ],
+    expansion: [
+      { robix: 'Is your friend tall and does she have blond hair?',
+        answer: 'No! She\'s short with dark hair!',
+        distractors: ['Yes! She\'s tall with blond hair!', 'No! She\'s short with blond hair!', 'Yes! She\'s tall with dark hair!'],
+        hint: '' },
+      { robix: 'What colour eyes and hair has your friend got?',
+        answer: 'She\'s got blue eyes and dark hair!',
+        distractors: ['She\'s got green eyes and blond hair!', 'She\'s got blue eyes and blond hair!', 'She\'s got brown eyes and dark hair!'],
+        hint: '' },
+      { robix: 'Describe your friend — is she tall or short? What colour are her eyes?',
+        answer: 'She\'s short! She\'s got blue eyes!',
+        distractors: ['She\'s tall! She\'s got brown eyes!', 'She\'s short! She\'s got green eyes!', 'She\'s tall! She\'s got blue eyes!'],
+        hint: '' }
+    ]
+  },
+  {
+    id: 'calendar',
+    location: '📅 Calendar',
+    emoji: '📅',
+    bg: 'bg-calendar',
+    supporting: [
+      { robix: 'What day is it today, Yiğit?',
+        answer: 'It\'s Saturday!',
+        distractors: ['It\'s Monday!'],
+        hint: 'Robix bugünün gününü soruyor — partiler hep hafta sonunda olur!' },
+      { robix: 'Is today a school day, Yiğit?',
+        answer: 'No, it isn\'t!',
+        distractors: ['Yes, it is!'],
+        hint: 'Robix bugünün okul günü olup olmadığını soruyor — doğum günü partisi okul gününde olmaz!' },
+      { robix: 'Is today Saturday or Sunday?',
+        answer: 'It\'s Saturday!',
+        distractors: ['It\'s Sunday!'],
+        hint: 'Robix Cumartesi mi Pazar mı olduğunu soruyor — Cumartesi!' }
+    ],
+    standard: [
+      { robix: 'What day is it today, Yiğit?',
+        answer: 'It\'s Saturday today!',
+        distractors: ['It\'s Monday today!', 'It\'s Friday today!'],
+        hint: 'Robix bugünün gününü soruyor — partiler hep hafta sonunda olur!' },
+      { robix: 'Is today a school day or a holiday?',
+        answer: 'It\'s a holiday! It\'s Saturday!',
+        distractors: ['It\'s a school day! It\'s Monday!', 'It\'s a holiday! It\'s Sunday!'],
+        hint: 'Robix bugünün tatil mi okul günü mü olduğunu soruyor — tatil, Cumartesi!' },
+      { robix: 'What day is your birthday party, Yiğit?',
+        answer: 'It\'s on Saturday!',
+        distractors: ['It\'s on Monday!', 'It\'s on Friday!'],
+        hint: 'Robix doğum günü partisinin hangi gün olduğunu soruyor — Cumartesi!' }
+    ],
+    expansion: [
+      { robix: 'What day is it? And do you have school today?',
+        answer: 'It\'s Saturday! No, I don\'t!',
+        distractors: ['It\'s Monday! Yes, I do!', 'It\'s Saturday! Yes, I do!', 'It\'s Sunday! No, I don\'t!'],
+        hint: '' },
+      { robix: 'Is today Saturday and is it a special day for you?',
+        answer: 'Yes! It\'s Saturday and it\'s my birthday!',
+        distractors: ['No! It\'s Monday and it\'s a school day!', 'Yes! It\'s Sunday and it\'s my birthday!', 'No! It\'s Saturday and it\'s a school day!'],
+        hint: '' },
+      { robix: 'What day is today and what comes after it?',
+        answer: 'It\'s Saturday! Sunday comes after!',
+        distractors: ['It\'s Friday! Saturday comes after!', 'It\'s Sunday! Monday comes after!', 'It\'s Saturday! Monday comes after!'],
+        hint: '' }
+    ]
+  },
+  {
+    id: 'wardrobe',
+    location: '👕 Wardrobe',
+    emoji: '👗',
+    bg: 'bg-wardrobe',
+    supporting: [
+      { robix: 'What colour is your t-shirt, Yiğit?',
+        answer: 'It\'s blue!',
+        distractors: ['It\'s red!'],
+        hint: 'Robix tişörtünün rengini soruyor — gökyüzünün rengi!' },
+      { robix: 'Are you wearing a coat or a t-shirt?',
+        answer: 'A t-shirt!',
+        distractors: ['A coat!'],
+        hint: 'Robix ne giydiğini soruyor — ince bir üst, doğum günü partisi için!' },
+      { robix: 'Is your t-shirt green?',
+        answer: 'No, it\'s blue!',
+        distractors: ['Yes, it\'s green!'],
+        hint: 'Robix tişörtünün yeşil olup olmadığını soruyor — hayır, mavi!' }
+    ],
+    standard: [
+      { robix: 'What have you got on, Yiğit?',
+        answer: 'I\'ve got a blue t-shirt!',
+        distractors: ['I\'ve got a purple coat!', 'I\'ve got a red dress!'],
+        hint: 'Robix ne giydiğini soruyor — üzerinde mavi bir tişört var!' },
+      { robix: 'What colour is your t-shirt, Yiğit?',
+        answer: 'It\'s blue!',
+        distractors: ['It\'s purple!', 'It\'s green!'],
+        hint: 'Robix tişörtünün rengini soruyor — gökyüzünün rengi!' },
+      { robix: 'Are you wearing your new purple scarf with the t-shirt?',
+        answer: 'Yes! A blue t-shirt and a purple scarf!',
+        distractors: ['No! A red t-shirt and a green scarf!', 'Yes! A green t-shirt and a purple scarf!'],
+        hint: 'Robix mor atkıyı tişörtle giyip giymediğini soruyor — evet, mavi tişörtle!' }
+    ],
+    expansion: [
+      { robix: 'Describe your outfit, Yiğit! What are you wearing?',
+        answer: 'I\'ve got a blue t-shirt and purple trousers!',
+        distractors: ['I\'ve got a red coat and green gloves!', 'I\'ve got a blue dress and yellow hat!', 'I\'ve got a purple t-shirt and blue trousers!'],
+        hint: '' },
+      { robix: 'What colour is your t-shirt and what else have you got on?',
+        answer: 'It\'s blue! I\'ve also got a purple scarf!',
+        distractors: ['It\'s red! I\'ve also got a green hat!', 'It\'s blue! I\'ve also got a yellow coat!', 'It\'s purple! I\'ve also got a blue scarf!'],
+        hint: '' },
+      { robix: 'Is your t-shirt the same colour as the sky?',
+        answer: 'Yes! It\'s blue, like the sky!',
+        distractors: ['No! It\'s red, like an apple!', 'Yes! It\'s blue, like the sea!', 'No! It\'s green, like the grass!'],
+        hint: '' }
+    ]
+  }
+];
+
+// ── CONFIG ──
+var diffConfig = {
+  supporting: { level: 'supporting', optCount: 2, showHint: true  },
+  standard:   { level: 'standard',   optCount: 3, showHint: true  },
+  expansion:  { level: 'expansion',  optCount: 4, showHint: false }
+};
+
+// ── STATE ──
+var selectedDiffLevel = null;
+var currentStop = 0;
+var chosenVariations = [];
+var score = 0;
+var correctCount = 0;
+var startTime = null;
+var answered = false;
+
+// ── DIFFICULTY ──
+function selectDiff(level, el) {
+  selectedDiffLevel = level;
+  document.querySelectorAll('.diff-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('startBtn').disabled = false;
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// ── START ──
+function startGame() {
+  currentStop = 0;
+  score = 0; correctCount = 0;
+  answered = false;
+  startTime = Date.now();
+
+  var cfg = diffConfig[selectedDiffLevel];
+
+  // For each stop, pick one variation from the correct difficulty pool, randomly
+  chosenVariations = stops.map(function(s) {
+    var pool = s[cfg.level];
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
+
+  showScreen('gameScreen');
+  buildJourneyBar();
+  renderStop();
+}
+
+// ── JOURNEY BAR ──
+function buildJourneyBar() {
+  var bar = document.getElementById('journeyBar');
+  bar.innerHTML = '';
+  stops.forEach(function(s, i) {
+    if (i > 0) {
+      var line = document.createElement('div');
+      line.className = 'journey-line';
+      line.id = 'line-' + i;
+      bar.appendChild(line);
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'journey-stop';
+
+    var dot = document.createElement('div');
+    dot.className = 'journey-dot';
+    dot.id = 'dot-' + i;
+    dot.textContent = s.emoji;
+
+    var lbl = document.createElement('div');
+    lbl.className = 'journey-label';
+    lbl.id = 'lbl-' + i;
+    // short label from location string after emoji
+    lbl.textContent = s.location.replace(/^[^\s]+\s/, '');
+
+    wrap.appendChild(dot);
+    wrap.appendChild(lbl);
+    bar.appendChild(wrap);
+  });
+  updateJourneyBar();
+}
+
+function updateJourneyBar() {
+  stops.forEach(function(s, i) {
+    var dot = document.getElementById('dot-' + i);
+    var lbl = document.getElementById('lbl-' + i);
+    dot.className = 'journey-dot' + (i < currentStop ? ' done' : i === currentStop ? ' active' : '');
+    lbl.className = 'journey-label' + (i < currentStop ? ' done' : i === currentStop ? ' active' : '');
+    if (i > 0) {
+      var line = document.getElementById('line-' + i);
+      if (line) line.className = 'journey-line' + (i <= currentStop ? ' done' : '');
+    }
+  });
+}
+
+// ── RENDER STOP ──
+function renderStop() {
+  answered = false;
+  var stop = stops[currentStop];
+  var variation = chosenVariations[currentStop];
+  var cfg = diffConfig[selectedDiffLevel];
+
+  // stop label & score
+  document.getElementById('stopLabel').textContent = stop.location;
+  document.getElementById('scoreDisplay').textContent = score;
+
+  // scene bg & emoji
+  document.getElementById('sceneBg').className = 'scene-bg ' + stop.bg;
+  document.getElementById('sceneLocation').textContent = stop.location;
+  document.getElementById('sceneEmoji').textContent = stop.emoji;
+
+  // chat bubbles
+  var chat = document.getElementById('chatArea');
+  chat.innerHTML =
+    '<div class="bubble-wrap robix">' +
+      '<div class="bubble-avatar">🤖</div>' +
+      '<div>' +
+        '<div class="bubble-speaker">Robix</div>' +
+        '<div class="bubble">' + escHtml(variation.robix) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="bubble-wrap yigit">' +
+      '<div class="bubble-avatar">🧒</div>' +
+      '<div>' +
+        '<div class="bubble-speaker" style="text-align:right">Yiğit</div>' +
+        '<div class="bubble">???</div>' +
+      '</div>' +
+    '</div>';
+
+  // hint
+  if (cfg.showHint) {
+    document.getElementById('hintBox').classList.add('visible');
+    document.getElementById('hintText').textContent = variation.hint;
+  } else {
+    document.getElementById('hintBox').classList.remove('visible');
+  }
+
+  // Build options: answer + enough distractors, then SHUFFLE so correct isn't always first
+  var distractors = variation.distractors.slice(0, cfg.optCount - 1);
+  var opts = shuffle([variation.answer].concat(distractors));
+
+  var grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  opts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.setAttribute('data-opt', opt);
+    btn.addEventListener('click', function(){ onAnswer(opt, btn, variation.answer); });
+    grid.appendChild(btn);
+  });
+
+  // next btn hidden
+  var nb = document.getElementById('nextBtn');
+  nb.className = 'next-btn';
+  nb.textContent = '';
+}
+
+// ── ANSWER ──
+function onAnswer(chosen, btn, correctAnswer) {
+  if (answered) return;
+  answered = true;
+
+  var correct = (chosen === correctAnswer);
+
+  // update Yiğit's bubble
+  var chatArea = document.getElementById('chatArea');
+  var yigitBubble = chatArea.querySelectorAll('.bubble')[1];
+  if (yigitBubble) yigitBubble.textContent = chosen;
+
+  // highlight options
+  document.querySelectorAll('.option-btn').forEach(function(b) {
+    b.disabled = true;
+    if (b.getAttribute('data-opt') === correctAnswer) b.classList.add('correct');
+  });
+  if (!correct) btn.classList.add('wrong');
+
+  if (correct) {
+    score += 10; correctCount++;
+  } else {
+    score = Math.max(0, score - 2);
+  }
+  document.getElementById('scoreDisplay').textContent = score;
+
+  // next / finish btn
+  var isLast = (currentStop === stops.length - 1);
+  var nb = document.getElementById('nextBtn');
+  nb.textContent = isLast ? '🎉 Partiyi Bitir!' : 'Sonraki Durak ➜';
+  nb.className = 'next-btn visible';
+}
+
+// ── NEXT STOP ──
+function nextStop() {
+  if (currentStop < stops.length - 1) {
+    currentStop++;
+    updateJourneyBar();
+    renderStop();
+  } else {
+    showEndScreen();
+  }
+}
+
+// ── END SCREEN ──
+function showEndScreen() {
+  var elapsed = Math.round((Date.now() - startTime) / 1000);
+  var pct = score / (stops.length * 10);
+  var stars = pct >= 0.9 ? 3 : pct >= 0.6 ? 2 : 1;
+
+  showScreen('endScreen');
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statCorrect').textContent = correctCount + ' / ' + stops.length;
+  document.getElementById('statTime').textContent = elapsed + 's';
+
+  var titles = ['Keep trying! 💪', 'Good job! 👏', 'Amazing! 🌟'];
+  var messages = [
+    'Yiğit biraz kafası karıştı! Tekrar oyna — parti daha güzel geçer. 🎂',
+    'Güzel! Yiğit Robix ile eğlendi. Daha yüksek puan için tekrar oyna! 🎂⭐',
+    'Mükemmel! Yiğit\'in doğum günü partisi muhteşem geçti! Sen harika bir öğrencisin! 🎂🎉'
+  ];
+
+  document.getElementById('endTitle').textContent = titles[stars - 1];
+  document.getElementById('endMessage').textContent = messages[stars - 1];
+  document.getElementById('trophyEmoji').textContent = stars === 3 ? '🏆' : stars === 2 ? '🥈' : '🥉';
+
+  for (var i = 1; i <= 3; i++) {
+    (function(idx){
+      setTimeout(function(){
+        if (idx <= stars) document.getElementById('star' + idx).classList.add('lit');
+      }, idx * 300);
+    })(i);
+  }
+  if (stars >= 2) launchConfetti();
+}
+
+// ── CONFETTI ──
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#4FC3F7','#FF6B8A'];
+  for (var i = 0; i < 80; i++) {
+    (function(i){
+      setTimeout(function(){
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        document.body.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 3500);
+      }, i * 30);
+    })(i);
+  }
+}
+
+// ── HELPERS ──
+function escHtml(str) {
+  return str
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/'/g,'&#39;');
+}
+
+function restartGame() {
+  for (var i = 1; i <= 3; i++) document.getElementById('star' + i).classList.remove('lit');
+  startGame();
+}
+function goToStart() {
+  for (var i = 1; i <= 3; i++) document.getElementById('star' + i).classList.remove('lit');
+  selectedDiffLevel = null;
+  document.getElementById('startBtn').disabled = true;
+  document.querySelectorAll('.diff-card').forEach(function(c){ c.classList.remove('selected'); });
+  showScreen('startScreen');
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>

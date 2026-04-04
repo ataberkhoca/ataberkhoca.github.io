@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Life — 2. Sınıf | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 2rem; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+    transition: box-shadow 0.3s;
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .navbar-brand span { color: var(--orange); }
+  .navbar-back {
+    color: rgba(255,255,255,0.7); text-decoration: none;
+    font-size: 0.9rem; font-weight: 600;
+    display: flex; align-items: center; gap: 0.3rem;
+    transition: color 0.2s;
+  }
+  .navbar-back:hover { color: var(--orange); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 100px 2rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 60%, rgba(255,107,53,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 25%, rgba(46,196,182,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 90%, rgba(255,199,87,0.1) 0%, transparent 45%);
+  }
+  .breadcrumb {
+    font-size: 0.82rem; color: rgba(255,255,255,0.55);
+    margin-bottom: 1rem; position: relative;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.55); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,107,53,0.2);
+    border: 1px solid rgba(255,107,53,0.4);
+    color: var(--orange);
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.85rem; font-weight: 700;
+    padding: 0.3rem 1rem; border-radius: 99px;
+    margin-bottom: 1rem; position: relative;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 3rem; font-weight: 800;
+    color: var(--white); position: relative;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.3);
+    line-height: 1.1; margin-bottom: 0.8rem;
+  }
+  .hero-title .emoji { font-size: 2.8rem; margin-right: 0.3rem; }
+
+  .hero-subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 1.05rem; position: relative;
+    margin-bottom: 2rem; line-height: 1.6;
+  }
+
+  /* Topic pills */
+  .topic-pills {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    justify-content: center; position: relative;
+  }
+  .topic-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    font-size: 0.82rem; font-weight: 600;
+    padding: 0.3rem 0.85rem; border-radius: 99px;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 900px; margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--navy); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-title::after {
+    content: ''; flex: 1;
+    height: 2px; background: linear-gradient(90deg, #E5E7EB, transparent);
+    margin-left: 0.5rem;
+  }
+
+  /* ── GAME CARDS ── */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3rem;
+  }
+
+  .game-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--card-accent, var(--orange));
+  }
+  .game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    border-color: var(--card-accent, var(--orange));
+  }
+
+  .card-icon {
+    font-size: 2.8rem; margin-bottom: 0.8rem;
+    line-height: 1;
+  }
+  .card-type {
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--card-accent, var(--orange));
+    margin-bottom: 0.3rem;
+  }
+  .card-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.25rem; font-weight: 800;
+    color: var(--navy); margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+  .card-desc {
+    font-size: 0.88rem; color: #777;
+    line-height: 1.5; flex: 1;
+    margin-bottom: 1rem;
+  }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-levels {
+    display: flex; gap: 0.25rem;
+  }
+  .level-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #E5E7EB;
+  }
+  .level-dot.filled { background: var(--card-accent, var(--orange)); }
+
+  .card-cta {
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.85rem; font-weight: 700;
+    color: var(--card-accent, var(--orange));
+    display: flex; align-items: center; gap: 0.2rem;
+  }
+
+  /* Card accent colors */
+  .card-matching  { --card-accent: #2EC4B6; }
+  .card-sorting   { --card-accent: #FF6B35; }
+  .card-fillin    { --card-accent: #FFC857; }
+  .card-dialogue  { --card-accent: #E91E8C; }
+  .card-sequencing{ --card-accent: #7C3AED; }
+
+  /* ── VOCABULARY PREVIEW ── */
+  .vocab-section {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    margin-bottom: 2rem;
+  }
+  .vocab-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1rem;
+  }
+  .vocab-group-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.85rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+  .vocab-tags {
+    display: flex; flex-wrap: wrap; gap: 0.35rem;
+  }
+  .vocab-tag {
+    background: var(--cream);
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem; font-weight: 600; color: #555;
+  }
+
+  /* ── BACK BUTTON ── */
+  .back-section {
+    text-align: center;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--navy);
+    color: var(--white); text-decoration: none;
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    padding: 0.85rem 2rem; border-radius: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(27,40,69,0.25);
+  }
+  .back-btn:hover { transform: translateY(-2px); background: var(--navy-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-title { font-size: 2rem; }
+    .games-grid { grid-template-columns: 1fr; }
+    .vocab-groups { grid-template-columns: 1fr 1fr; }
+    .navbar-back span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <span>📚</span>ataberk<span>hoca</span>ingilizce
+  </a>
+  <a href="2-sinif.html" class="navbar-back">
+    ← <span>2. Sınıf</span>
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> ›
+    <a href="2-sinif.html">2. Sınıf</a> ›
+    Personal Life
+  </div>
+  <div class="hero-badge">📘 Tema 3 — 2. Sınıf</div>
+  <h1 class="hero-title">
+    <span class="emoji">🧒</span>Personal Life
+  </h1>
+  <p class="hero-subtitle">
+    Body parts, clothes, colours, ages &amp; birthdays, and weather!
+  </p>
+  <div class="topic-pills">
+    <div class="topic-pill">👁️ Body Parts</div>
+    <div class="topic-pill">👕 Clothes</div>
+    <div class="topic-pill">🌈 Colours</div>
+    <div class="topic-pill">🎂 Ages &amp; Birthdays</div>
+    <div class="topic-pill">☀️ Weather</div>
+    <div class="topic-pill">📏 Adjectives</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Games -->
+  <div class="section-title">🎮 Oyunlar</div>
+  <div class="games-grid">
+
+    <!-- 1. Matching -->
+    <a href="personal-life-matching.html" class="game-card card-matching">
+      <div class="card-icon">🤖</div>
+      <div class="card-type">Matching</div>
+      <div class="card-title">Build Robix!</div>
+      <div class="card-desc">
+        Robix's body part labels have fallen off! Match each picture to the correct word and help Robix.
+      </div>
+      <div class="card-footer">
+        <div class="card-levels">
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+        </div>
+        <div class="card-cta">Oyna →</div>
+      </div>
+    </a>
+
+    <!-- 2. Sorting -->
+    <a href="personal-life-sorting.html" class="game-card card-sorting">
+      <div class="card-icon">🎒</div>
+      <div class="card-type">Sorting</div>
+      <div class="card-title">Pack Yiğit's Bag!</div>
+      <div class="card-desc">
+        Yiğit is going on a school trip! Sort each item of clothing into the right weather bag.
+      </div>
+      <div class="card-footer">
+        <div class="card-levels">
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+        </div>
+        <div class="card-cta">Oyna →</div>
+      </div>
+    </a>
+
+    <!-- 3. Fill-in -->
+    <a href="personal-life-fill-in.html" class="game-card card-fillin">
+      <div class="card-icon">🪞</div>
+      <div class="card-type">Fill In</div>
+      <div class="card-title">Yiğit's Mirror</div>
+      <div class="card-desc">
+        Yiğit is looking in the mirror! Complete each sentence by choosing the right word.
+      </div>
+      <div class="card-footer">
+        <div class="card-levels">
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+        </div>
+        <div class="card-cta">Oyna →</div>
+      </div>
+    </a>
+
+    <!-- 4. Dialogue -->
+    <a href="personal-life-dialogue.html" class="game-card card-dialogue">
+      <div class="card-icon">🎂</div>
+      <div class="card-type">Dialogue</div>
+      <div class="card-title">Yiğit's Birthday Party!</div>
+      <div class="card-desc">
+        Today is Yiğit's birthday! Help him answer Robix's questions at every stop of the party.
+      </div>
+      <div class="card-footer">
+        <div class="card-levels">
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+        </div>
+        <div class="card-cta">Oyna →</div>
+      </div>
+    </a>
+
+    <!-- 5. Sequencing -->
+    <a href="personal-life-sequencing.html" class="game-card card-sequencing">
+      <div class="card-icon">🪆</div>
+      <div class="card-type">Sequencing</div>
+      <div class="card-title">Describe the Puppet!</div>
+      <div class="card-desc">
+        Yiğit is making puppets! Put the words in the right order to describe each puppet.
+      </div>
+      <div class="card-footer">
+        <div class="card-levels">
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+          <div class="level-dot filled"></div>
+        </div>
+        <div class="card-cta">Oyna →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Vocabulary preview -->
+  <div class="vocab-section">
+    <div class="section-title">📚 Bu Temada Öğreneceklerimiz</div>
+    <div class="vocab-groups">
+      <div>
+        <div class="vocab-group-title">👁️ Body Parts</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">head</span>
+          <span class="vocab-tag">face</span>
+          <span class="vocab-tag">hair</span>
+          <span class="vocab-tag">eye</span>
+          <span class="vocab-tag">ear</span>
+          <span class="vocab-tag">nose</span>
+          <span class="vocab-tag">mouth</span>
+          <span class="vocab-tag">arm</span>
+          <span class="vocab-tag">hand</span>
+          <span class="vocab-tag">leg</span>
+        </div>
+      </div>
+      <div>
+        <div class="vocab-group-title">👕 Clothes</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">shirt</span>
+          <span class="vocab-tag">t-shirt</span>
+          <span class="vocab-tag">trousers</span>
+          <span class="vocab-tag">dress</span>
+          <span class="vocab-tag">coat</span>
+          <span class="vocab-tag">jacket</span>
+          <span class="vocab-tag">hat</span>
+          <span class="vocab-tag">scarf</span>
+          <span class="vocab-tag">gloves</span>
+          <span class="vocab-tag">shoes</span>
+          <span class="vocab-tag">umbrella</span>
+        </div>
+      </div>
+      <div>
+        <div class="vocab-group-title">🌈 Colours</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">red</span>
+          <span class="vocab-tag">blue</span>
+          <span class="vocab-tag">green</span>
+          <span class="vocab-tag">yellow</span>
+          <span class="vocab-tag">purple</span>
+          <span class="vocab-tag">orange</span>
+          <span class="vocab-tag">pink</span>
+          <span class="vocab-tag">black</span>
+          <span class="vocab-tag">white</span>
+          <span class="vocab-tag">brown</span>
+        </div>
+      </div>
+      <div>
+        <div class="vocab-group-title">📏 Adjectives</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">tall</span>
+          <span class="vocab-tag">short</span>
+          <span class="vocab-tag">big</span>
+          <span class="vocab-tag">small</span>
+          <span class="vocab-tag">long</span>
+          <span class="vocab-tag">blond</span>
+          <span class="vocab-tag">dark</span>
+        </div>
+      </div>
+      <div>
+        <div class="vocab-group-title">☀️ Weather</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">cold</span>
+          <span class="vocab-tag">hot</span>
+          <span class="vocab-tag">rain</span>
+          <span class="vocab-tag">snow</span>
+        </div>
+      </div>
+      <div>
+        <div class="vocab-group-title">💬 Key Chunks</div>
+        <div class="vocab-tags">
+          <span class="vocab-tag">I've got...</span>
+          <span class="vocab-tag">She has got...</span>
+          <span class="vocab-tag">How old are you?</span>
+          <span class="vocab-tag">I'm 7.</span>
+          <span class="vocab-tag">Is she tall?</span>
+          <span class="vocab-tag">How's the weather?</span>
+          <span class="vocab-tag">It's cold.</span>
+          <span class="vocab-tag">What colour is it?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back -->
+  <div class="back-section">
+    <a href="2-sinif.html" class="back-btn">← 2. Sınıf Sayfasına Dön</a>
+  </div>
+
+</div>
+
+</body>
+</html>
