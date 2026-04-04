@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Day in the Classroom — Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --green: #22C55E;
+  --red: #EF4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Quicksand', sans-serif; background: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+/* NAVBAR */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(27,40,69,0.95); backdrop-filter: blur(10px);
+  padding: 0 24px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--orange), var(--yellow)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-brand { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700; color: var(--white); }
+.nav-brand span { color: var(--orange); }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s; }
+.nav-links a:hover { color: var(--orange); }
+
+/* HEADER */
+.game-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 90px 24px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.game-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 40% 60%, rgba(255,200,87,0.12) 0%, transparent 70%); }
+.breadcrumb { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; position: relative; }
+.breadcrumb a, .breadcrumb span { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; font-weight: 600; }
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(255,255,255,0.3); }
+.breadcrumb .current { color: var(--yellow); }
+.game-header h1 { font-family: 'Baloo 2', cursive; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--white); position: relative; }
+.game-header h1 span { color: var(--yellow); }
+.game-header p { color: rgba(255,255,255,0.75); margin-top: 8px; font-size: 1rem; position: relative; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* START */
+.start-screen { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+.story-box { background: var(--white); border-radius: 20px; padding: 28px 32px; border-left: 6px solid var(--yellow); box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 32px; display: flex; gap: 16px; align-items: flex-start; }
+.story-emoji { font-size: 2.5rem; flex-shrink: 0; }
+.story-text h3 { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.story-text p { font-size: 0.95rem; color: #555; line-height: 1.6; }
+
+/* Stop map */
+.stop-map { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin-bottom: 32px; }
+.stop-pip { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.stop-pip-icon { width: 40px; height: 40px; border-radius: 50%; background: #E5E7EB; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.stop-pip-label { font-size: 0.65rem; font-weight: 700; color: #aaa; text-align: center; max-width: 48px; }
+.stop-arrow { font-size: 1rem; color: #D1D5DB; margin-bottom: 18px; }
+
+.difficulty-label { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy); text-align: center; margin-bottom: 16px; }
+.difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 32px; }
+.diff-card { border: 3px solid #E5E7EB; border-radius: 16px; padding: 20px 12px; text-align: center; cursor: pointer; background: var(--white); transition: all 0.2s; }
+.diff-card:hover { border-color: var(--navy-light); transform: translateY(-2px); }
+.diff-card.selected { border-color: var(--orange); background: #FFF5F0; }
+.diff-card .diff-icon { font-size: 2rem; margin-bottom: 6px; }
+.diff-card .diff-name { font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; color: var(--navy); display: block; }
+.diff-card .diff-desc { font-size: 0.75rem; color: #777; margin-top: 4px; display: block; }
+.start-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--orange), var(--orange-glow)); color: var(--white); border: none; border-radius: 16px; font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(255,107,53,0.4); }
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,0.5); }
+
+/* GAME SCREEN */
+.game-screen { padding: 20px 16px 60px; max-width: 760px; margin: 0 auto; }
+
+/* Journey bar */
+.journey-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.journey-stop {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.journey-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #E5E7EB; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; transition: all 0.3s;
+  border: 2px solid transparent;
+}
+.journey-icon.done { background: var(--green); border-color: var(--green); }
+.journey-icon.active { background: var(--orange); border-color: var(--orange); animation: pulse 1.5s infinite; }
+.journey-icon.upcoming { background: #E5E7EB; }
+.journey-label { font-size: 0.6rem; font-weight: 700; color: #aaa; max-width: 40px; text-align: center; }
+.journey-label.active-label { color: var(--orange); }
+.journey-arrow { font-size: 0.8rem; color: #D1D5DB; margin-bottom: 14px; }
+
+/* Score strip */
+.score-strip {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.score-badge { background: var(--navy); color: var(--white); border-radius: 20px; padding: 6px 18px; font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; }
+.score-badge span { color: var(--yellow); }
+.stop-counter { font-family: 'Baloo 2', cursive; font-size: 0.9rem; font-weight: 700; color: #aaa; }
+
+/* SCENE CARD */
+.scene-card {
+  background: var(--white); border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+  overflow: hidden; margin-bottom: 16px;
+  transition: all 0.3s;
+}
+.scene-bg {
+  padding: 28px 24px 20px;
+  position: relative;
+  min-height: 140px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.scene-location-tag {
+  position: absolute; top: 16px; left: 16px;
+  background: rgba(0,0,0,0.35); color: var(--white);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.scene-characters {
+  display: flex; align-items: flex-end; gap: 12px;
+}
+.scene-teacher { font-size: 3rem; }
+.scene-student { font-size: 2.4rem; }
+
+/* Speech bubble */
+.speech-bubble {
+  background: var(--white); border-radius: 0 0 24px 24px;
+  padding: 20px 24px;
+}
+.speaker-label {
+  font-size: 0.72rem; font-weight: 700; color: #aaa;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.speech-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.15rem; font-weight: 700; color: var(--navy);
+  line-height: 1.5;
+}
+.speech-text .blank {
+  display: inline-block; min-width: 100px;
+  border-bottom: 3px solid var(--orange); color: var(--orange);
+  text-align: center; padding: 0 6px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.your-turn-label {
+  font-size: 0.8rem; font-weight: 700; color: var(--teal);
+  margin-top: 10px; display: flex; align-items: center; gap: 6px;
+}
+
+/* HINT */
+.hint-box { background: var(--yellow-light); border-radius: 12px; padding: 12px 20px; display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #6B5C2E; font-weight: 600; margin-bottom: 16px; }
+.hint-box.hidden { visibility: hidden; }
+
+/* OPTIONS */
+.options-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+.option-btn {
+  border: 3px solid #E5E7EB; border-radius: 14px;
+  padding: 15px 20px; cursor: pointer; background: var(--white);
+  transition: all 0.2s;
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+  color: var(--navy);
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+}
+.option-btn:hover { border-color: var(--teal); background: #F0FFFE; transform: translateX(4px); }
+.option-btn.correct { border-color: var(--green) !important; background: #F0FDF4; }
+.option-btn.wrong   { border-color: var(--red)   !important; background: #FEF2F2; animation: shake 0.4s ease; }
+.option-btn.reveal  { border-color: var(--green) !important; background: #F0FDF4; }
+.option-letter {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: #F3F4F6; display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 800; color: #666; flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+.option-btn.correct .option-letter { background: var(--green); color: var(--white); }
+.option-btn.wrong   .option-letter { background: var(--red);   color: var(--white); }
+.option-btn.reveal  .option-letter { background: var(--green); color: var(--white); }
+
+/* FEEDBACK */
+.feedback-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+.feedback-overlay.show { opacity: 1; }
+.feedback-popup { background: var(--white); border-radius: 20px; padding: 24px 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); transform: scale(0.8); transition: transform 0.2s; max-width: 320px; }
+.feedback-overlay.show .feedback-popup { transform: scale(1); }
+.feedback-popup.correct { border-top: 6px solid var(--green); }
+.feedback-popup.wrong   { border-top: 6px solid var(--red); }
+.feedback-icon { font-size: 2.8rem; }
+.feedback-msg { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-top: 8px; }
+.feedback-sub { font-size: 0.88rem; color: #666; margin-top: 6px; line-height: 1.4; }
+
+/* END */
+.end-screen { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; text-align: center; }
+.trophy-area { font-size: 5rem; margin-bottom: 16px; animation: trophy-bounce 1s ease; }
+.end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.stars-row { display: flex; justify-content: center; gap: 8px; font-size: 2.5rem; margin-bottom: 20px; }
+.end-stats { background: var(--white); border-radius: 20px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+.stat-label { font-size: 0.85rem; color: #777; font-weight: 600; }
+.end-message { background: var(--yellow-light); border-radius: 16px; padding: 16px 24px; font-size: 0.95rem; color: #6B5C2E; font-weight: 600; margin-bottom: 28px; line-height: 1.6; }
+.end-buttons { display: flex; gap: 12px; }
+.btn-retry, .btn-home { flex: 1; padding: 16px; border: none; border-radius: 14px; font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-retry { background: linear-gradient(135deg, var(--orange), var(--orange-glow)); color: var(--white); box-shadow: 0 4px 16px rgba(255,107,53,0.4); }
+.btn-retry:hover { transform: translateY(-2px); }
+.btn-home { background: var(--white); color: var(--navy); border: 2px solid #E5E7EB; }
+.btn-home:hover { border-color: var(--navy); }
+
+.confetti-piece { position: fixed; border-radius: 2px; animation: confetti-fall linear forwards; z-index: 9999; pointer-events: none; }
+
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.4)} 50%{box-shadow:0 0 0 8px rgba(255,107,53,0)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+@keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+@keyframes trophy-bounce { 0%,100%{transform:scale(1) rotate(0deg)} 25%{transform:scale(1.15) rotate(-5deg)} 75%{transform:scale(1.15) rotate(5deg)} }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .difficulty-grid { grid-template-columns: 1fr; }
+  .scene-teacher { font-size: 2.4rem; }
+  .scene-student { font-size: 2rem; }
+  .speech-text { font-size: 1rem; }
+  .journey-icon { width: 30px; height: 30px; font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">📚</div>
+    <span class="nav-brand">ataberk<span>hoca</span>ingilizce</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="2-sinif.html">2. Sınıf</a>
+    <a href="hakkimda.html">Hakkımda</a>
+  </div>
+</nav>
+
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+    <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+    <a href="classroom-life.html">Classroom Life</a><span class="sep">›</span>
+    <span class="current">A Day in the Classroom</span>
+  </div>
+  <h1>🏫 A Day in the <span>Classroom!</span></h1>
+  <p>Go through your school day — say the right thing at each stop!</p>
+</div>
+
+<!-- START -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <div class="story-emoji">🌅</div>
+      <div class="story-text">
+        <h3>Your school day is starting!</h3>
+        <p>Follow the day from the classroom door to the final bell. At each stop, something happens — choose the right words to respond. Can you get through the whole day?</p>
+      </div>
+    </div>
+
+    <div class="stop-map" id="stopMap"></div>
+
+    <div class="difficulty-label">Seviye Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-card" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">🌱</div>
+        <span class="diff-name">Destekleyici</span>
+        <span class="diff-desc">2 seçenek, Türkçe ipucu</span>
+      </div>
+      <div class="diff-card selected" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <span class="diff-name">Standart</span>
+        <span class="diff-desc">3 seçenek, Türkçe ipucu</span>
+      </div>
+      <div class="diff-card" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">🚀</div>
+        <span class="diff-name">Genişletme</span>
+        <span class="diff-desc">4 seçenek, ipucu yok</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">▶ Günü Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="journey-bar" id="journeyBar"></div>
+
+    <div class="score-strip">
+      <div class="stop-counter">Stop <span id="stopNum">1</span> / <span id="stopTotal">7</span></div>
+      <div class="score-badge">Score: <span id="scoreDisplay">0</span></div>
+    </div>
+
+    <div class="scene-card">
+      <div class="scene-bg" id="sceneBg">
+        <div class="scene-location-tag" id="locationTag">📍 The Door</div>
+        <div class="scene-characters">
+          <span class="scene-teacher" id="sceneTeacher">👩‍🏫</span>
+          <span class="scene-student" id="sceneStudent">👧</span>
+        </div>
+      </div>
+      <div class="speech-bubble">
+        <div class="speaker-label" id="speakerLabel">THE TEACHER SAYS:</div>
+        <div class="speech-text" id="speechText"></div>
+        <div class="your-turn-label" id="yourTurnLabel">
+          <span>💬</span><span>Your turn — what do you say?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint-box" id="hintBox">
+      <span>💡</span><span id="hintText"></span>
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+  </div>
+</div>
+
+<!-- END -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy-area" id="trophyEmoji">🏆</div>
+    <div class="end-title" id="endTitle">Well Done!</div>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="end-stats">
+      <div class="stat-item"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat-item"><div class="stat-num" id="statWrong">0</div><div class="stat-label">Wrong</div></div>
+      <div class="stat-item"><div class="stat-num" id="statScore">0</div><div class="stat-label">Score</div></div>
+      <div class="stat-item"><div class="stat-num" id="statPct">0%</div><div class="stat-label">Accuracy</div></div>
+    </div>
+    <div class="end-message" id="endMessage"></div>
+    <div class="end-buttons">
+      <button class="btn-retry" onclick="retryGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="window.location.href='classroom-life.html'">🏠 Tema Sayfası</button>
+    </div>
+  </div>
+</div>
+
+<div class="feedback-overlay" id="feedbackOverlay">
+  <div class="feedback-popup" id="feedbackPopup">
+    <div class="feedback-icon" id="feedbackIcon"></div>
+    <div class="feedback-msg" id="feedbackMsg"></div>
+    <div class="feedback-sub" id="feedbackSub"></div>
+  </div>
+</div>
+
+<script>
+/*
+  7 STOPS — each stop has:
+  - icon, label, bgGradient, locationTag
+  - teacher & student emoji
+  - speakerLabel: who is speaking / setting up the situation
+  - variations: array of question variants (one chosen randomly per play)
+    Each variation: { prompt, answer, blank, options{supporting,standard,expansion}, hint }
+  - chunk: which language chunk is practised
+*/
+
+var STOPS = [
+  // 1. DOOR — Greetings
+  {
+    icon: '🚪', label: 'Door',
+    bgGradient: 'linear-gradient(135deg, #1B2845 0%, #274472 100%)',
+    locationTag: '🚪 The Classroom Door',
+    teacher: '👩‍🏫', student: '👧',
+    speakerLabel: 'THE TEACHER SAYS:',
+    chunk: 'Greetings',
+    variations: [
+      {
+        prompt: 'Good morning, everyone!',
+        blank: 'Good ___, Mrs. Hopkins!',
+        answer: 'morning',
+        options: {
+          supporting: ['morning', 'night'],
+          standard:   ['morning', 'night', 'evening'],
+          expansion:  ['morning', 'night', 'evening', 'afternoon']
+        },
+        hint: 'Sabah okula geliyorsun — öğretmen seni sabah selamladı. Sen de ona geri selam vermelisin!'
+      },
+      {
+        prompt: 'Hello, class! How are you?',
+        blank: "I'm ___, thank you!",
+        answer: 'fine',
+        options: {
+          supporting: ['fine', 'sad'],
+          standard:   ['fine', 'sad', 'tired'],
+          expansion:  ['fine', 'sad', 'tired', 'hungry']
+        },
+        hint: 'Öğretmen nasıl olduğunu soruyor — ve sen bugün çok iyisin!'
+      },
+      {
+        prompt: 'Good morning! Come in, please.',
+        blank: 'Good ___, Mrs. Hopkins!',
+        answer: 'morning',
+        options: {
+          supporting: ['morning', 'bye'],
+          standard:   ['morning', 'bye', 'night'],
+          expansion:  ['morning', 'bye', 'night', 'afternoon']
+        },
+        hint: 'Sabah girişte öğretmeni nasıl selamlarsın?'
+      }
+    ]
+  },
+
+  // 2. SEAT — Classroom Instructions
+  {
+    icon: '🪑', label: 'Seats',
+    bgGradient: 'linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%)',
+    locationTag: '🪑 Your Seat',
+    teacher: '👩‍🏫', student: '👦',
+    speakerLabel: 'THE TEACHER SAYS:',
+    chunk: 'Classroom Instructions',
+    variations: [
+      {
+        prompt: 'Everyone, please sit ___!',
+        blank: 'Everyone, please sit ___!',
+        answer: 'down',
+        options: {
+          supporting: ['down', 'up'],
+          standard:   ['down', 'up', 'outside'],
+          expansion:  ['down', 'up', 'outside', 'away']
+        },
+        hint: 'Öğretmen sınıfa girince herkese oturmasını söylüyor — "aşağı otur" demek için hangi kelime gelir?'
+      },
+      {
+        prompt: 'Stand ___, please!',
+        blank: 'Stand ___, please!',
+        answer: 'up',
+        options: {
+          supporting: ['up', 'down'],
+          standard:   ['up', 'down', 'out'],
+          expansion:  ['up', 'down', 'out', 'away']
+        },
+        hint: 'Okul müdürü sınıfa girdi — öğretmen herkesten ayağa kalkmasını istiyor!'
+      },
+      {
+        prompt: 'Open your ___, please!',
+        blank: 'Open your ___, please!',
+        answer: 'book',
+        options: {
+          supporting: ['book', 'door'],
+          standard:   ['book', 'door', 'window'],
+          expansion:  ['book', 'door', 'window', 'pencil case']
+        },
+        hint: 'Ders başladı — öğretmen elindekini gösteriyor ve onu açmanızı istiyor.'
+      }
+    ]
+  },
+
+  // 3. BOARD — What's this?
+  {
+    icon: '📋', label: 'Board',
+    bgGradient: 'linear-gradient(135deg, #14532d 0%, #166534 100%)',
+    locationTag: '📋 The Board',
+    teacher: '👩‍🏫', student: '👧',
+    speakerLabel: 'THE TEACHER HOLDS SOMETHING UP:',
+    chunk: "What's this? / It's a...",
+    variations: [
+      {
+        prompt: "What's this?",
+        visual: '✂️',
+        blank: "It's a ___.",
+        answer: 'scissors',
+        options: {
+          supporting: ['scissors', 'pencil'],
+          standard:   ['scissors', 'pencil', 'rubber'],
+          expansion:  ['scissors', 'pencil', 'rubber', 'sharpener']
+        },
+        hint: 'Öğretmen bunu kağıt kesmek için kullanır — dikkatli ol, keskin!'
+      },
+      {
+        prompt: "What's this?",
+        visual: '🖊️',
+        blank: "It's a ___.",
+        answer: 'chalk',
+        options: {
+          supporting: ['chalk', 'pencil'],
+          standard:   ['chalk', 'pencil', 'crayon'],
+          expansion:  ['chalk', 'pencil', 'crayon', 'rubber']
+        },
+        hint: 'Tahtaya yazmak için kullanılır — beyaz ve ince bir şey.'
+      },
+      {
+        prompt: "What's this?",
+        visual: '🫧',
+        blank: "It's a ___.",
+        answer: 'glue',
+        options: {
+          supporting: ['glue', 'chalk'],
+          standard:   ['glue', 'chalk', 'crayon'],
+          expansion:  ['glue', 'chalk', 'crayon', 'scissors']
+        },
+        hint: 'Kağıtları birbirine yapıştırmak için kullanılır.'
+      }
+    ]
+  },
+
+  // 4. ART — What colour is it?
+  {
+    icon: '🎨', label: 'Art',
+    bgGradient: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)',
+    locationTag: '🎨 Art Time',
+    teacher: '👩‍🏫', student: '👦',
+    speakerLabel: 'THE TEACHER POINTS AND ASKS:',
+    chunk: 'What colour is it?',
+    variations: [
+      {
+        prompt: 'What colour is the pencil?',
+        colourHex: '#FFC857',
+        blank: 'It is ___.',
+        answer: 'yellow',
+        options: {
+          supporting: ['yellow', 'blue'],
+          standard:   ['yellow', 'blue', 'green'],
+          expansion:  ['yellow', 'blue', 'green', 'orange']
+        },
+        hint: 'Öğretmen sarı kalemi gösteriyor — güneş gibi parlak!'
+      },
+      {
+        prompt: 'What colour is the rubber?',
+        colourHex: '#EC4899',
+        blank: 'It is ___.',
+        answer: 'pink',
+        options: {
+          supporting: ['pink', 'red'],
+          standard:   ['pink', 'red', 'purple'],
+          expansion:  ['pink', 'red', 'purple', 'orange']
+        },
+        hint: 'Silgi pembe renkte — kırmızıdan daha açık.'
+      },
+      {
+        prompt: 'What colour is the book?',
+        colourHex: '#22C55E',
+        blank: 'It is ___.',
+        answer: 'green',
+        options: {
+          supporting: ['green', 'blue'],
+          standard:   ['green', 'blue', 'yellow'],
+          expansion:  ['green', 'blue', 'yellow', 'brown']
+        },
+        hint: 'Kitabın kapağı çimen gibi — hangi renk?'
+      }
+    ]
+  },
+
+  // 5. COUNTING — How many?
+  {
+    icon: '🔢', label: 'Count',
+    bgGradient: 'linear-gradient(135deg, #b45309 0%, #d97706 100%)',
+    locationTag: '🔢 Counting Time',
+    teacher: '👩‍🏫', student: '👧',
+    speakerLabel: 'THE TEACHER ASKS:',
+    chunk: 'How many...?',
+    variations: [
+      {
+        prompt: 'How many pencils? ✏️✏️✏️',
+        blank: '___ pencils.',
+        answer: 'Three',
+        options: {
+          supporting: ['Three', 'Two'],
+          standard:   ['Three', 'Two', 'Four'],
+          expansion:  ['Three', 'Two', 'Four', 'Five']
+        },
+        hint: 'Resimdeki kalemleri say — üç mü, iki mi?'
+      },
+      {
+        prompt: 'How many books? 📗📗📗📗📗',
+        blank: '___ books.',
+        answer: 'Five',
+        options: {
+          supporting: ['Five', 'Four'],
+          standard:   ['Five', 'Four', 'Six'],
+          expansion:  ['Five', 'Four', 'Six', 'Three']
+        },
+        hint: 'Kitapları tek tek say — kaç tane?'
+      },
+      {
+        prompt: 'How many chairs? 🪑🪑',
+        blank: '___ chairs.',
+        answer: 'Two',
+        options: {
+          supporting: ['Two', 'Three'],
+          standard:   ['Two', 'Three', 'One'],
+          expansion:  ['Two', 'Three', 'One', 'Four']
+        },
+        hint: 'Sandalyeleri say — iki mi, üç mü?'
+      }
+    ]
+  },
+
+  // 6. BREAK — Can I?
+  {
+    icon: '🚻', label: 'Break',
+    bgGradient: 'linear-gradient(135deg, #0f4c81 0%, #1a6dbd 100%)',
+    locationTag: '🚻 Break Time',
+    teacher: '👩‍🏫', student: '👦',
+    speakerLabel: 'YOU WANT TO ASK THE TEACHER:',
+    chunk: 'Can I...? / Yes, you can.',
+    variations: [
+      {
+        prompt: 'You need to go to the bathroom.',
+        blank: 'Can I go to the ___, please?',
+        answer: 'bathroom',
+        options: {
+          supporting: ['bathroom', 'garden'],
+          standard:   ['bathroom', 'garden', 'canteen'],
+          expansion:  ['bathroom', 'garden', 'canteen', 'library']
+        },
+        hint: 'Tuvalete gitmek istiyorsun — öğretmenden izin almak için ne dersin?'
+      },
+      {
+        prompt: 'You want to go outside.',
+        blank: 'Can I go ___, please?',
+        answer: 'outside',
+        options: {
+          supporting: ['outside', 'home'],
+          standard:   ['outside', 'home', 'away'],
+          expansion:  ['outside', 'home', 'away', 'upstairs']
+        },
+        hint: 'Dışarı çıkmak istiyorsun — öğretmenden izin isteyeceksin.'
+      },
+      {
+        prompt: 'The teacher says: "Can I help you?"',
+        blank: 'Yes, ___ can.',
+        answer: 'you',
+        options: {
+          supporting: ['you', 'I'],
+          standard:   ['you', 'I', 'we'],
+          expansion:  ['you', 'I', 'we', 'they']
+        },
+        hint: 'Öğretmen sana "Yardım edebilir miyim?" diye soruyor — cevap ne olmalı?'
+      }
+    ]
+  },
+
+  // 7. END OF DAY — Goodbye
+  {
+    icon: '🔔', label: 'Bell!',
+    bgGradient: 'linear-gradient(135deg, #1B2845 0%, #FF6B35 100%)',
+    locationTag: '🔔 End of the Day',
+    teacher: '👩‍🏫', student: '👧',
+    speakerLabel: 'THE TEACHER SAYS:',
+    chunk: 'Goodbye / See you!',
+    variations: [
+      {
+        prompt: 'Goodbye, everyone! See you tomorrow!',
+        blank: '___, Mrs. Hopkins!',
+        answer: 'Goodbye',
+        options: {
+          supporting: ['Goodbye', 'Hello'],
+          standard:   ['Goodbye', 'Hello', 'Sorry'],
+          expansion:  ['Goodbye', 'Hello', 'Sorry', 'Please']
+        },
+        hint: 'Okul bitti — öğretmene vedalaşma vakti!'
+      },
+      {
+        prompt: 'Have a nice day! Goodbye!',
+        blank: 'See you ___!',
+        answer: 'tomorrow',
+        options: {
+          supporting: ['tomorrow', 'never'],
+          standard:   ['tomorrow', 'never', 'yesterday'],
+          expansion:  ['tomorrow', 'never', 'yesterday', 'morning']
+        },
+        hint: 'Bugün okul bitti — yarın tekrar görüşeceksiniz!'
+      },
+      {
+        prompt: 'Class is over. Goodbye!',
+        blank: 'Goodbye! Have a nice ___!',
+        answer: 'day',
+        options: {
+          supporting: ['day', 'night'],
+          standard:   ['day', 'night', 'morning'],
+          expansion:  ['day', 'night', 'morning', 'week']
+        },
+        hint: 'Öğretmene güzel bir şeyler dilemek istiyorsun — günün geri kalanı için ne dersin?'
+      }
+    ]
+  }
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+var currentLevel = 'standard';
+var currentStop = 0;
+var chosenVariations = [];
+var score = 0;
+var correctCount = 0;
+var wrongCount = 0;
+var isLocked = false;
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.getAttribute('data-level');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+// ── BUILD STOP MAP (start screen) ─────────────────────────────────────────
+function buildStopMap() {
+  var el = document.getElementById('stopMap');
+  el.innerHTML = '';
+  STOPS.forEach(function(stop, i) {
+    var pip = document.createElement('div');
+    pip.className = 'stop-pip';
+    pip.innerHTML = '<div class="stop-pip-icon">' + stop.icon + '</div><div class="stop-pip-label">' + stop.label + '</div>';
+    el.appendChild(pip);
+    if (i < STOPS.length - 1) {
+      var arr = document.createElement('div');
+      arr.className = 'stop-arrow';
+      arr.textContent = '›';
+      el.appendChild(arr);
+    }
+  });
+}
+
+// ── BUILD JOURNEY BAR (game screen) ───────────────────────────────────────
+function buildJourneyBar() {
+  var bar = document.getElementById('journeyBar');
+  bar.innerHTML = '';
+  STOPS.forEach(function(stop, i) {
+    var js = document.createElement('div');
+    js.className = 'journey-stop';
+    var stateClass = i < currentStop ? 'done' : i === currentStop ? 'active' : 'upcoming';
+    js.innerHTML =
+      '<div class="journey-icon ' + stateClass + '" id="jicon-' + i + '">' + (i < currentStop ? '✓' : stop.icon) + '</div>' +
+      '<div class="journey-label' + (i === currentStop ? ' active-label' : '') + '">' + stop.label + '</div>';
+    bar.appendChild(js);
+    if (i < STOPS.length - 1) {
+      var arr = document.createElement('div');
+      arr.className = 'journey-arrow';
+      arr.textContent = '›';
+      bar.appendChild(arr);
+    }
+  });
+}
+
+// ── START ──────────────────────────────────────────────────────────────────
+function startGame() {
+  currentStop = 0;
+  score = 0; correctCount = 0; wrongCount = 0;
+  // Pick one random variation per stop
+  chosenVariations = STOPS.map(function(stop) {
+    return Math.floor(Math.random() * stop.variations.length);
+  });
+  showScreen('gameScreen');
+  renderStop();
+}
+
+// ── RENDER STOP ────────────────────────────────────────────────────────────
+function renderStop() {
+  if (currentStop >= STOPS.length) { endGame(); return; }
+
+  var stop = STOPS[currentStop];
+  var varIdx = chosenVariations[currentStop];
+  var v = stop.variations[varIdx];
+
+  isLocked = false;
+
+  buildJourneyBar();
+  document.getElementById('stopNum').textContent = currentStop + 1;
+  document.getElementById('stopTotal').textContent = STOPS.length;
+  document.getElementById('scoreDisplay').textContent = score;
+
+  // Scene visuals
+  document.getElementById('sceneBg').style.background = stop.bgGradient;
+  document.getElementById('locationTag').textContent = stop.locationTag;
+  document.getElementById('sceneTeacher').textContent = stop.teacher;
+  document.getElementById('sceneStudent').textContent = stop.student;
+  document.getElementById('speakerLabel').textContent = stop.speakerLabel;
+
+  // Colour patch for art stop
+  var colourPatch = '';
+  if (v.colourHex) {
+    colourPatch = ' <span style="display:inline-block;width:22px;height:22px;border-radius:6px;background:' + v.colourHex + ';border:2px solid rgba(0,0,0,0.15);vertical-align:middle;margin-left:4px;"></span>';
+  }
+  // Visual emoji for board stop
+  var visualEmoji = v.visual ? ' <span style="font-size:1.5rem;vertical-align:middle;">' + v.visual + '</span>' : '';
+
+  // Build speech: show the prompt, then the blank sentence
+  var promptHtml = '<span style="color:#888;font-size:0.92rem;font-weight:600;">' + v.prompt + '</span>' + colourPatch + visualEmoji;
+  var blankHtml = '<br><span style="color:#1B2845;">' + v.blank.replace('___', '<span class="blank" id="qBlank">___</span>') + '</span>';
+  document.getElementById('speechText').innerHTML = promptHtml + blankHtml;
+
+  // Hint
+  var hintBox = document.getElementById('hintBox');
+  if (currentLevel !== 'expansion' && v.hint) {
+    hintBox.classList.remove('hidden');
+    document.getElementById('hintText').textContent = v.hint;
+  } else {
+    hintBox.classList.add('hidden');
+  }
+
+  buildOptions(v);
+}
+
+function buildOptions(v) {
+  var opts = shuffle(v.options[currentLevel].slice());
+  var letters = ['A','B','C','D'];
+  var grid = document.getElementById('optionsGrid');
+  grid.style.gridTemplateColumns = opts.length === 2 ? '1fr 1fr' : '1fr';
+  grid.innerHTML = '';
+  opts.forEach(function(opt, i) {
+    var btn = document.createElement('div');
+    btn.className = 'option-btn';
+    btn.setAttribute('data-opt', encodeURIComponent(opt));
+    btn.innerHTML = '<span class="option-letter">' + letters[i] + '</span>' + opt;
+    btn.addEventListener('click', function() { pickOption(opt, v); });
+    grid.appendChild(btn);
+  });
+}
+
+// ── PICK ───────────────────────────────────────────────────────────────────
+function pickOption(chosen, v) {
+  if (isLocked) return;
+  isLocked = true;
+
+  var correct = v.answer;
+  var chosenBtn = document.querySelector('[data-opt="' + encodeURIComponent(chosen) + '"]');
+  var correctBtn = document.querySelector('[data-opt="' + encodeURIComponent(correct) + '"]');
+
+  if (chosen === correct) {
+    score += 10; correctCount++;
+    chosenBtn.classList.add('correct');
+    var blank = document.getElementById('qBlank');
+    if (blank) { blank.textContent = correct; blank.style.color = 'var(--green)'; blank.style.borderBottomColor = 'var(--green)'; }
+    showFeedback(true, getCorrectMsg(), '');
+  } else {
+    wrongCount++;
+    chosenBtn.classList.add('wrong');
+    if (correctBtn) correctBtn.classList.add('reveal');
+    var blank2 = document.getElementById('qBlank');
+    if (blank2) { blank2.textContent = correct; blank2.style.color = 'var(--green)'; blank2.style.borderBottomColor = 'var(--green)'; }
+    showFeedback(false, 'Not quite!', 'The answer is: ' + correct);
+  }
+
+  document.getElementById('scoreDisplay').textContent = score;
+
+  setTimeout(function() {
+    hideFeedback();
+    currentStop++;
+    renderStop();
+  }, 1600);
+}
+
+var correctMsgs = ['Great!', 'Perfect!', 'Excellent!', 'Well done!', 'Amazing!', 'Brilliant!'];
+function getCorrectMsg() { return correctMsgs[Math.floor(Math.random() * correctMsgs.length)]; }
+
+function showFeedback(correct, msg, sub) {
+  var overlay = document.getElementById('feedbackOverlay');
+  var popup = document.getElementById('feedbackPopup');
+  document.getElementById('feedbackIcon').textContent = correct ? '✅' : '❌';
+  document.getElementById('feedbackMsg').textContent = msg;
+  document.getElementById('feedbackSub').textContent = sub;
+  popup.className = 'feedback-popup ' + (correct ? 'correct' : 'wrong');
+  overlay.classList.add('show');
+}
+function hideFeedback() { document.getElementById('feedbackOverlay').classList.remove('show'); }
+
+// ── END ────────────────────────────────────────────────────────────────────
+function endGame() {
+  var total = STOPS.length;
+  var pct = Math.round((correctCount / total) * 100);
+  var stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+
+  document.getElementById('statCorrect').textContent = correctCount;
+  document.getElementById('statWrong').textContent = wrongCount;
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statPct').textContent = pct + '%';
+
+  var starsHtml = '';
+  for (var i = 0; i < 3; i++) { starsHtml += i < stars ? '⭐' : '☆'; }
+  document.getElementById('starsRow').innerHTML = starsHtml;
+
+  var msgs = {
+    3: 'Mükemmel! Tüm gün boyunca doğru şeyleri söyledin! Artık sınıf dilini çok iyi biliyorsun! 🎉',
+    2: 'Güzel bir gündü! Birkaç durakta tökezledin ama genel olarak çok iyisin! 💪',
+    1: 'Okul günü bitti ama biraz daha pratik yapman gerekiyor. Tekrar dene! 📚'
+  };
+  document.getElementById('endMessage').textContent = msgs[stars];
+  document.getElementById('trophyEmoji').textContent = stars === 3 ? '🏆' : stars === 2 ? '🥈' : '🎯';
+  document.getElementById('endTitle').textContent = stars === 3 ? 'Classroom Star!' : stars === 2 ? 'Well Done!' : 'Keep Trying!';
+
+  showScreen('endScreen');
+  if (stars >= 2) launchConfetti();
+}
+
+function retryGame() { showScreen('startScreen'); }
+
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#8B5CF6','#EF4444','#3B82F6'];
+  for (var i = 0; i < 80; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (Math.random() * 8 + 6) + 'px';
+        el.style.height = (Math.random() * 8 + 6) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(el);
+        setTimeout(function() { el.remove(); }, 4000);
+      }, i * 30);
+    })(i);
+  }
+}
+
+// Init stop map on load
+buildStopMap();
+</script>
+</body>
+</html>

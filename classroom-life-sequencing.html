@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Sequencing — Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --green: #22C55E;
+  --red: #EF4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Quicksand', sans-serif; background: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+/* NAVBAR */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(27,40,69,0.95); backdrop-filter: blur(10px);
+  padding: 0 24px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--orange), var(--yellow)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-brand { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700; color: var(--white); }
+.nav-brand span { color: var(--orange); }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s; }
+.nav-links a:hover { color: var(--orange); }
+
+/* HEADER */
+.game-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 90px 24px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.game-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(46,196,182,0.15) 0%, transparent 70%); }
+.breadcrumb { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; position: relative; }
+.breadcrumb a, .breadcrumb span { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; font-weight: 600; }
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(255,255,255,0.3); }
+.breadcrumb .current { color: var(--yellow); }
+.game-header h1 { font-family: 'Baloo 2', cursive; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: var(--white); position: relative; }
+.game-header h1 span { color: var(--yellow); }
+.game-header p { color: rgba(255,255,255,0.75); margin-top: 8px; font-size: 1rem; position: relative; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* START */
+.start-screen { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+.story-box { background: var(--white); border-radius: 20px; padding: 28px 32px; border-left: 6px solid var(--yellow); box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 32px; display: flex; gap: 16px; align-items: flex-start; }
+.story-emoji { font-size: 2.5rem; flex-shrink: 0; }
+.story-text h3 { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.story-text p { font-size: 0.95rem; color: #555; line-height: 1.6; }
+
+.tip-box { background: #EFF6FF; border-radius: 14px; padding: 14px 20px; margin-bottom: 28px; display: flex; gap: 12px; align-items: flex-start; }
+.tip-box p { font-size: 0.88rem; color: #1D4ED8; font-weight: 600; line-height: 1.5; }
+
+.difficulty-label { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy); text-align: center; margin-bottom: 16px; }
+.difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 32px; }
+.diff-card { border: 3px solid #E5E7EB; border-radius: 16px; padding: 20px 12px; text-align: center; cursor: pointer; background: var(--white); transition: all 0.2s; }
+.diff-card:hover { border-color: var(--navy-light); transform: translateY(-2px); }
+.diff-card.selected { border-color: var(--orange); background: #FFF5F0; }
+.diff-card .diff-icon { font-size: 2rem; margin-bottom: 6px; }
+.diff-card .diff-name { font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; color: var(--navy); display: block; }
+.diff-card .diff-desc { font-size: 0.75rem; color: #777; margin-top: 4px; display: block; }
+.start-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--orange), var(--orange-glow)); color: var(--white); border: none; border-radius: 16px; font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(255,107,53,0.4); }
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,0.5); }
+
+/* GAME */
+.game-screen { padding: 24px 16px 60px; }
+.game-topbar { max-width: 860px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.progress-info { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy); }
+.score-badge { background: var(--navy); color: var(--white); border-radius: 20px; padding: 6px 18px; font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; }
+.score-badge span { color: var(--yellow); }
+.progress-bar-wrap { max-width: 860px; margin: 0 auto 20px; background: #E5E7EB; border-radius: 10px; height: 8px; }
+.progress-bar-fill { height: 8px; border-radius: 10px; background: linear-gradient(90deg, var(--teal), var(--yellow)); transition: width 0.5s ease; }
+
+/* ROUND HEADER */
+.round-header {
+  max-width: 860px; margin: 0 auto 20px;
+  background: var(--white); border-radius: 18px;
+  padding: 16px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.round-tag {
+  background: var(--navy); color: var(--white);
+  border-radius: 10px; padding: 6px 14px;
+  font-family: 'Baloo 2', cursive; font-size: 0.85rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.round-instruction {
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy);
+  flex: 1;
+}
+.round-hint { font-size: 0.82rem; color: #777; font-weight: 600; }
+
+/* SLOTS — where numbers go in order */
+.slots-area {
+  max-width: 860px; margin: 0 auto 24px;
+  background: var(--white); border-radius: 20px;
+  padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.slots-label {
+  font-size: 0.78rem; color: #aaa; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 12px; text-align: center;
+}
+.slots-grid {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.slot {
+  width: 72px; height: 72px; border-radius: 14px;
+  border: 2px dashed #D1D5DB;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #F9FAFB;
+  transition: all 0.2s;
+  position: relative;
+}
+.slot.drag-over { border-color: var(--teal); background: #F0FFFE; transform: scale(1.05); }
+.slot.filled { border-style: solid; border-color: #E5E7EB; background: var(--white); }
+.slot.correct-slot { border-color: var(--green); background: #F0FDF4; }
+.slot.wrong-slot   { border-color: var(--red);   background: #FEF2F2; animation: shake 0.4s ease; }
+.slot-number { font-family: 'Baloo 2', cursive; font-size: 0.7rem; font-weight: 700; color: #aaa; position: absolute; top: 4px; left: 0; right: 0; text-align: center; }
+.slot-content { font-family: 'Baloo 2', cursive; font-size: 0.78rem; font-weight: 800; color: var(--navy); text-align: center; line-height: 1.2; padding: 2px; }
+.slot-digit { font-size: 1.1rem; color: var(--teal); }
+
+/* Missing word slot for expansion */
+.slot.missing-slot {
+  border-color: var(--orange); border-style: solid;
+  background: #FFF5F0;
+}
+.slot.missing-slot .slot-content { color: var(--orange); font-size: 0.7rem; }
+
+/* BANK — the scrambled cards */
+.bank-area {
+  max-width: 860px; margin: 0 auto 20px;
+}
+.bank-label {
+  font-size: 0.78rem; color: #aaa; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 12px; text-align: center;
+}
+.bank-grid {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+}
+
+/* Number cards */
+.num-card {
+  width: 72px; min-height: 72px; border-radius: 14px;
+  border: 3px solid #E5E7EB;
+  background: var(--white);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: grab; user-select: none;
+  transition: all 0.2s;
+  padding: 6px 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: relative;
+}
+.num-card:hover { border-color: var(--teal); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(46,196,182,0.25); }
+.num-card.dragging { opacity: 0.4; transform: scale(0.95); }
+.num-card.selected-card { border-color: var(--orange); background: #FFF5F0; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(255,107,53,0.3); }
+.num-card.placed { opacity: 0; pointer-events: none; }
+.num-card.correct-flash { border-color: var(--green); background: #F0FDF4; animation: card-pop 0.4s ease; }
+.num-card.wrong-flash   { border-color: var(--red);   background: #FEF2F2; animation: shake 0.4s ease; }
+
+.card-word { font-family: 'Baloo 2', cursive; font-size: 0.82rem; font-weight: 800; color: var(--navy); text-align: center; line-height: 1.2; }
+.card-digit { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800; color: var(--teal); }
+
+/* Double-tap hint */
+.double-tap-hint {
+  text-align: center; font-size: 0.8rem; color: #aaa; font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Check button */
+.check-btn {
+  display: block; max-width: 860px; width: 100%; margin: 0 auto;
+  padding: 16px; background: linear-gradient(135deg, var(--teal), #26a99e);
+  color: var(--white); border: none; border-radius: 16px;
+  font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(46,196,182,0.4);
+  opacity: 0.5; pointer-events: none;
+}
+.check-btn.active { opacity: 1; pointer-events: auto; }
+.check-btn.active:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,196,182,0.5); }
+
+/* Missing word options */
+.missing-options { max-width: 860px; margin: 0 auto 20px; display: none; }
+.missing-options-label { font-size: 0.78rem; color: #aaa; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
+.missing-opts-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.missing-opt-btn {
+  padding: 10px 20px; border-radius: 12px; border: 3px solid #E5E7EB;
+  background: var(--white); font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem; font-weight: 700; color: var(--navy);
+  cursor: pointer; transition: all 0.2s;
+}
+.missing-opt-btn:hover { border-color: var(--orange); background: #FFF5F0; }
+.missing-opt-btn.correct { border-color: var(--green); background: #F0FDF4; }
+.missing-opt-btn.wrong   { border-color: var(--red);   background: #FEF2F2; animation: shake 0.4s; }
+
+/* END */
+.end-screen { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; text-align: center; }
+.trophy-area { font-size: 5rem; margin-bottom: 16px; animation: trophy-bounce 1s ease; }
+.end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.stars-row { display: flex; justify-content: center; gap: 8px; font-size: 2.5rem; margin-bottom: 20px; }
+.end-stats { background: var(--white); border-radius: 20px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+.stat-label { font-size: 0.85rem; color: #777; font-weight: 600; }
+.end-message { background: var(--yellow-light); border-radius: 16px; padding: 16px 24px; font-size: 0.95rem; color: #6B5C2E; font-weight: 600; margin-bottom: 28px; line-height: 1.6; }
+.end-buttons { display: flex; gap: 12px; }
+.btn-retry, .btn-home { flex: 1; padding: 16px; border: none; border-radius: 14px; font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-retry { background: linear-gradient(135deg, var(--orange), var(--orange-glow)); color: var(--white); box-shadow: 0 4px 16px rgba(255,107,53,0.4); }
+.btn-retry:hover { transform: translateY(-2px); }
+.btn-home { background: var(--white); color: var(--navy); border: 2px solid #E5E7EB; }
+.btn-home:hover { border-color: var(--navy); }
+
+.confetti-piece { position: fixed; border-radius: 2px; animation: confetti-fall linear forwards; z-index: 9999; pointer-events: none; }
+
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+@keyframes card-pop { 0%{transform:scale(1)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
+@keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+@keyframes trophy-bounce { 0%,100%{transform:scale(1) rotate(0deg)} 25%{transform:scale(1.15) rotate(-5deg)} 75%{transform:scale(1.15) rotate(5deg)} }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .difficulty-grid { grid-template-columns: 1fr; }
+  .slot { width: 60px; height: 60px; border-radius: 10px; }
+  .num-card { width: 60px; min-height: 60px; }
+  .card-word { font-size: 0.72rem; }
+  .card-digit { font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">📚</div>
+    <span class="nav-brand">ataberk<span>hoca</span>ingilizce</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="2-sinif.html">2. Sınıf</a>
+    <a href="hakkimda.html">Hakkımda</a>
+  </div>
+</nav>
+
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+    <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+    <a href="classroom-life.html">Classroom Life</a><span class="sep">›</span>
+    <span class="current">Number Line-Up</span>
+  </div>
+  <h1>🔢 Number <span>Line-Up!</span></h1>
+  <p>Put the numbers in the right order!</p>
+</div>
+
+<!-- START -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <div class="story-emoji">🌀</div>
+      <div class="story-text">
+        <h3>The numbers fell off the board!</h3>
+        <p>The teacher wrote the numbers on the board, but a gust of wind mixed them all up! Put them back in the right order — from smallest to biggest.</p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span>💡</span>
+      <p>Bir sayıyı sürükleyip bırakabilirsin <strong>veya</strong> bir sayıya iki kez tıklarsan otomatik olarak sıradaki boşluğa gider!</p>
+    </div>
+
+    <div class="difficulty-label">Seviye Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-card" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">🌱</div>
+        <span class="diff-name">Destekleyici</span>
+        <span class="diff-desc">1–5, rakam + yazı</span>
+      </div>
+      <div class="diff-card selected" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <span class="diff-name">Standart</span>
+        <span class="diff-desc">1–10, sadece yazı</span>
+      </div>
+      <div class="diff-card" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">🚀</div>
+        <span class="diff-name">Genişletme</span>
+        <span class="diff-desc">1–20 + eksik sayı bul</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">▶ Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="progress-info">Round <span id="roundNum">1</span> of <span id="roundTotal">3</span></div>
+      <div class="score-badge">Score: <span id="scoreDisplay">0</span></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <div class="round-header">
+      <div class="round-tag" id="roundTag">ROUND 1</div>
+      <div>
+        <div class="round-instruction" id="roundInstruction">Put the numbers in order: smallest → biggest</div>
+        <div class="round-hint" id="roundHint"></div>
+      </div>
+    </div>
+
+    <!-- Slots: correct order destination -->
+    <div class="slots-area">
+      <div class="slots-label">↓ Drop here in order ↓</div>
+      <div class="slots-grid" id="slotsGrid"></div>
+    </div>
+
+    <!-- Missing word options (expansion only) -->
+    <div class="missing-options" id="missingOptions">
+      <div class="missing-options-label">Which number is missing?</div>
+      <div class="missing-opts-grid" id="missingOptsGrid"></div>
+    </div>
+
+    <!-- Bank: scrambled cards -->
+    <div class="bank-area">
+      <div class="double-tap-hint">💡 Drag a card to a slot — or double-tap to place it automatically!</div>
+      <div class="bank-label">↑ Scrambled numbers ↑</div>
+      <div class="bank-grid" id="bankGrid"></div>
+    </div>
+
+    <button class="check-btn" id="checkBtn" onclick="checkAnswer()">✓ Check my order!</button>
+  </div>
+</div>
+
+<!-- END -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy-area" id="trophyEmoji">🏆</div>
+    <div class="end-title" id="endTitle">Well Done!</div>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="end-stats">
+      <div class="stat-item"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">Rounds Won</div></div>
+      <div class="stat-item"><div class="stat-num" id="statScore">0</div><div class="stat-label">Score</div></div>
+    </div>
+    <div class="end-message" id="endMessage"></div>
+    <div class="end-buttons">
+      <button class="btn-retry" onclick="retryGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="window.location.href=\'classroom-life.html\'">🏠 Tema Sayfası</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var NUMBERS = [
+  { n: 1,  word: 'one' },
+  { n: 2,  word: 'two' },
+  { n: 3,  word: 'three' },
+  { n: 4,  word: 'four' },
+  { n: 5,  word: 'five' },
+  { n: 6,  word: 'six' },
+  { n: 7,  word: 'seven' },
+  { n: 8,  word: 'eight' },
+  { n: 9,  word: 'nine' },
+  { n: 10, word: 'ten' },
+  { n: 11, word: 'eleven' },
+  { n: 12, word: 'twelve' },
+  { n: 13, word: 'thirteen' },
+  { n: 14, word: 'fourteen' },
+  { n: 15, word: 'fifteen' },
+  { n: 16, word: 'sixteen' },
+  { n: 17, word: 'seventeen' },
+  { n: 18, word: 'eighteen' },
+  { n: 19, word: 'nineteen' },
+  { n: 20, word: 'twenty' }
+];
+
+// Rounds per level
+var LEVEL_ROUNDS = {
+  supporting: [
+    { range: [1,5],  showDigit: true,  type: 'order' },
+    { range: [1,5],  showDigit: true,  type: 'order' },
+    { range: [1,5],  showDigit: true,  type: 'order' }
+  ],
+  standard: [
+    { range: [1,5],  showDigit: false, type: 'order' },
+    { range: [1,10], showDigit: false, type: 'order' },
+    { range: [1,10], showDigit: false, type: 'order' }
+  ],
+  expansion: [
+    { range: [1,10],  showDigit: false, type: 'order' },
+    { range: [1,20],  showDigit: false, type: 'order' },
+    { range: [1,20],  showDigit: false, type: 'missing' }
+  ]
+};
+
+var currentLevel = 'standard';
+var rounds = [];
+var currentRound = 0;
+var score = 0;
+var roundsWon = 0;
+
+// Per-round state
+var correctOrder = [];   // array of number objects in correct order
+var scrambled = [];      // shuffled copy
+var slotValues = [];     // what's currently in each slot (null or number obj)
+var selectedCard = null; // for double-tap/click logic
+var lastTapCard = null;
+var lastTapTime = 0;
+var missingNumber = null; // for 'missing' type rounds
+var missingAnswered = false;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.getAttribute('data-level');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  rounds = LEVEL_ROUNDS[currentLevel];
+  currentRound = 0;
+  score = 0;
+  roundsWon = 0;
+  showScreen('gameScreen');
+  loadRound();
+}
+
+function loadRound() {
+  if (currentRound >= rounds.length) { endGame(); return; }
+  var rd = rounds[currentRound];
+  selectedCard = null;
+  lastTapCard = null;
+  missingAnswered = false;
+
+  // Build correct order from range
+  var nums = NUMBERS.filter(function(n) { return n.n >= rd.range[0] && n.n <= rd.range[1]; });
+
+  document.getElementById('roundNum').textContent = currentRound + 1;
+  document.getElementById('roundTotal').textContent = rounds.length;
+  document.getElementById('roundTag').textContent = 'ROUND ' + (currentRound + 1);
+  document.getElementById('progressFill').style.width = ((currentRound / rounds.length) * 100) + '%';
+  document.getElementById('scoreDisplay').textContent = score;
+
+  var checkBtn = document.getElementById('checkBtn');
+  checkBtn.classList.remove('active');
+
+  if (rd.type === 'missing') {
+    // Pick one number to hide
+    var fullNums = nums.slice();
+    var missingIdx = Math.floor(Math.random() * fullNums.length);
+    missingNumber = fullNums[missingIdx];
+    correctOrder = fullNums; // full sequence including gap
+    scrambled = []; // no bank cards
+
+    document.getElementById('roundInstruction').textContent = 'Find the missing number in the sequence!';
+    document.getElementById('roundHint').textContent = 'Dizide hangi sayı eksik? Seçeneklerden doğrusunu bul.';
+
+    buildMissingSlots(fullNums, missingIdx, rd.showDigit);
+    buildMissingOptions(missingNumber, fullNums);
+    document.getElementById('bankGrid').innerHTML = '';
+    document.getElementById('bankArea') && (document.getElementById('bankArea').style.display = 'none');
+    document.querySelector('.bank-area').style.display = 'none';
+    document.querySelector('.double-tap-hint').style.display = 'none';
+    checkBtn.style.display = 'none';
+    document.getElementById('missingOptions').style.display = 'block';
+  } else {
+    correctOrder = nums.slice();
+    scrambled = shuffle(nums.slice());
+    slotValues = new Array(nums.length).fill(null);
+
+    document.getElementById('roundInstruction').textContent = 'Put the numbers in order: smallest → biggest';
+    document.getElementById('roundHint').textContent = currentLevel === 'supporting' ? 'Sayıları küçükten büyüğe sırala — rakam ve yazısı birlikte gösteriliyor.' : 'Sayıları küçükten büyüğe sırala — sadece İngilizce yazısına bak!';
+
+    buildSlots(nums.length, rd.showDigit);
+    buildBank(scrambled, rd.showDigit);
+    document.querySelector('.bank-area').style.display = 'block';
+    document.querySelector('.double-tap-hint').style.display = 'block';
+    checkBtn.style.display = 'block';
+    document.getElementById('missingOptions').style.display = 'none';
+  }
+}
+
+// ── BUILD SLOTS (order type) ──────────────────────────────────────────────
+function buildSlots(count, showDigit) {
+  var grid = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+  for (var i = 0; i < count; i++) {
+    var slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.setAttribute('data-slot', i);
+    var posLabel = document.createElement('span');
+    posLabel.className = 'slot-number';
+    posLabel.textContent = (i + 1);
+    slot.appendChild(posLabel);
+    setupSlotDrop(slot, i);
+    grid.appendChild(slot);
+  }
+}
+
+// ── BUILD SLOTS (missing type) ────────────────────────────────────────────
+function buildMissingSlots(nums, missingIdx, showDigit) {
+  var grid = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+  nums.forEach(function(num, i) {
+    var slot = document.createElement('div');
+    if (i === missingIdx) {
+      slot.className = 'slot missing-slot';
+      var content = document.createElement('div');
+      content.className = 'slot-content';
+      content.textContent = '?';
+      slot.appendChild(content);
+    } else {
+      slot.className = 'slot filled correct-slot';
+      var content = document.createElement('div');
+      content.className = 'slot-content';
+      content.innerHTML = (showDigit ? '<span class="slot-digit">' + num.n + '</span><br>' : '') + num.word;
+      slot.appendChild(content);
+    }
+    grid.appendChild(slot);
+  });
+}
+
+// ── BUILD BANK ────────────────────────────────────────────────────────────
+function buildBank(nums, showDigit) {
+  var grid = document.getElementById('bankGrid');
+  grid.innerHTML = '';
+  nums.forEach(function(num) {
+    var card = createCard(num, showDigit);
+    grid.appendChild(card);
+  });
+}
+
+function createCard(num, showDigit) {
+  var card = document.createElement('div');
+  card.className = 'num-card';
+  card.setAttribute('data-n', num.n);
+  card.setAttribute('data-word', num.word);
+  card.draggable = true;
+
+  var inner = '';
+  if (showDigit) inner += '<span class="card-digit">' + num.n + '</span>';
+  inner += '<span class="card-word">' + num.word + '</span>';
+  card.innerHTML = inner;
+
+  // Drag events
+  card.addEventListener('dragstart', function(e) {
+    e.dataTransfer.setData('text/plain', num.n);
+    card.classList.add('dragging');
+    selectedCard = null;
+    clearCardSelection();
+  });
+  card.addEventListener('dragend', function() {
+    card.classList.remove('dragging');
+  });
+
+  // Double-tap / double-click detection
+  card.addEventListener('click', function() {
+    var now = Date.now();
+    if (lastTapCard === card && now - lastTapTime < 400) {
+      // Double tap — place in next empty slot
+      placeCardInNextSlot(num, card);
+      lastTapCard = null;
+    } else {
+      // Single tap — select/deselect
+      lastTapCard = card;
+      lastTapTime = now;
+      if (selectedCard === card) {
+        selectedCard = null;
+        card.classList.remove('selected-card');
+      } else {
+        clearCardSelection();
+        selectedCard = card;
+        card.classList.add('selected-card');
+      }
+    }
+  });
+
+  return card;
+}
+
+function clearCardSelection() {
+  document.querySelectorAll('.num-card').forEach(function(c) { c.classList.remove('selected-card'); });
+  selectedCard = null;
+}
+
+function placeCardInNextSlot(num, card) {
+  // Find first empty slot
+  var slots = document.querySelectorAll('#slotsGrid .slot');
+  for (var i = 0; i < slots.length; i++) {
+    if (slotValues[i] === null) {
+      placeInSlot(i, num, card);
+      return;
+    }
+  }
+}
+
+// ── SLOT DROP SETUP ───────────────────────────────────────────────────────
+function setupSlotDrop(slot, idx) {
+  slot.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    slot.classList.add('drag-over');
+  });
+  slot.addEventListener('dragleave', function() {
+    slot.classList.remove('drag-over');
+  });
+  slot.addEventListener('drop', function(e) {
+    e.preventDefault();
+    slot.classList.remove('drag-over');
+    var n = parseInt(e.dataTransfer.getData('text/plain'));
+    var num = NUMBERS.filter(function(x) { return x.n === n; })[0];
+    if (!num) return;
+    var card = document.querySelector('[data-n="' + n + '"]');
+    placeInSlot(idx, num, card);
+  });
+  // Also allow clicking slot to receive selected card
+  slot.addEventListener('click', function() {
+    if (selectedCard && slotValues[idx] === null) {
+      var n = parseInt(selectedCard.getAttribute('data-n'));
+      var num = NUMBERS.filter(function(x) { return x.n === n; })[0];
+      placeInSlot(idx, num, selectedCard);
+      clearCardSelection();
+    }
+  });
+}
+
+function placeInSlot(idx, num, card) {
+  if (slotValues[idx] !== null) return; // slot already filled
+  slotValues[idx] = num;
+
+  var rd = rounds[currentRound];
+  var showDigit = rd.showDigit;
+
+  var slot = document.querySelector('[data-slot="' + idx + '"]');
+  slot.classList.add('filled');
+  slot.innerHTML = '';
+
+  var posLabel = document.createElement('span');
+  posLabel.className = 'slot-number';
+  posLabel.textContent = (idx + 1);
+  slot.appendChild(posLabel);
+
+  var content = document.createElement('div');
+  content.className = 'slot-content';
+  content.innerHTML = (showDigit ? '<span class="slot-digit">' + num.n + '</span><br>' : '') + num.word;
+  slot.appendChild(content);
+
+  // Hide card
+  if (card) card.classList.add('placed');
+  clearCardSelection();
+
+  // Enable check button if all slots filled
+  var allFilled = slotValues.every(function(v) { return v !== null; });
+  var checkBtn = document.getElementById('checkBtn');
+  if (allFilled) checkBtn.classList.add('active');
+  else checkBtn.classList.remove('active');
+}
+
+// ── CHECK ANSWER (order type) ─────────────────────────────────────────────
+function checkAnswer() {
+  var allCorrect = true;
+  var slots = document.querySelectorAll('#slotsGrid .slot');
+  slotValues.forEach(function(val, i) {
+    var expected = correctOrder[i];
+    var slot = slots[i];
+    if (val && val.n === expected.n) {
+      slot.classList.add('correct-slot');
+    } else {
+      slot.classList.add('wrong-slot');
+      allCorrect = false;
+    }
+  });
+
+  if (allCorrect) {
+    score += 30;
+    roundsWon++;
+    document.getElementById('scoreDisplay').textContent = score;
+    setTimeout(function() { currentRound++; loadRound(); }, 1200);
+  } else {
+    // Reset after shake — let them try again
+    setTimeout(function() {
+      slots.forEach(function(s) { s.classList.remove('wrong-slot'); });
+    }, 800);
+  }
+}
+
+// ── MISSING TYPE ──────────────────────────────────────────────────────────
+function buildMissingOptions(correct, allNums) {
+  // 3 distractors: adjacent numbers + one random
+  var pool = [];
+  allNums.forEach(function(n) { if (n.n !== correct.n) pool.push(n); });
+  pool = shuffle(pool).slice(0, 3);
+  pool.push(correct);
+  pool = shuffle(pool);
+
+  var grid = document.getElementById('missingOptsGrid');
+  grid.innerHTML = '';
+  pool.forEach(function(num) {
+    var btn = document.createElement('div');
+    btn.className = 'missing-opt-btn';
+    btn.textContent = num.word;
+    btn.addEventListener('click', function() { pickMissing(num, btn); });
+    grid.appendChild(btn);
+  });
+}
+
+function pickMissing(chosen, btn) {
+  if (missingAnswered) return;
+  missingAnswered = true;
+
+  if (chosen.n === missingNumber.n) {
+    btn.classList.add('correct');
+    score += 30;
+    roundsWon++;
+    // Fill in the missing slot
+    var missingSlot = document.querySelector('.missing-slot');
+    if (missingSlot) {
+      missingSlot.classList.remove('missing-slot');
+      missingSlot.classList.add('filled', 'correct-slot');
+      missingSlot.innerHTML = '<div class="slot-content">' + chosen.word + '</div>';
+    }
+    document.getElementById('scoreDisplay').textContent = score;
+    setTimeout(function() { currentRound++; loadRound(); }, 1200);
+  } else {
+    btn.classList.add('wrong');
+    missingAnswered = false;
+    setTimeout(function() { btn.classList.remove('wrong'); }, 600);
+  }
+}
+
+// ── END ───────────────────────────────────────────────────────────────────
+function endGame() {
+  document.getElementById('progressFill').style.width = '100%';
+  var pct = Math.round((roundsWon / rounds.length) * 100);
+  var stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+
+  document.getElementById('statCorrect').textContent = roundsWon + '/' + rounds.length;
+  document.getElementById('statScore').textContent = score;
+
+  var starsHtml = '';
+  for (var i = 0; i < 3; i++) { starsHtml += i < stars ? '⭐' : '☆'; }
+  document.getElementById('starsRow').innerHTML = starsHtml;
+
+  var msgs = {
+    3: 'Süper! Tüm sayıları doğru sıraladın! Sen bir sayı ustasısın! 🔢',
+    2: 'Güzel iş! Neredeyse hepsini doğru yaptın — bir daha dene! 💪',
+    1: 'Sayıları tekrar gözden geçir ve tekrar dene! 🤔'
+  };
+  document.getElementById('endMessage').textContent = msgs[stars];
+  document.getElementById('trophyEmoji').textContent = stars === 3 ? '🏆' : stars === 2 ? '🥈' : '🎯';
+  document.getElementById('endTitle').textContent = stars === 3 ? 'Number Master!' : stars === 2 ? 'Well Done!' : 'Keep Trying!';
+
+  showScreen('endScreen');
+  if (stars >= 2) launchConfetti();
+}
+
+function retryGame() { showScreen('startScreen'); }
+
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#8B5CF6','#EF4444','#3B82F6'];
+  for (var i = 0; i < 80; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (Math.random() * 8 + 6) + 'px';
+        el.style.height = (Math.random() * 8 + 6) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(el);
+        setTimeout(function() { el.remove(); }, 4000);
+      }, i * 30);
+    })(i);
+  }
+}
+</script>
+</body>
+</html>

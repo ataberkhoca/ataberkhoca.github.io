@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classroom Sorting — Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --green: #22C55E;
+  --red: #EF4444;
+  --purple: #8B5CF6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--cream);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(27,40,69,0.95);
+  backdrop-filter: blur(10px);
+  padding: 0 24px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.nav-brand {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--white);
+}
+.nav-brand span { color: var(--orange); }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a {
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  font-size: 0.9rem; font-weight: 600;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--orange); }
+
+/* ── GAME HEADER ── */
+.game-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 90px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.game-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(255,107,53,0.15) 0%, transparent 70%);
+}
+.breadcrumb {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 16px; position: relative;
+}
+.breadcrumb a, .breadcrumb span {
+  font-size: 0.8rem; color: rgba(255,255,255,0.6);
+  text-decoration: none; font-weight: 600;
+}
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(255,255,255,0.3); }
+.breadcrumb .current { color: var(--yellow); }
+.game-header h1 {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800; color: var(--white);
+  position: relative;
+}
+.game-header h1 span { color: var(--yellow); }
+.game-header p {
+  color: rgba(255,255,255,0.75);
+  margin-top: 8px; font-size: 1rem;
+  position: relative;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── START SCREEN ── */
+.start-screen {
+  max-width: 680px; margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+.story-box {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 28px 32px;
+  border-left: 6px solid var(--teal);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.story-emoji { font-size: 2.5rem; flex-shrink: 0; }
+.story-text h3 {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 6px;
+}
+.story-text p {
+  font-size: 0.95rem; color: #555; line-height: 1.6;
+}
+
+.difficulty-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 700;
+  color: var(--navy); text-align: center;
+  margin-bottom: 16px;
+}
+.difficulty-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-bottom: 32px;
+}
+.diff-card {
+  border: 3px solid #E5E7EB;
+  border-radius: 16px; padding: 20px 12px;
+  text-align: center; cursor: pointer;
+  background: var(--white);
+  transition: all 0.2s;
+}
+.diff-card:hover { border-color: var(--navy-light); transform: translateY(-2px); }
+.diff-card.selected { border-color: var(--orange); background: #FFF5F0; }
+.diff-card .diff-icon { font-size: 2rem; margin-bottom: 6px; }
+.diff-card .diff-name {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--navy); display: block;
+}
+.diff-card .diff-desc {
+  font-size: 0.75rem; color: #777; margin-top: 4px;
+  display: block;
+}
+
+.start-btn {
+  width: 100%; padding: 18px;
+  background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+  color: var(--white); border: none; border-radius: 16px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(255,107,53,0.4);
+}
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255,107,53,0.5);
+}
+
+/* ── GAME SCREEN ── */
+.game-screen { padding: 24px 16px 60px; }
+
+.game-topbar {
+  max-width: 900px; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.progress-info {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 700; color: var(--navy);
+}
+.score-badge {
+  background: var(--navy);
+  color: var(--white); border-radius: 20px;
+  padding: 6px 18px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.95rem; font-weight: 700;
+}
+.score-badge span { color: var(--yellow); }
+
+.progress-bar-wrap {
+  max-width: 900px; margin: 0 auto 24px;
+  background: #E5E7EB; border-radius: 10px; height: 8px;
+}
+.progress-bar-fill {
+  height: 8px; border-radius: 10px;
+  background: linear-gradient(90deg, var(--teal), var(--yellow));
+  transition: width 0.5s ease;
+}
+
+/* The item to sort */
+.sort-item-area {
+  max-width: 500px; margin: 0 auto 28px;
+  text-align: center;
+}
+.sort-item-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px 40px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  display: inline-block;
+  min-width: 220px;
+  transition: all 0.3s;
+  border: 3px solid transparent;
+}
+.sort-item-card.correct { border-color: var(--green); animation: correct-pop 0.5s ease; }
+.sort-item-card.wrong { border-color: var(--red); animation: wrong-shake 0.4s ease; }
+.sort-item-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+.sort-item-word {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.8rem; font-weight: 800;
+  color: var(--navy);
+}
+
+/* Hint */
+.hint-box {
+  max-width: 500px; margin: 0 auto 20px;
+  background: var(--yellow-light);
+  border-radius: 12px; padding: 12px 20px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.88rem; color: #6B5C2E;
+  font-weight: 600;
+}
+.hint-box.hidden { visibility: hidden; }
+
+/* Category buckets */
+.categories-grid {
+  max-width: 900px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.category-bucket {
+  background: var(--white);
+  border-radius: 20px;
+  border: 3px solid #E5E7EB;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  min-height: 160px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.category-bucket:hover {
+  border-color: var(--orange);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255,107,53,0.2);
+}
+.category-bucket.correct-pick {
+  border-color: var(--green);
+  background: #F0FDF4;
+  animation: bucket-bounce 0.4s ease;
+}
+.category-bucket.wrong-pick {
+  border-color: var(--red);
+  background: #FEF2F2;
+  animation: wrong-shake 0.4s ease;
+}
+.bucket-icon { font-size: 2.2rem; margin-bottom: 8px; }
+.bucket-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 10px;
+}
+.bucket-items {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+}
+.bucket-item-tag {
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  animation: tag-pop 0.3s ease;
+}
+
+/* Feedback overlay */
+.feedback-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  opacity: 0; transition: opacity 0.2s;
+}
+.feedback-overlay.show { opacity: 1; }
+.feedback-popup {
+  background: var(--white);
+  border-radius: 20px; padding: 24px 40px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  transform: scale(0.8);
+  transition: transform 0.2s;
+}
+.feedback-overlay.show .feedback-popup { transform: scale(1); }
+.feedback-popup.correct { border-top: 6px solid var(--green); }
+.feedback-popup.wrong { border-top: 6px solid var(--red); }
+.feedback-icon { font-size: 2.8rem; }
+.feedback-msg {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--navy); margin-top: 8px;
+}
+
+/* ── END SCREEN ── */
+.end-screen {
+  max-width: 600px; margin: 0 auto;
+  padding: 40px 24px 80px;
+  text-align: center;
+}
+.trophy-area { font-size: 5rem; margin-bottom: 16px; animation: trophy-bounce 1s ease; }
+.end-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2rem; font-weight: 800;
+  color: var(--navy); margin-bottom: 8px;
+}
+.stars-row { display: flex; justify-content: center; gap: 8px; font-size: 2.5rem; margin-bottom: 20px; }
+.end-stats {
+  background: var(--white);
+  border-radius: 20px; padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2rem; font-weight: 800;
+  color: var(--orange);
+}
+.stat-label { font-size: 0.85rem; color: #777; font-weight: 600; }
+.end-message {
+  background: var(--yellow-light);
+  border-radius: 16px; padding: 16px 24px;
+  font-size: 0.95rem; color: #6B5C2E;
+  font-weight: 600; margin-bottom: 28px;
+  line-height: 1.6;
+}
+.end-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-retry, .btn-home {
+  flex: 1; padding: 16px;
+  border: none; border-radius: 14px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-retry {
+  background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+}
+.btn-retry:hover { transform: translateY(-2px); }
+.btn-home {
+  background: var(--white);
+  color: var(--navy);
+  border: 2px solid #E5E7EB;
+}
+.btn-home:hover { border-color: var(--navy); }
+
+/* CONFETTI */
+.confetti-piece {
+  position: fixed; width: 10px; height: 10px;
+  border-radius: 2px;
+  animation: confetti-fall linear forwards;
+  z-index: 9999; pointer-events: none;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ANIMATIONS */
+@keyframes correct-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes wrong-shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+@keyframes bucket-bounce {
+  0%,100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+}
+@keyframes tag-pop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes trophy-bounce {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.15) rotate(-5deg); }
+  75% { transform: scale(1.15) rotate(5deg); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .categories-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .difficulty-grid { grid-template-columns: 1fr; }
+  .sort-item-card { padding: 24px; }
+  .sort-item-emoji { font-size: 2.8rem; }
+  .sort-item-word { font-size: 1.5rem; }
+  .end-stats { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">📚</div>
+    <span class="nav-brand">ataberk<span>hoca</span>ingilizce</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Ana Sayfa</a>
+    <a href="2-sinif.html">2. Sınıf</a>
+    <a href="hakkimda.html">Hakkımda</a>
+  </div>
+</nav>
+
+<!-- GAME HEADER -->
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a>
+    <span class="sep">›</span>
+    <a href="2-sinif.html">2. Sınıf</a>
+    <span class="sep">›</span>
+    <a href="classroom-life.html">Classroom Life</a>
+    <span class="sep">›</span>
+    <span class="current">Classroom Sorting</span>
+  </div>
+  <h1>🏫 Classroom <span>Sort!</span></h1>
+  <p>Sort the classroom items into the right groups!</p>
+</div>
+
+<!-- ══ START SCREEN ══ -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <div class="story-emoji">🌀</div>
+      <div class="story-text">
+        <h3>Oh no! A big wind blew everything around!</h3>
+        <p>All the classroom things are mixed up! Help sort them into three groups: <strong>Furniture</strong>, <strong>Objects</strong>, and <strong>Devices</strong>. Can you fix the classroom?</p>
+      </div>
+    </div>
+
+    <div class="difficulty-label">Seviye Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-card" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">🌱</div>
+        <span class="diff-name">Destekleyici</span>
+        <span class="diff-desc">Az eşya, Türkçe ipucu</span>
+      </div>
+      <div class="diff-card selected" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <span class="diff-name">Standart</span>
+        <span class="diff-desc">Normal sayıda eşya</span>
+      </div>
+      <div class="diff-card" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">🚀</div>
+        <span class="diff-name">Genişletme</span>
+        <span class="diff-desc">Tüm eşyalar, ipucu yok</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">▶ Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="progress-info">Item <span id="itemNum">1</span> of <span id="itemTotal">10</span></div>
+      <div class="score-badge">Score: <span id="scoreDisplay">0</span></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- Current item -->
+    <div class="sort-item-area">
+      <div class="sort-item-card" id="sortCard">
+        <span class="sort-item-emoji" id="sortEmoji">📚</span>
+        <span class="sort-item-word" id="sortWord">book</span>
+      </div>
+    </div>
+
+    <!-- Hint -->
+    <div class="hint-box" id="hintBox">
+      <span>💡</span>
+      <span id="hintText"></span>
+    </div>
+
+    <!-- Category buckets -->
+    <div class="categories-grid" id="categoriesGrid">
+      <div class="category-bucket" id="bucket-furniture" onclick="pickCategory('furniture')">
+        <div class="bucket-icon">🪑</div>
+        <div class="bucket-title">Furniture</div>
+        <div class="bucket-items" id="items-furniture"></div>
+      </div>
+      <div class="category-bucket" id="bucket-objects" onclick="pickCategory('objects')">
+        <div class="bucket-icon">✏️</div>
+        <div class="bucket-title">Objects</div>
+        <div class="bucket-items" id="items-objects"></div>
+      </div>
+      <div class="category-bucket" id="bucket-devices" onclick="pickCategory('devices')">
+        <div class="bucket-icon">💻</div>
+        <div class="bucket-title">Devices</div>
+        <div class="bucket-items" id="items-devices"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ END SCREEN ══ -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy-area" id="trophyEmoji">🏆</div>
+    <div class="end-title" id="endTitle">Well Done!</div>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="end-stats">
+      <div class="stat-item">
+        <div class="stat-num" id="statCorrect">0</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statWrong">0</div>
+        <div class="stat-label">Wrong</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statScore">0</div>
+        <div class="stat-label">Score</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statPct">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+    </div>
+    <div class="end-message" id="endMessage"></div>
+    <div class="end-buttons">
+      <button class="btn-retry" onclick="retryGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="window.location.href='classroom-life.html'">🏠 Tema Sayfası</button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback overlay -->
+<div class="feedback-overlay" id="feedbackOverlay">
+  <div class="feedback-popup" id="feedbackPopup">
+    <div class="feedback-icon" id="feedbackIcon"></div>
+    <div class="feedback-msg" id="feedbackMsg"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+var ALL_ITEMS = {
+  furniture: [
+    { word: 'desk',      emoji: '🪑', hint: 'Üzerinde ders çalıştığın büyük masa.' },
+    { word: 'chair',     emoji: '🪑', hint: 'Üzerine oturduğun şey.' },
+    { word: 'board',     emoji: '🟫', hint: 'Öğretmenin üzerine yazdığı büyük yüzey.' },
+    { word: 'bookcase',  emoji: '📚', hint: 'Kitapların dizildiği raf.' },
+    { word: 'clock',     emoji: '🕐', hint: 'Duvarda asılı, zamanı gösterir.' },
+    { word: 'door',      emoji: '🚪', hint: 'Sınıfa girmek için açarsın.' },
+    { word: 'window',    emoji: '🪟', hint: 'Dışarıya bakmak için kullandığın cam.' },
+    { word: 'wall',      emoji: '🧱', hint: 'Sınıfın çevresi bundan yapılmış.' }
+  ],
+  objects: [
+    { word: 'pencil',      emoji: '✏️', hint: 'Yazı yazmak için kullandığın ince araç.' },
+    { word: 'rubber',      emoji: '🩹', hint: 'Yanlış yazdığında silmek için kullanırsın.' },
+    { word: 'notebook',    emoji: '📓', hint: 'Ders notlarını yazdığın defter.' },
+    { word: 'book',        emoji: '📖', hint: 'Okuyarak öğrendiğin şey.' },
+    { word: 'crayon',      emoji: '🖍️', hint: 'Renkli çizmek için kullandığın boya kalemi.' },
+    { word: 'pencil case', emoji: '🧰', hint: 'Kalemlerini içinde taşıdığın kutu.' },
+    { word: 'sharpener',   emoji: '🔧', hint: 'Kalemini bu aletle sivriltirsin.' },
+    { word: 'chalk',       emoji: '🖊️', hint: 'Öğretmenin tahtaya bu ile yazar.' },
+    { word: 'glue',        emoji: '🫧', hint: 'Kağıtları birbirine yapıştırmak için.' },
+    { word: 'scissors',    emoji: '✂️', hint: 'Kağıdı kesmek için kullandığın araç.' }
+  ],
+  devices: [
+    { word: 'computer',    emoji: '🖥️', hint: 'Ekranı ve klavyesi olan büyük makine.' },
+    { word: 'tablet',      emoji: '📱', hint: 'Dokunmatik ekranlı taşınabilir cihaz.' },
+    { word: 'smart board', emoji: '📺', hint: 'Öğretmenin etkileşimli olarak kullandığı büyük tahta.' }
+  ]
+};
+
+var LEVEL_CONFIG = {
+  supporting: {
+    furniture: ['desk','chair','board','door'],
+    objects:   ['pencil','rubber','book','crayon'],
+    devices:   ['computer','tablet','smart board'],
+    showHint: true
+  },
+  standard: {
+    furniture: ['desk','chair','board','bookcase','clock','door','window'],
+    objects:   ['pencil','rubber','notebook','book','crayon','pencil case','sharpener','scissors'],
+    devices:   ['computer','tablet','smart board'],
+    showHint: true
+  },
+  expansion: {
+    furniture: ['desk','chair','board','bookcase','clock','door','window','wall'],
+    objects:   ['pencil','rubber','notebook','book','crayon','pencil case','sharpener','chalk','glue','scissors'],
+    devices:   ['computer','tablet','smart board'],
+    showHint: false
+  }
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+var currentLevel = 'standard';
+var queue = [];
+var currentIndex = 0;
+var score = 0;
+var correctCount = 0;
+var wrongCount = 0;
+var isLocked = false;
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function getItemData(word, category) {
+  var list = ALL_ITEMS[category];
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].word === word) return list[i];
+  }
+  return { word: word, emoji: '❓', hint: '' };
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────
+function selectDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.getAttribute('data-level');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+// ── GAME START ────────────────────────────────────────────────────────────
+function startGame() {
+  var cfg = LEVEL_CONFIG[currentLevel];
+  queue = [];
+
+  ['furniture','objects','devices'].forEach(function(cat) {
+    cfg[cat].forEach(function(word) {
+      var data = getItemData(word, cat);
+      queue.push({ word: data.word, emoji: data.emoji, hint: data.hint, category: cat });
+    });
+  });
+
+  queue = shuffle(queue);
+  currentIndex = 0;
+  score = 0;
+  correctCount = 0;
+  wrongCount = 0;
+
+  // Clear buckets
+  ['furniture','objects','devices'].forEach(function(cat) {
+    document.getElementById('items-' + cat).innerHTML = '';
+    var b = document.getElementById('bucket-' + cat);
+    b.classList.remove('correct-pick','wrong-pick');
+  });
+
+  showScreen('gameScreen');
+  updateScoreDisplay();
+  showItem();
+}
+
+function showItem() {
+  if (currentIndex >= queue.length) { endGame(); return; }
+
+  var item = queue[currentIndex];
+  var cfg = LEVEL_CONFIG[currentLevel];
+  var total = queue.length;
+
+  document.getElementById('sortCard').classList.remove('correct','wrong');
+  document.getElementById('sortEmoji').textContent = item.emoji;
+  document.getElementById('sortWord').textContent = item.word;
+  document.getElementById('itemNum').textContent = currentIndex + 1;
+  document.getElementById('itemTotal').textContent = total;
+  document.getElementById('progressFill').style.width = ((currentIndex / total) * 100) + '%';
+
+  var hintBox = document.getElementById('hintBox');
+  if (cfg.showHint && item.hint) {
+    hintBox.classList.remove('hidden');
+    document.getElementById('hintText').textContent = item.hint;
+  } else {
+    hintBox.classList.add('hidden');
+  }
+
+  isLocked = false;
+}
+
+function updateScoreDisplay() {
+  document.getElementById('scoreDisplay').textContent = score;
+}
+
+// ── PICK CATEGORY ─────────────────────────────────────────────────────────
+function pickCategory(cat) {
+  if (isLocked) return;
+  isLocked = true;
+
+  var item = queue[currentIndex];
+  var correct = (item.category === cat);
+  var bucket = document.getElementById('bucket-' + cat);
+  var card = document.getElementById('sortCard');
+
+  if (correct) {
+    score += 10;
+    correctCount++;
+    bucket.classList.add('correct-pick');
+    card.classList.add('correct');
+    // Add tag to bucket
+    var tag = document.createElement('span');
+    tag.className = 'bucket-item-tag';
+    tag.textContent = item.word;
+    document.getElementById('items-' + cat).appendChild(tag);
+    showFeedback(true, getCorrectMsg());
+  } else {
+    wrongCount++;
+    bucket.classList.add('wrong-pick');
+    card.classList.add('wrong');
+    showFeedback(false, 'It\'s ' + item.category + '! 📦');
+  }
+
+  updateScoreDisplay();
+
+  setTimeout(function() {
+    bucket.classList.remove('correct-pick','wrong-pick');
+    hideFeedback();
+    currentIndex++;
+    showItem();
+  }, 1400);
+}
+
+var correctMsgs = ['Great!', 'Perfect!', 'Well done!', 'Excellent!', 'Amazing!'];
+function getCorrectMsg() {
+  return correctMsgs[Math.floor(Math.random() * correctMsgs.length)];
+}
+
+// ── FEEDBACK ──────────────────────────────────────────────────────────────
+function showFeedback(correct, msg) {
+  var overlay = document.getElementById('feedbackOverlay');
+  var popup = document.getElementById('feedbackPopup');
+  document.getElementById('feedbackIcon').textContent = correct ? '✅' : '❌';
+  document.getElementById('feedbackMsg').textContent = msg;
+  popup.className = 'feedback-popup ' + (correct ? 'correct' : 'wrong');
+  overlay.classList.add('show');
+}
+function hideFeedback() {
+  document.getElementById('feedbackOverlay').classList.remove('show');
+}
+
+// ── END GAME ──────────────────────────────────────────────────────────────
+function endGame() {
+  var total = queue.length;
+  var pct = Math.round((correctCount / total) * 100);
+  var stars = pct >= 90 ? 3 : pct >= 60 ? 2 : 1;
+
+  document.getElementById('statCorrect').textContent = correctCount;
+  document.getElementById('statWrong').textContent = wrongCount;
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statPct').textContent = pct + '%';
+
+  var starsHtml = '';
+  for (var i = 0; i < 3; i++) { starsHtml += i < stars ? '⭐' : '☆'; }
+  document.getElementById('starsRow').innerHTML = starsHtml;
+
+  var msgs = {
+    3: 'Harika! Tüm eşyaları doğru grupladın! Sınıf tekrar düzene girdi! 🎉',
+    2: 'Güzel iş çıkardın! Birkaç eşya yanlış yerde, ama çok yaklaştın! 💪',
+    1: 'Tekrar deneyebilirsin! Her eşyanın hangi gruba ait olduğunu düşün. 🤔'
+  };
+  document.getElementById('endMessage').textContent = msgs[stars];
+
+  var trophies = { 3: '🏆', 2: '🥈', 1: '🎯' };
+  document.getElementById('trophyEmoji').textContent = trophies[stars];
+
+  var titles = { 3: 'Classroom Expert!', 2: 'Well Done!', 1: 'Keep Trying!' };
+  document.getElementById('endTitle').textContent = titles[stars];
+
+  showScreen('endScreen');
+  if (stars >= 2) launchConfetti();
+}
+
+function retryGame() {
+  showScreen('startScreen');
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────────
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#8B5CF6','#1B2845'];
+  for (var i = 0; i < 80; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (Math.random() * 8 + 6) + 'px';
+        el.style.height = (Math.random() * 8 + 6) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        el.style.animationDelay = '0s';
+        document.body.appendChild(el);
+        setTimeout(function() { el.remove(); }, 4000);
+      }, i * 30);
+    })(i);
+  }
+}
+</script>
+</body>
+</html>
