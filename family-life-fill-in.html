@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who's in the Photo? — Family Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --red: #EF4444;
+    --polaroid-bg: #fafafa;
+    --film-dark: #2a2a2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 24px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive; font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); -webkit-text-fill-color: var(--orange); }
+
+  /* GAME HEADER */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 80px 24px 32px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .game-header::before {
+    content: '📷'; position: absolute;
+    font-size: 120px; opacity: 0.05; top: 10px; right: 30px;
+  }
+  .breadcrumb {
+    font-size: 0.75rem; color: rgba(255,255,255,0.5);
+    margin-bottom: 12px; letter-spacing: 0.5px;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-header h1 {
+    font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .game-header h1 span { color: var(--yellow); }
+  .game-header p { color: rgba(255,255,255,0.7); font-size: 1rem; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-screen { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+  .story-box {
+    background: var(--polaroid-bg);
+    border: 3px solid #ddd;
+    border-radius: 4px; padding: 28px; margin-bottom: 32px;
+    position: relative;
+    box-shadow: 3px 3px 0 #ccc, 6px 6px 0 #bbb;
+    transform: rotate(-1deg);
+  }
+  .story-box::before {
+    content: '📷'; position: absolute; top: -18px; left: 24px;
+    font-size: 2rem; background: var(--cream); padding: 0 8px;
+  }
+  .story-box h2 { font-family: 'Baloo 2', cursive; font-size: 1.3rem; color: var(--film-dark); margin-bottom: 12px; }
+  .story-box p { color: #444; line-height: 1.7; font-size: 0.95rem; }
+
+  .difficulty-label {
+    text-align: center; font-size: 0.85rem; font-weight: 700;
+    color: var(--navy); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+  .diff-btn {
+    border: 3px solid transparent; border-radius: 14px; padding: 16px 8px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .diff-btn.selected { border-color: var(--orange); background: #fff5f0; }
+  .diff-btn .diff-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .diff-btn .diff-name { font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 4px; }
+  .diff-btn .diff-desc { font-size: 0.72rem; color: #888; line-height: 1.4; }
+
+  .start-btn {
+    display: block; width: 100%; padding: 18px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800; border: none;
+    border-radius: 16px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4); transition: all 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+
+  /* GAME SCREEN */
+  .game-screen { padding: 24px 16px 60px; }
+
+  .progress-bar-wrap {
+    max-width: 620px; margin: 0 auto 20px;
+    background: #e5e7eb; border-radius: 30px; height: 10px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; border-radius: 30px;
+    background: linear-gradient(90deg, var(--orange), var(--yellow));
+    transition: width 0.5s ease;
+  }
+
+  .game-topbar {
+    max-width: 620px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .stat-pill {
+    background: var(--white); border-radius: 30px; padding: 8px 18px;
+    font-weight: 700; font-size: 0.9rem; color: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill span { color: var(--orange); }
+
+  .hint-box {
+    max-width: 620px; margin: 0 auto 16px;
+    background: var(--yellow-light); border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 0.88rem; color: #5c4a00; display: none;
+  }
+  .hint-box.visible { display: block; }
+
+  /* POLAROID CARD */
+  .polaroid-wrap {
+    max-width: 480px; margin: 0 auto;
+    display: flex; justify-content: center;
+  }
+  .polaroid {
+    background: var(--polaroid-bg);
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 16px 16px 48px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1);
+    width: 100%; max-width: 400px;
+    position: relative;
+    animation: polaroidIn 0.4s ease;
+  }
+  @keyframes polaroidIn {
+    from { opacity: 0; transform: translateY(20px) rotate(-2deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(-1deg); }
+  }
+  .polaroid.shake { animation: cardShake 0.4s ease; }
+  @keyframes cardShake {
+    0%,100%{transform:rotate(-1deg) translateX(0)}
+    25%{transform:rotate(-1deg) translateX(-8px)}
+    75%{transform:rotate(-1deg) translateX(8px)}
+  }
+
+  /* Photo area */
+  .photo-area {
+    background: linear-gradient(135deg, #e8f4f8 0%, #d4eaf5 100%);
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-area::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.15) 20px, rgba(255,255,255,0.15) 21px
+    );
+  }
+  .photo-characters {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 8px; padding: 16px; position: relative; z-index: 1;
+    flex-wrap: wrap;
+  }
+  .photo-character {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: transform 0.2s;
+  }
+  .photo-character .char-emoji {
+    font-size: 2.8rem; line-height: 1;
+    filter: grayscale(30%);
+    transition: all 0.3s;
+  }
+  .photo-character .char-label {
+    font-size: 0.65rem; color: rgba(255,255,255,0.9);
+    font-weight: 700; background: rgba(0,0,0,0.35);
+    border-radius: 4px; padding: 1px 5px;
+  }
+  .photo-character.highlighted .char-emoji {
+    filter: none;
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 8px rgba(255,200,87,0.8));
+  }
+  .photo-character.highlighted .char-label {
+    background: var(--orange); color: white;
+  }
+  .photo-character.dimmed .char-emoji {
+    filter: grayscale(80%) brightness(0.7);
+  }
+
+  /* Polaroid caption */
+  .polaroid-caption {
+    padding: 4px 8px 0;
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.85rem; color: #555;
+    text-align: center; font-style: italic;
+    min-height: 24px;
+  }
+
+  /* QUESTION */
+  .question-area {
+    max-width: 480px; margin: 20px auto 0;
+  }
+  .question-text {
+    font-family: 'Baloo 2', cursive; font-size: 1.25rem; font-weight: 700;
+    color: var(--navy); text-align: center; margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .question-text .blank {
+    display: inline-block;
+    border-bottom: 3px solid var(--orange);
+    min-width: 80px; color: transparent;
+    vertical-align: bottom; margin: 0 4px;
+  }
+  .question-text .filled-correct {
+    color: var(--green); border-bottom-color: var(--green);
+  }
+  .question-text .filled-wrong {
+    color: var(--red); border-bottom-color: var(--red);
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .option-btn {
+    background: var(--white); border: 2px solid #e0e0e0;
+    border-radius: 12px; padding: 12px 8px;
+    font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700;
+    color: var(--navy); cursor: pointer;
+    transition: all 0.15s; text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--orange); transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
+  .option-btn.correct { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+  .option-btn.wrong   { background: #fef2f2; border-color: var(--red);   color: var(--red); }
+  .option-btn:disabled { cursor: default; }
+
+  /* NEXT BTN */
+  .next-btn {
+    display: none; width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.05rem; font-weight: 700; border: none;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(27,40,69,0.25); transition: all 0.2s;
+  }
+  .next-btn.visible { display: block; }
+  .next-btn:hover { transform: translateY(-1px); }
+
+  /* FEEDBACK */
+  .feedback-msg {
+    text-align: center; font-weight: 700; font-size: 0.95rem;
+    min-height: 24px; margin-bottom: 10px; transition: all 0.2s;
+  }
+  .feedback-msg.correct { color: var(--green); }
+  .feedback-msg.wrong   { color: var(--red); }
+
+  /* END SCREEN */
+  .end-screen { max-width: 560px; margin: 0 auto; padding: 40px 24px 60px; text-align: center; }
+  .trophy { font-size: 5rem; margin-bottom: 16px; animation: bounce 1s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .end-msg { color: #666; font-size: 1rem; margin-bottom: 24px; line-height: 1.6; }
+  .stars { font-size: 2.5rem; margin-bottom: 20px; }
+  .stats-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 16px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .stat-card .val { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-card .lbl { font-size: 0.75rem; color: #aaa; font-weight: 600; }
+  .end-btns { display: flex; flex-direction: column; gap: 12px; }
+  .btn-replay {
+    padding: 16px; background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: white; font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    border: none; border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.35); transition: all 0.2s;
+  }
+  .btn-replay:hover { transform: translateY(-2px); }
+  .btn-home {
+    padding: 14px; background: var(--white); color: var(--navy);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    border: 2px solid #e0e0e0; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-home:hover { border-color: var(--navy); }
+
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px;
+    top: -10px; z-index: 999; border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+
+  @media (max-width: 600px) {
+    .game-header h1 { font-size: 1.6rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr 1fr; }
+    .photo-character .char-emoji { font-size: 2.2rem; }
+    .polaroid { padding: 12px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">ataberk<span>hoca</span>ingilizce</a>
+</nav>
+
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> › <a href="2-sinif.html">2. Sınıf</a> › <a href="family-life.html">Family Life</a> › Who's in the Photo?
+  </div>
+  <h1>📷 Who's in the <span>Photo?</span></h1>
+  <p>Look at the photo and fill in the missing word!</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <h2>Lily found the family album! 📷</h2>
+      <p>Lily is looking through her family photo album but some of the captions got smudged! Look at each photo carefully and help her fill in the missing words. Who is in the photo? What do they look like?</p>
+    </div>
+    <div class="difficulty-label">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-btn selected" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">Kısa cümleler<br>5 soru · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">Orta cümleler<br>6 soru · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">Tam soru-cevap<br>8 soru · ipucu yok</div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🎮 Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="stat-pill">📷 Fotoğraf: <span id="qNum">1</span> / <span id="qTotal">5</span></div>
+      <div class="stat-pill">⭐ Puan: <span id="scoreCount">0</span></div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+    <div id="hintBox" class="hint-box">💡 <span id="hintText"></span></div>
+
+    <!-- POLAROID -->
+    <div class="polaroid-wrap">
+      <div class="polaroid" id="polaroid">
+        <div class="photo-area">
+          <div class="photo-characters" id="photoChars"></div>
+        </div>
+        <div class="polaroid-caption" id="polaroidCaption">Lily's Family 💛</div>
+      </div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="question-area">
+      <div class="question-text" id="questionText"></div>
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Sonraki Fotoğraf →</button>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars" id="starsDisplay"></div>
+    <div class="end-title" id="endTitle">Harika!</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statScore">0</div><div class="lbl">Puan</div></div>
+      <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Toplam</div></div>
+    </div>
+    <div class="end-btns">
+      <button class="btn-replay" onclick="replayGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="goHome()">🏠 Ana Sayfaya Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── QUESTION BANK ───
+// characters: array of {emoji, name, highlighted}
+// question: sentence with ___ for blank
+// answer: correct fill
+// options: [correct, wrong1, wrong2]
+// hint: Turkish contextual hint (supporting & standard only)
+// caption: polaroid bottom text
+
+var QUESTIONS = {
+  supporting: [
+    {
+      characters: [
+        {emoji:'👴', name:'Grandpa'},
+        {emoji:'👵', name:'Grandma'},
+        {emoji:'👨', name:'Dad', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'He\'s Lily\'s ___.',
+      answer: 'father',
+      options: ['father','brother','son'],
+      hint: '💡 Lily\'nin babası fotoğrafta vurgulanmış — o Lily\'nin ne olur?',
+      caption: "Lily's Family Picnic 🌿"
+    },
+    {
+      characters: [
+        {emoji:'👴', name:'Grandpa'},
+        {emoji:'👵', name:'Grandma', highlighted: true},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'She\'s Lily\'s ___.',
+      answer: 'grandmother',
+      options: ['grandmother','mother','sister'],
+      hint: '💡 Vurgulanan kişi Lily\'nin anneannesinin yaşında biri — nasıl deriz?',
+      caption: 'Summer Holidays 🌞'
+    },
+    {
+      characters: [
+        {emoji:'👦', name:'Tom', highlighted: true},
+        {emoji:'👧', name:'Lily'},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👩', name:'Mum'}
+      ],
+      question: 'He\'s Lily\'s ___.',
+      answer: 'brother',
+      options: ['brother','father','son'],
+      hint: '💡 Tom, Lily ile aynı aileden ve ondan küçük — kim olabilir?',
+      caption: 'Tom and Lily 🎈'
+    },
+    {
+      characters: [
+        {emoji:'👴', name:'Grandpa', highlighted: true},
+        {emoji:'👵', name:'Grandma'},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👩', name:'Mum'}
+      ],
+      question: 'He\'s Lily\'s ___.',
+      answer: 'grandfather',
+      options: ['grandfather','father','uncle'],
+      hint: '💡 Lily\'nin babasının babası fotoğrafta vurgulanmış — nasıl çağırırız?',
+      caption: "Grandpa's Birthday 🎂"
+    },
+    {
+      characters: [
+        {emoji:'👶', name:'Baby Emma', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'She\'s Lily\'s ___.',
+      answer: 'sister',
+      options: ['sister','daughter','mother'],
+      hint: '💡 Küçük bebeğin adı Emma — o Lily\'nin ne olur?',
+      caption: 'Baby Emma is here! 🌸'
+    }
+  ],
+
+  standard: [
+    {
+      characters: [
+        {emoji:'👩', name:'Mum', highlighted: true},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'She\'s got ___ hair.',
+      answer: 'blond',
+      options: ['blond','dark','short'],
+      hint: '💡 Annenin saç rengi açık sarı — bunu İngilizce nasıl söyleriz?',
+      caption: "Mum's golden hair ✨"
+    },
+    {
+      characters: [
+        {emoji:'👨', name:'Dad', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👧', name:'Lily'},
+        {emoji:'👦', name:'Tom'}
+      ],
+      question: 'He\'s got ___ hair.',
+      answer: 'dark',
+      options: ['dark','blond','long'],
+      hint: '💡 Babanın saçı koyu renk — bunu nasıl anlatırsın?',
+      caption: 'Dad the chef! 👨‍🍳'
+    },
+    {
+      characters: [
+        {emoji:'👴', name:'Grandpa', highlighted: true},
+        {emoji:'👵', name:'Grandma'}
+      ],
+      question: 'He\'s very ___.',
+      answer: 'tall',
+      options: ['tall','short','lovely'],
+      hint: '💡 Dede çok uzun boylu — bunu nasıl söyleriz?',
+      caption: 'Grandpa stands tall! 🏔️'
+    },
+    {
+      characters: [
+        {emoji:'👵', name:'Grandma', highlighted: true},
+        {emoji:'👴', name:'Grandpa'}
+      ],
+      question: 'She\'s very ___.',
+      answer: 'lovely',
+      options: ['lovely','tall','handsome'],
+      hint: '💡 Anneanne çok sevimli ve güzel kalpli biri — hangi kelime onu anlatır?',
+      caption: 'Sweet Grandma 💜'
+    },
+    {
+      characters: [
+        {emoji:'👩‍🦰', name:'Aunt Sue', highlighted: true},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'She\'s got ___ hair.',
+      answer: 'long',
+      options: ['long','short','blond'],
+      hint: '💡 Teyzenin saçı omuzlarına kadar uzanıyor — hangi kelime bu?',
+      caption: 'Aunt Sue visits! 🌺'
+    },
+    {
+      characters: [
+        {emoji:'👱‍♂️', name:'Uncle Bob', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👨', name:'Dad'}
+      ],
+      question: 'He\'s very ___.',
+      answer: 'handsome',
+      options: ['handsome','beautiful','nice'],
+      hint: '💡 Amca çok yakışıklı biri — hangi kelime erkekler için kullanılır?',
+      caption: 'Uncle Bob rocks! 😎'
+    }
+  ],
+
+  expansion: [
+    {
+      characters: [
+        {emoji:'👨', name:'Dad', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👧', name:'Lily'},
+        {emoji:'👦', name:'Tom'}
+      ],
+      question: 'What colour eyes has he got?',
+      answer: 'He\'s got brown eyes.',
+      options: ['He\'s got brown eyes.', 'She\'s got brown eyes.', 'He\'s got blue eyes.'],
+      hint: '',
+      caption: 'Dad\'s brown eyes 🤎'
+    },
+    {
+      characters: [
+        {emoji:'👩', name:'Mum', highlighted: true},
+        {emoji:'👨', name:'Dad'},
+        {emoji:'👧', name:'Lily'}
+      ],
+      question: 'What colour eyes has she got?',
+      answer: 'She\'s got blue eyes.',
+      options: ['She\'s got blue eyes.', 'He\'s got blue eyes.', 'She\'s got brown eyes.'],
+      hint: '',
+      caption: "Mum's blue eyes 💙"
+    },
+    {
+      characters: [
+        {emoji:'👴', name:'Grandpa', highlighted: true},
+        {emoji:'👵', name:'Grandma'}
+      ],
+      question: 'Is he tall or short?',
+      answer: 'He is tall.',
+      options: ['He is tall.', 'She is tall.', 'He is short.'],
+      hint: '',
+      caption: 'Tall Grandpa 🏔️'
+    },
+    {
+      characters: [
+        {emoji:'👵', name:'Grandma', highlighted: true},
+        {emoji:'👴', name:'Grandpa'}
+      ],
+      question: 'Is she tall or short?',
+      answer: 'She is short.',
+      options: ['She is short.', 'He is short.', 'She is tall.'],
+      hint: '',
+      caption: 'Sweet short Grandma 💜'
+    },
+    {
+      characters: [
+        {emoji:'👱‍♂️', name:'Uncle Bob', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👨', name:'Dad'}
+      ],
+      question: 'What colour hair has he got?',
+      answer: 'He\'s got blond hair.',
+      options: ['He\'s got blond hair.', 'She\'s got blond hair.', 'He\'s got dark hair.'],
+      hint: '',
+      caption: 'Blond Uncle Bob 🌟'
+    },
+    {
+      characters: [
+        {emoji:'👩‍🦱', name:'Cousin Mia', highlighted: true},
+        {emoji:'👧', name:'Lily'},
+        {emoji:'👦', name:'Tom'}
+      ],
+      question: 'What colour hair has she got?',
+      answer: 'She\'s got dark hair.',
+      options: ['She\'s got dark hair.', 'He\'s got dark hair.', 'She\'s got blond hair.'],
+      hint: '',
+      caption: 'Cousin Mia 🌙'
+    },
+    {
+      characters: [
+        {emoji:'👸', name:'Aunt Lisa', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👨', name:'Dad'}
+      ],
+      question: 'Is she beautiful or handsome?',
+      answer: 'She is beautiful.',
+      options: ['She is beautiful.', 'He is beautiful.', 'She is handsome.'],
+      hint: '',
+      caption: 'Beautiful Aunt Lisa 💎'
+    },
+    {
+      characters: [
+        {emoji:'🤴', name:'Uncle Dan', highlighted: true},
+        {emoji:'👩', name:'Mum'},
+        {emoji:'👨', name:'Dad'}
+      ],
+      question: 'Is he handsome or beautiful?',
+      answer: 'He is handsome.',
+      options: ['He is handsome.', 'She is handsome.', 'He is beautiful.'],
+      hint: '',
+      caption: 'Handsome Uncle Dan 👑'
+    }
+  ]
+};
+
+// ─── STATE ───
+var currentLevel = 'supporting';
+var questions = [];
+var currentQ = 0;
+var score = 0;
+var answered = false;
+
+// ─── UI ───
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.dataset.level;
+}
+
+function startGame() {
+  currentQ = 0; score = 0; answered = false;
+  questions = shuffle(QUESTIONS[currentLevel].slice());
+  updateTopbar();
+  showScreen('gameScreen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  var q = questions[currentQ];
+  answered = false;
+
+  // Progress
+  var pct = (currentQ / questions.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  updateTopbar();
+
+  // Hint
+  if (currentLevel !== 'expansion' && q.hint) {
+    document.getElementById('hintText').textContent = q.hint;
+    document.getElementById('hintBox').classList.add('visible');
+  } else {
+    document.getElementById('hintBox').classList.remove('visible');
+  }
+
+  // Polaroid photo
+  var charsHtml = '';
+  q.characters.forEach(function(c) {
+    var cls = c.highlighted ? 'photo-character highlighted' : 'photo-character dimmed';
+    charsHtml +=
+      '<div class="' + cls + '">' +
+        '<div class="char-emoji">' + c.emoji + '</div>' +
+        '<div class="char-label">' + c.name + '</div>' +
+      '</div>';
+  });
+  document.getElementById('photoChars').innerHTML = charsHtml;
+  document.getElementById('polaroidCaption').textContent = q.caption;
+
+  // Polaroid entrance animation
+  var pol = document.getElementById('polaroid');
+  pol.style.animation = 'none';
+  pol.offsetHeight; // reflow
+  pol.style.animation = 'polaroidIn 0.4s ease';
+
+  // Question text with blank
+  document.getElementById('questionText').innerHTML =
+    q.question.replace('___', '<span class="blank" id="blankSpan">___</span>');
+
+  // Feedback clear
+  var fb = document.getElementById('feedbackMsg');
+  fb.textContent = '';
+  fb.className = 'feedback-msg';
+
+  // Options
+  var grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  var opts = shuffle(q.options.slice());
+  opts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', function(){ selectAnswer(opt, btn, q); });
+    grid.appendChild(btn);
+  });
+
+  // Next btn
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function selectAnswer(chosen, btn, q) {
+  if (answered) return;
+  answered = true;
+
+  // Disable all
+  document.querySelectorAll('.option-btn').forEach(function(b){ b.disabled = true; });
+
+  var correct = chosen === q.answer;
+  var fb = document.getElementById('feedbackMsg');
+  var blank = document.getElementById('blankSpan');
+
+  if (correct) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ Harika!';
+    fb.className = 'feedback-msg correct';
+    if (blank) {
+      blank.textContent = q.answer;
+      blank.className = 'blank filled-correct';
+    }
+    score++;
+    updateTopbar();
+  } else {
+    btn.classList.add('wrong');
+    // Show correct
+    document.querySelectorAll('.option-btn').forEach(function(b){
+      if (b.textContent === q.answer) b.classList.add('correct');
+    });
+    fb.textContent = '❌ Doğru cevap: ' + q.answer;
+    fb.className = 'feedback-msg wrong';
+    if (blank) {
+      blank.textContent = q.answer;
+      blank.className = 'blank filled-wrong';
+    }
+    // Shake polaroid
+    var pol = document.getElementById('polaroid');
+    pol.classList.add('shake');
+    setTimeout(function(){ pol.classList.remove('shake'); }, 450);
+  }
+
+  // Show next / finish
+  var nextBtn = document.getElementById('nextBtn');
+  nextBtn.classList.add('visible');
+  if (currentQ === questions.length - 1) {
+    nextBtn.textContent = '🏁 Sonuçları Gör';
+  } else {
+    nextBtn.textContent = 'Sonraki Fotoğraf →';
+  }
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) {
+    showEndScreen();
+  } else {
+    renderQuestion();
+  }
+}
+
+function updateTopbar() {
+  document.getElementById('qNum').textContent = currentQ + 1;
+  document.getElementById('qTotal').textContent = questions.length;
+  document.getElementById('scoreCount').textContent = score;
+}
+
+function showEndScreen() {
+  var total = questions.length;
+  var ratio = score / total;
+  var stars = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : 1;
+
+  document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statTotal').textContent = total;
+
+  if (stars === 3) {
+    document.getElementById('trophyEmoji').textContent = '🏆';
+    document.getElementById('endTitle').textContent = 'Mükemmel!';
+    document.getElementById('endMsg').textContent = "Tüm fotoğrafların altındaki boşlukları doğru doldurdun! Lily'nin aile albümü artık tam. Sen harika bir dedektifsin!";
+    launchConfetti();
+  } else if (stars === 2) {
+    document.getElementById('trophyEmoji').textContent = '🥈';
+    document.getElementById('endTitle').textContent = 'Çok İyi!';
+    document.getElementById('endMsg').textContent = 'Fotoğrafların büyük kısmını doğru tanımladın! Biraz daha pratik yaparsan mükemmel olursun.';
+  } else {
+    document.getElementById('trophyEmoji').textContent = '💪';
+    document.getElementById('endTitle').textContent = 'Devam Et!';
+    document.getElementById('endMsg').textContent = "Fotoğraflara dikkatli bak ve aile üyelerini hatırla. Tekrar dene!";
+  }
+  showScreen('endScreen');
+}
+
+function replayGame() { startGame(); }
+function goHome() { window.location.href = 'family-life.html'; }
+
+function shuffle(arr) {
+  for (var i=arr.length-1; i>0; i--) {
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#1B2845'];
+  for (var i=0; i<80; i++) {
+    (function(i){ setTimeout(function(){
+      var el=document.createElement('div'); el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      el.style.width=(8+Math.random()*8)+'px'; el.style.height=(8+Math.random()*8)+'px';
+      el.style.animationDuration=(1.5+Math.random()*2)+'s';
+      el.style.animationDelay=(Math.random()*0.5)+'s';
+      document.body.appendChild(el);
+      setTimeout(function(){ el.remove(); },4000);
+    },i*30); })(i);
+  }
+}
+</script>
+</body>
+</html>

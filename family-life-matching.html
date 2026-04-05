@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Family Album — Family Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --red: #EF4444;
+    --album-brown: #8B5E3C;
+    --album-tan: #D4A574;
+    --album-page: #FDF6E3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95);
+    backdrop-filter: blur(10px);
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); -webkit-text-fill-color: var(--orange); }
+
+  /* GAME HEADER */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 80px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-header::before {
+    content: '📷';
+    position: absolute; font-size: 120px; opacity: 0.05;
+    top: 10px; right: 30px;
+  }
+  .breadcrumb {
+    font-size: 0.75rem; color: rgba(255,255,255,0.5);
+    margin-bottom: 12px; letter-spacing: 0.5px;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .game-header h1 span { color: var(--yellow); }
+  .game-header p { color: rgba(255,255,255,0.7); font-size: 1rem; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-screen {
+    max-width: 680px; margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+  .story-box {
+    background: var(--album-page);
+    border: 3px solid var(--album-tan);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--album-tan);
+  }
+  .story-box::before {
+    content: '📸';
+    position: absolute; top: -18px; left: 24px;
+    font-size: 2rem; background: var(--cream); padding: 0 8px;
+  }
+  .story-box h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; color: var(--album-brown);
+    margin-bottom: 12px;
+  }
+  .story-box p { color: #5c4a32; line-height: 1.7; font-size: 0.95rem; }
+
+  .difficulty-label {
+    text-align: center; font-size: 0.85rem; font-weight: 700;
+    color: var(--navy); letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .difficulty-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-bottom: 28px;
+  }
+  .diff-btn {
+    border: 3px solid transparent;
+    border-radius: 14px; padding: 16px 8px;
+    cursor: pointer; text-align: center;
+    transition: all 0.2s; background: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .diff-btn.selected { border-color: var(--orange); background: #fff5f0; }
+  .diff-btn .diff-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .diff-btn .diff-name {
+    font-family: 'Baloo 2', cursive; font-weight: 700;
+    font-size: 0.9rem; color: var(--navy); margin-bottom: 4px;
+  }
+  .diff-btn .diff-desc { font-size: 0.72rem; color: #888; }
+
+  .start-btn {
+    display: block; width: 100%; padding: 18px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800; border: none;
+    border-radius: 16px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+    transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+
+  /* GAME SCREEN */
+  .game-screen { padding: 24px 16px 60px; }
+
+  .game-topbar {
+    max-width: 720px; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .stat-pill {
+    background: var(--white); border-radius: 30px;
+    padding: 8px 18px; font-weight: 700; font-size: 0.9rem;
+    color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill span { color: var(--orange); }
+
+  .hint-box {
+    max-width: 720px; margin: 0 auto 20px;
+    background: var(--yellow-light);
+    border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 0.88rem; color: #5c4a00;
+    display: none;
+  }
+  .hint-box.visible { display: block; }
+
+  /* ALBUM BOARD */
+  .album-board {
+    max-width: 720px; margin: 0 auto;
+    background: var(--album-page);
+    border-radius: 20px;
+    border: 4px solid var(--album-tan);
+    box-shadow: 6px 6px 0 var(--album-brown), 0 12px 40px rgba(0,0,0,0.15);
+    padding: 28px 20px;
+    position: relative;
+  }
+  .album-board::before {
+    content: '';
+    position: absolute; left: 44px; top: 0; bottom: 0; width: 3px;
+    background: repeating-linear-gradient(to bottom, var(--orange) 0, var(--orange) 8px, transparent 8px, transparent 16px);
+    opacity: 0.3;
+  }
+  .album-title {
+    text-align: center; font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; color: var(--album-brown);
+    font-weight: 700; margin-bottom: 20px; letter-spacing: 1px;
+  }
+
+  .cards-grid {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  /* CARD */
+  .card-wrap {
+    perspective: 600px;
+    cursor: pointer;
+  }
+  .card {
+    width: 100%; height: 90px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease;
+    border-radius: 12px;
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .card.matched { pointer-events: none; }
+
+  .card-front, .card-back {
+    position: absolute; inset: 0;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+  }
+  .card-front {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: rgba(255,255,255,0.15);
+    font-size: 1.6rem;
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  .card-front::after { content: '?'; color: rgba(255,255,255,0.25); font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; }
+
+  .card-back {
+    transform: rotateY(180deg);
+    border: 2px solid var(--album-tan);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 8px;
+    text-align: center;
+  }
+  .card-back.type-emoji {
+    background: #fffbe8;
+    font-size: 2.8rem;
+    flex-direction: column; gap: 2px;
+  }
+  .card-back.type-word {
+    background: var(--white);
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    flex-direction: column; gap: 4px;
+  }
+  .card-back.type-word .word-tr {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem; color: #aaa; font-weight: 600;
+  }
+
+  .card.matched .card-back {
+    border-color: var(--green);
+    background: #f0fdf4 !important;
+    animation: matchPop 0.4s ease;
+  }
+  .card.wrong .card-back {
+    border-color: var(--red);
+    animation: wrongShake 0.4s ease;
+  }
+
+  @keyframes matchPop {
+    0% { transform: rotateY(180deg) scale(1); }
+    50% { transform: rotateY(180deg) scale(1.08); }
+    100% { transform: rotateY(180deg) scale(1); }
+  }
+  @keyframes wrongShake {
+    0%,100% { transform: rotateY(180deg) translateX(0); }
+    25% { transform: rotateY(180deg) translateX(-5px); }
+    75% { transform: rotateY(180deg) translateX(5px); }
+  }
+
+  /* END SCREEN */
+  .end-screen { max-width: 560px; margin: 0 auto; padding: 40px 24px 60px; text-align: center; }
+  .trophy { font-size: 5rem; margin-bottom: 16px; animation: bounce 1s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .end-msg { color: #666; font-size: 1rem; margin-bottom: 24px; line-height: 1.6; }
+  .stars { font-size: 2.5rem; margin-bottom: 20px; }
+  .stats-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 16px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .stat-card .val { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-card .lbl { font-size: 0.75rem; color: #aaa; font-weight: 600; }
+  .end-btns { display: flex; flex-direction: column; gap: 12px; }
+  .btn-replay {
+    padding: 16px; background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: white; font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    border: none; border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.35); transition: all 0.2s;
+  }
+  .btn-replay:hover { transform: translateY(-2px); }
+  .btn-home {
+    padding: 14px; background: var(--white); color: var(--navy);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    border: 2px solid #e0e0e0; border-radius: 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-home:hover { border-color: var(--navy); }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px;
+    top: -10px; z-index: 999;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .game-header h1 { font-size: 1.6rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+    .card { height: 80px; }
+    .card-back.type-emoji { font-size: 2.2rem; }
+    .card-back.type-word { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">ataberk<span>hoca</span>ingilizce</a>
+</nav>
+
+<!-- GAME HEADER -->
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> › <a href="2-sinif.html">2. Sınıf</a> › <a href="family-life.html">Family Life</a> › The Family Album
+  </div>
+  <h1>📸 The Family <span>Album</span></h1>
+  <p>Match each family member with their name!</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <h2>The Album is Mixed Up! 📷</h2>
+      <p>Lily found her family photo album — but all the labels fell off the photos! Help her put the right names back on the right family members. Match each picture to the correct word!</p>
+    </div>
+
+    <div class="difficulty-label">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-btn selected" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">6 çift · Türkçe ipucu</div>
+      </div>
+      <div class="diff-btn" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">8 çift · Türkçe ipucu</div>
+      </div>
+      <div class="diff-btn" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">9 çift · İpucu yok</div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">🎮 Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="stat-pill">✅ Eşleşme: <span id="matchCount">0</span> / <span id="totalPairs">0</span></div>
+      <div class="stat-pill">❌ Hata: <span id="mistakeCount">0</span></div>
+      <div class="stat-pill">🔄 Deneme: <span id="flipCount">0</span></div>
+    </div>
+    <div id="hintBox" class="hint-box">💡 <span id="hintText"></span></div>
+    <div class="album-board">
+      <div class="album-title">📒 Lily's Family Album</div>
+      <div id="cardsGrid" class="cards-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars" id="starsDisplay"></div>
+    <div class="end-title" id="endTitle">Harika!</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statPairs">0</div><div class="lbl">Eşleşme</div></div>
+      <div class="stat-card"><div class="val" id="statMistakes">0</div><div class="lbl">Hata</div></div>
+      <div class="stat-card"><div class="val" id="statFlips">0</div><div class="lbl">Deneme</div></div>
+    </div>
+    <div class="end-btns">
+      <button class="btn-replay" onclick="replayGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="goHome()">🏠 Ana Sayfaya Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ───── DATA ─────
+  var ALL_PAIRS = [
+    { id:'father',      emoji:'👨',  word:'father',      tr:'baba' },
+    { id:'mother',      emoji:'👩',  word:'mother',      tr:'anne' },
+    { id:'sister',      emoji:'👧',  word:'sister',      tr:'kız kardeş' },
+    { id:'brother',     emoji:'👦',  word:'brother',     tr:'erkek kardeş' },
+    { id:'grandfather', emoji:'👴',  word:'grandfather', tr:'büyük baba' },
+    { id:'grandmother', emoji:'👵',  word:'grandmother', tr:'büyük anne' },
+    { id:'baby',        emoji:'👶',  word:'baby',        tr:'bebek' },
+    { id:'son',         emoji:'🧒',  word:'son',         tr:'erkek evlat' },
+    { id:'daughter',    emoji:'👧🏻', word:'daughter',    tr:'kız evlat' }
+  ];
+
+  var HINTS = {
+    supporting: [
+      '💡 Lily, albümde babasının fotoğrafını arıyor. "Father" diyoruz!',
+      '💡 Bu kartlardan birinde Lily\'nin annesi var. "Mother" diyoruz!',
+      '💡 Küçük bir bebeğin resmi var — hangi kart onu tarif ediyor?',
+      '💡 Büyük baba ve büyük anne kart çiftleri var, dikkatli bak!'
+    ],
+    standard: [
+      '💡 Aile üyelerini hatırla: father, mother, sister, brother — ve büyükleri!',
+      '💡 "Son" erkek evlat, "daughter" ise kız evlat demek.',
+      '💡 "Grandfather" ve "grandmother" — grand büyük demek!'
+    ]
+  };
+
+  // ───── STATE ─────
+  var currentLevel = 'supporting';
+  var flippedCards = [];
+  var matchedIds = [];
+  var mistakes = 0;
+  var flips = 0;
+  var lockBoard = false;
+  var currentPairs = [];
+  var hintShown = false;
+  var hintIndex = 0;
+
+  // ───── UI ─────
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  function selectDiff(el) {
+    document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('selected'); });
+    el.classList.add('selected');
+    currentLevel = el.dataset.level;
+  }
+
+  function startGame() {
+    mistakes = 0; flips = 0; flippedCards = []; matchedIds = []; lockBoard = false; hintShown = false; hintIndex = 0;
+    var count = currentLevel === 'supporting' ? 6 : currentLevel === 'standard' ? 8 : 9;
+    currentPairs = shuffle(ALL_PAIRS.slice()).slice(0, count);
+    buildGrid();
+    updateStats();
+    showHint();
+    showScreen('gameScreen');
+  }
+
+  function buildGrid() {
+    var grid = document.getElementById('cardsGrid');
+    grid.innerHTML = '';
+    var total = currentPairs.length * 2;
+    var cols = total <= 12 ? 4 : total <= 16 ? 4 : 6;
+    if (window.innerWidth < 480) cols = 3;
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+
+    // build card data: emoji + word for each pair
+    var cardData = [];
+    currentPairs.forEach(function(pair) {
+      cardData.push({ pairId: pair.id, type: 'emoji', content: pair.emoji, tr: pair.tr, word: pair.word });
+      cardData.push({ pairId: pair.id, type: 'word', content: pair.word, tr: pair.tr });
+    });
+    cardData = shuffle(cardData);
+
+    cardData.forEach(function(data, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'card-wrap';
+      wrap.innerHTML =
+        '<div class="card" data-pair="' + data.pairId + '" data-type="' + data.type + '" data-index="' + i + '">' +
+          '<div class="card-front"></div>' +
+          '<div class="card-back type-' + data.type + '">' +
+            (data.type === 'emoji'
+              ? data.content
+              : data.content + '<span class="word-tr">' + data.tr + '</span>'
+            ) +
+          '</div>' +
+        '</div>';
+      wrap.addEventListener('click', function() { flipCard(this.querySelector('.card')); });
+      grid.appendChild(wrap);
+    });
+  }
+
+  function flipCard(card) {
+    if (lockBoard) return;
+    if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+    if (flippedCards.length === 2) return;
+
+    card.classList.add('flipped');
+    flippedCards.push(card);
+    flips++;
+    updateStats();
+
+    if (flippedCards.length === 2) {
+      lockBoard = true;
+      checkMatch();
+    }
+  }
+
+  function checkMatch() {
+    var a = flippedCards[0], b = flippedCards[1];
+    var sameId = a.dataset.pair === b.dataset.pair;
+    var diffType = a.dataset.type !== b.dataset.type;
+
+    if (sameId && diffType) {
+      // MATCH
+      setTimeout(function() {
+        a.classList.add('matched');
+        b.classList.add('matched');
+        matchedIds.push(a.dataset.pair);
+        flippedCards = [];
+        lockBoard = false;
+        updateStats();
+        cycleHint();
+        if (matchedIds.length === currentPairs.length) {
+          setTimeout(showEndScreen, 600);
+        }
+      }, 500);
+    } else {
+      // WRONG
+      mistakes++;
+      a.classList.add('wrong'); b.classList.add('wrong');
+      setTimeout(function() {
+        a.classList.remove('flipped', 'wrong');
+        b.classList.remove('flipped', 'wrong');
+        flippedCards = [];
+        lockBoard = false;
+        updateStats();
+      }, 900);
+    }
+  }
+
+  function updateStats() {
+    document.getElementById('matchCount').textContent = matchedIds.length;
+    document.getElementById('totalPairs').textContent = currentPairs.length;
+    document.getElementById('mistakeCount').textContent = mistakes;
+    document.getElementById('flipCount').textContent = flips;
+  }
+
+  function showHint() {
+    if (currentLevel === 'expansion') return;
+    var hints = HINTS[currentLevel];
+    if (!hints || hints.length === 0) return;
+    document.getElementById('hintText').textContent = hints[hintIndex % hints.length];
+    document.getElementById('hintBox').classList.add('visible');
+  }
+
+  function cycleHint() {
+    if (currentLevel === 'expansion') return;
+    hintIndex++;
+    showHint();
+  }
+
+  function showEndScreen() {
+    var total = currentPairs.length;
+    var score = Math.max(0, total - mistakes);
+    var ratio = score / total;
+    var stars = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : 1;
+
+    document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    document.getElementById('statPairs').textContent = total;
+    document.getElementById('statMistakes').textContent = mistakes;
+    document.getElementById('statFlips').textContent = flips;
+
+    if (stars === 3) {
+      document.getElementById('trophyEmoji').textContent = '🏆';
+      document.getElementById('endTitle').textContent = 'Mükemmel!';
+      document.getElementById('endMsg').textContent = 'Tüm aile üyelerini doğru eşleştirdin! Lily\'nin albümü artık tamamlandı. Sen gerçek bir aile uzmanısın!';
+      launchConfetti();
+    } else if (stars === 2) {
+      document.getElementById('trophyEmoji').textContent = '🥈';
+      document.getElementById('endTitle').textContent = 'Çok İyi!';
+      document.getElementById('endMsg').textContent = 'Albümün büyük kısmını düzelttirdin! Bir daha denersen mükemmel olabilirsin.';
+    } else {
+      document.getElementById('trophyEmoji').textContent = '💪';
+      document.getElementById('endTitle').textContent = 'Devam Et!';
+      document.getElementById('endMsg').textContent = 'Aile üyelerini pratik yaparsan çok daha iyi olursun. Tekrar dene!';
+    }
+
+    showScreen('endScreen');
+  }
+
+  function replayGame() { startGame(); }
+  function goHome() { window.location.href = 'family-life.html'; }
+
+  // ───── HELPERS ─────
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+
+  function launchConfetti() {
+    var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#1B2845'];
+    for (var i = 0; i < 80; i++) {
+      (function(i) {
+        setTimeout(function() {
+          var el = document.createElement('div');
+          el.className = 'confetti-piece';
+          el.style.left = Math.random() * 100 + 'vw';
+          el.style.background = colors[Math.floor(Math.random() * colors.length)];
+          el.style.width = (8 + Math.random() * 8) + 'px';
+          el.style.height = (8 + Math.random() * 8) + 'px';
+          el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+          el.style.animationDelay = (Math.random() * 0.5) + 's';
+          document.body.appendChild(el);
+          setTimeout(function() { el.remove(); }, 4000);
+        }, i * 30);
+      })(i);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tell Me About Your Family — Family Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --red: #EF4444;
+    --tree-trunk: #8B5E3C;
+    --tree-leaves: #2d7a3a;
+    --tree-leaves-light: #3da64e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Quicksand', sans-serif; background: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+  /* NAVBAR */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95); backdrop-filter: blur(10px);
+    padding: 0 24px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive; font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); -webkit-text-fill-color: var(--orange); }
+
+  /* HEADER */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 80px 24px 32px; text-align: center; position: relative; overflow: hidden;
+  }
+  .game-header::before { content: '🌳'; position: absolute; font-size: 120px; opacity: 0.05; top: 10px; right: 30px; }
+  .breadcrumb { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+  .breadcrumb a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-header h1 { font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+  .game-header h1 span { color: var(--yellow); }
+  .game-header p { color: rgba(255,255,255,0.7); font-size: 1rem; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-screen { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+  .story-box {
+    background: #f0fdf4; border: 3px solid #86efac;
+    border-radius: 16px; padding: 28px; margin-bottom: 32px;
+    position: relative; box-shadow: 4px 4px 0 #86efac;
+  }
+  .story-box::before { content: '🌳'; position: absolute; top: -18px; left: 24px; font-size: 2rem; background: var(--cream); padding: 0 8px; }
+  .story-box h2 { font-family: 'Baloo 2', cursive; font-size: 1.3rem; color: #166534; margin-bottom: 12px; }
+  .story-box p { color: #15803d; line-height: 1.7; font-size: 0.95rem; }
+
+  .difficulty-label { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--navy); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+  .difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+  .diff-btn {
+    border: 3px solid transparent; border-radius: 14px; padding: 16px 8px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .diff-btn.selected { border-color: var(--orange); background: #fff5f0; }
+  .diff-btn .diff-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .diff-btn .diff-name { font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 4px; }
+  .diff-btn .diff-desc { font-size: 0.72rem; color: #888; line-height: 1.4; }
+  .start-btn {
+    display: block; width: 100%; padding: 18px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800; border: none;
+    border-radius: 16px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4); transition: all 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+
+  /* GAME SCREEN */
+  .game-screen { padding: 24px 16px 60px; }
+  .game-topbar {
+    max-width: 720px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .stat-pill {
+    background: var(--white); border-radius: 30px; padding: 8px 18px;
+    font-weight: 700; font-size: 0.9rem; color: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill span { color: var(--orange); }
+
+  .hint-box {
+    max-width: 720px; margin: 0 auto 16px;
+    background: var(--yellow-light); border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 0.88rem; color: #5c4a00; display: none;
+  }
+  .hint-box.visible { display: block; }
+
+  /* MAIN GAME AREA */
+  .game-area {
+    max-width: 720px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 220px; gap: 16px;
+    align-items: start;
+  }
+
+  /* LEFT: sentence builder */
+  .sentence-panel {
+    background: var(--white); border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .sentence-panel-header {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sentence-panel-header .who-emoji { font-size: 2rem; }
+  .sentence-panel-header .who-info { flex: 1; }
+  .sentence-panel-header .who-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sentence-panel-header .who-name { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800; color: var(--white); }
+  .sentence-num { font-family: 'Baloo 2', cursive; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+
+  .sentence-body { padding: 20px; }
+
+  /* DROP ZONE */
+  .drop-zone {
+    min-height: 56px; border-radius: 12px;
+    border: 2px dashed #d1d5db;
+    background: #f9fafb;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 10px; margin-bottom: 16px;
+    transition: all 0.2s; align-items: center;
+  }
+  .drop-zone.drag-over { border-color: var(--orange); background: #fff5f0; }
+  .drop-zone.correct { border-color: var(--green); background: #f0fdf4; }
+  .drop-zone.wrong { border-color: var(--red); background: #fef2f2; animation: shakeZone 0.4s ease; }
+  @keyframes shakeZone { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* WORD CHIPS */
+  .word-chip {
+    background: var(--navy); color: var(--white);
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem;
+    border-radius: 8px; padding: 8px 14px;
+    cursor: grab; user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 6px rgba(27,40,69,0.25);
+    white-space: nowrap;
+  }
+  .word-chip:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(27,40,69,0.3); }
+  .word-chip.dragging { opacity: 0.4; }
+  .word-chip.touch-active { transform: scale(1.08); box-shadow: 0 8px 20px rgba(27,40,69,0.35); opacity: 0.85; z-index: 50; }
+  .word-chip.in-zone { background: var(--orange); cursor: grab; }
+  .word-chip.in-zone:hover { background: var(--orange-glow); }
+  .word-chip.word-correct { background: var(--green) !important; cursor: default; box-shadow: 0 2px 8px rgba(34,197,94,0.4); animation: chipPop 0.3s ease; }
+  .word-chip.word-wrong { background: var(--red) !important; animation: chipShake 0.35s ease; }
+  .word-chip.locked { background: var(--green); cursor: default; pointer-events: none; }
+  @keyframes chipPop { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+  @keyframes chipShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+  /* WORD BANK */
+  .word-bank {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    min-height: 44px; margin-bottom: 14px;
+  }
+
+  /* CHECK BTN */
+  .check-btn {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--teal), #1eaaa0);
+    color: white; font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700; border: none;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(46,196,182,0.3); transition: all 0.2s;
+  }
+  .check-btn:hover { transform: translateY(-1px); }
+  .check-btn:disabled { background: #d1d5db; box-shadow: none; cursor: default; }
+
+  .feedback-msg { text-align: center; font-weight: 700; font-size: 0.9rem; min-height: 20px; margin-bottom: 8px; }
+  .feedback-msg.correct { color: var(--green); }
+  .feedback-msg.wrong { color: var(--red); }
+
+  .next-btn {
+    display: none; width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: white; font-family: 'Baloo 2', cursive;
+    font-size: 1rem; font-weight: 700; border: none;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(27,40,69,0.25); transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .next-btn.visible { display: block; }
+  .next-btn:hover { transform: translateY(-1px); }
+
+  /* RIGHT: FAMILY TREE */
+  .tree-panel {
+    background: var(--white); border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    padding: 16px; position: sticky; top: 80px;
+  }
+  .tree-title {
+    font-family: 'Baloo 2', cursive; font-size: 0.85rem; font-weight: 800;
+    color: var(--navy); text-align: center; margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+  .tree-visual {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .tree-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .tree-node {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    opacity: 0.18; transition: all 0.5s ease;
+    min-width: 44px;
+  }
+  .tree-node.revealed { opacity: 1; }
+  .tree-node.revealed .node-emoji { animation: nodeReveal 0.5s ease; }
+  @keyframes nodeReveal {
+    0% { transform: scale(0) rotate(-10deg); }
+    70% { transform: scale(1.2) rotate(3deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .node-emoji { font-size: 1.8rem; line-height: 1; }
+  .node-label { font-size: 0.55rem; font-weight: 700; color: #888; text-align: center; }
+  .node-label.revealed-label { color: var(--navy); }
+
+  .tree-connector {
+    width: 2px; height: 12px; background: #d1d5db; margin: 0 auto;
+  }
+  .tree-connector-h {
+    height: 2px; background: #d1d5db;
+    transition: background 0.5s;
+  }
+  .tree-connector-h.lit { background: var(--green); }
+  .tree-trunk-visual {
+    width: 14px; height: 28px;
+    background: linear-gradient(180deg, var(--tree-trunk), #6b3f1f);
+    border-radius: 3px; margin: 0 auto;
+  }
+  .tree-leaves-visual {
+    width: 70px; height: 50px;
+    background: radial-gradient(ellipse, var(--tree-leaves-light) 30%, var(--tree-leaves) 100%);
+    border-radius: 50% 50% 40% 40%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(45,122,58,0.3);
+  }
+
+  /* END SCREEN */
+  .end-screen { max-width: 560px; margin: 0 auto; padding: 40px 24px 60px; text-align: center; }
+  .trophy { font-size: 5rem; margin-bottom: 16px; animation: bounce 1s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .end-msg { color: #666; font-size: 1rem; margin-bottom: 24px; line-height: 1.6; }
+  .stars { font-size: 2.5rem; margin-bottom: 20px; }
+  .end-tree { font-size: 3rem; margin-bottom: 16px; animation: nodeReveal 0.6s ease; }
+  .stats-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 16px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .stat-card .val { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-card .lbl { font-size: 0.75rem; color: #aaa; font-weight: 600; }
+  .end-btns { display: flex; flex-direction: column; gap: 12px; }
+  .btn-replay {
+    padding: 16px; background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: white; font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    border: none; border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.35); transition: all 0.2s;
+  }
+  .btn-replay:hover { transform: translateY(-2px); }
+  .btn-home {
+    padding: 14px; background: var(--white); color: var(--navy);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    border: 2px solid #e0e0e0; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-home:hover { border-color: var(--navy); }
+
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px; top: -10px; z-index: 999; border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+
+  @media (max-width: 640px) {
+    .game-area { grid-template-columns: 1fr; }
+    .tree-panel { position: static; }
+    .game-header h1 { font-size: 1.6rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+    .word-chip { font-size: 0.82rem; padding: 7px 11px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">ataberk<span>hoca</span>ingilizce</a>
+</nav>
+
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> › <a href="2-sinif.html">2. Sınıf</a> › <a href="family-life.html">Family Life</a> › Tell Me About Your Family
+  </div>
+  <h1>🌳 Tell Me About Your <span>Family!</span></h1>
+  <p>Put the words in the right order to build the family tree!</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <h2>Build Lily's Family Tree! 🌳</h2>
+      <p>Lily wants to tell everyone about her family — but her sentences got all mixed up! Put the words in the right order to make a sentence about each family member. Every correct sentence adds someone to the family tree!</p>
+    </div>
+    <div class="difficulty-label">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-btn selected" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">3-4 kelime<br>4 cümle · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">5-6 kelime<br>5 cümle · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">7-8 kelime<br>6 cümle · ipucu yok</div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🎮 Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="stat-pill">📝 Cümle: <span id="sentNum">1</span> / <span id="sentTotal">4</span></div>
+      <div class="stat-pill">⭐ Puan: <span id="scoreNum">0</span></div>
+    </div>
+    <div id="hintBox" class="hint-box">💡 <span id="hintText"></span></div>
+
+    <div class="game-area">
+      <!-- LEFT: sentence builder -->
+      <div class="sentence-panel">
+        <div class="sentence-panel-header">
+          <div class="who-emoji" id="whoEmoji">👨</div>
+          <div class="who-info">
+            <div class="who-label">Hakkında cümle kur:</div>
+            <div class="who-name" id="whoName">Dad</div>
+          </div>
+          <div class="sentence-num" id="sentNumBadge">1/4</div>
+        </div>
+        <div class="sentence-body">
+          <div class="drop-zone" id="dropZone"
+            ondragover="event.preventDefault(); document.getElementById('dropZone').classList.add('drag-over')"
+            ondragleave="document.getElementById('dropZone').classList.remove('drag-over')"
+            ondrop="event.preventDefault(); document.getElementById('dropZone').classList.remove('drag-over'); dropToZone(event)">
+            <span style="color:#ccc;font-size:0.85rem;font-style:italic;" id="dropPlaceholder">Kelimeleri buraya sürükle veya tıkla...</span>
+          </div>
+          <div class="word-bank" id="wordBank"></div>
+          <div class="feedback-msg" id="feedbackMsg"></div>
+          <button class="next-btn" id="nextBtn" onclick="nextSentence()">Sonraki →</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: family tree -->
+      <div class="tree-panel">
+        <div class="tree-title">🌳 Lily's Family Tree</div>
+        <div class="tree-visual" id="treeVisual"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="end-tree">🌳</div>
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars" id="starsDisplay"></div>
+    <div class="end-title" id="endTitle">Harika!</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statScore">0</div><div class="lbl">Puan</div></div>
+      <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Cümle</div></div>
+    </div>
+    <div class="end-btns">
+      <button class="btn-replay" onclick="replayGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="goHome()">🏠 Ana Sayfaya Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── SENTENCES ───
+var SENTENCES = {
+  supporting: [
+    { who:'👨', name:'Dad',       words:['He', 'is', 'my', 'father.'],       answer:'He is my father.',       hint:'💡 "He" ile başla — baba için hangi kelimeyi kullanırız?' },
+    { who:'👩', name:'Mum',       words:['She', 'is', 'my', 'mother.'],      answer:'She is my mother.',      hint:'💡 "She" ile başla — anne için hangi kelimeyi kullanırız?' },
+    { who:'👴', name:'Grandpa',   words:['He', 'is', 'very', 'tall.'],       answer:'He is very tall.',       hint:'💡 Dede çok uzun boylu — "very tall" ifadesini kullan!' },
+    { who:'👶', name:'Baby Emma', words:['She', 'is', 'my', 'sister.'],      answer:'She is my sister.',      hint:'💡 Bebek Emma Lily\'nin kız kardeşi — "sister" kelimesini kullan!' }
+  ],
+  standard: [
+    { who:'👨', name:'Dad',         words:['He', 'is', 'tall', 'and', 'handsome.'],          answer:'He is tall and handsome.',          hint:'💡 Baba hem uzun hem yakışıklı — iki sıfatı "and" ile birleştir!' },
+    { who:'👩', name:'Mum',         words:['She', 'has', 'got', 'blond', 'hair.'],           answer:'She has got blond hair.',           hint:'💡 Annenin sarı saçları var — "has got" yapısını kullan!' },
+    { who:'👵', name:'Grandma',     words:['My', 'grandmother', 'is', 'short', 'and', 'lovely.'], answer:'My grandmother is short and lovely.', hint:'💡 Anneanne hem kısa hem sevimli — "My grandmother" ile başla!' },
+    { who:'👦', name:'Tom',         words:['He', 'is', 'my', 'brother.', 'He', 'is', 'short.'], answer:'He is my brother. He is short.',   hint:'💡 Tom Lily\'nin erkek kardeşi ve kısa boylu — iki cümle yaz!' },
+    { who:'👱‍♂️', name:'Uncle Bob', words:['He', 'has', 'got', 'dark', 'hair.'],             answer:'He has got dark hair.',             hint:'💡 Amcanın koyu saçları var — "has got" yapısını kullan!' }
+  ],
+  expansion: [
+    { who:'👨', name:'Dad',         words:['He', 'is', 'tall', 'and', 'he', 'has', 'got', 'dark', 'hair.'],       answer:'He is tall and he has got dark hair.',       hint:'' },
+    { who:'👩', name:'Mum',         words:['She', 'is', 'beautiful.', 'She', 'has', 'got', 'long', 'blond', 'hair.'], answer:'She is beautiful. She has got long blond hair.', hint:'' },
+    { who:'👴', name:'Grandpa',     words:['My', 'grandfather', 'is', 'very', 'tall', 'and', 'handsome.'],         answer:'My grandfather is very tall and handsome.',  hint:'' },
+    { who:'👵', name:'Grandma',     words:['She', 'is', 'short', 'and', 'lovely.', 'She', 'has', 'got', 'dark', 'hair.'], answer:'She is short and lovely. She has got dark hair.', hint:'' },
+    { who:'👩‍🦰', name:'Aunt Sue',  words:['She', 'has', 'got', 'long', 'hair.', 'She', 'is', 'very', 'nice.'],   answer:'She has got long hair. She is very nice.',   hint:'' },
+    { who:'👩‍🦱', name:'Cousin Mia',words:['She', 'has', 'got', 'dark', 'hair', 'and', 'brown', 'eyes.'],         answer:'She has got dark hair and brown eyes.',      hint:'' }
+  ]
+};
+
+// Tree nodes per level — which characters appear and in what order they're revealed
+var TREE_NODES = {
+  supporting: [
+    { row: 0, nodes: [{ emoji:'👴', label:'Grandpa', id:'grandpa' }, { emoji:'👵', label:'Grandma', id:'grandma' }] },
+    { row: 1, nodes: [{ emoji:'👨', label:'Dad', id:'dad' }, { emoji:'👩', label:'Mum', id:'mum' }] },
+    { row: 2, nodes: [{ emoji:'👧', label:'Lily', id:'lily' }, { emoji:'👶', label:'Emma', id:'emma' }] }
+  ],
+  standard: [
+    { row: 0, nodes: [{ emoji:'👴', label:'Grandpa', id:'grandpa' }, { emoji:'👵', label:'Grandma', id:'grandma' }] },
+    { row: 1, nodes: [{ emoji:'👨', label:'Dad', id:'dad' }, { emoji:'👩', label:'Mum', id:'mum' }, { emoji:'👱‍♂️', label:'Uncle Bob', id:'uncle' }] },
+    { row: 2, nodes: [{ emoji:'👧', label:'Lily', id:'lily' }, { emoji:'👦', label:'Tom', id:'tom' }] }
+  ],
+  expansion: [
+    { row: 0, nodes: [{ emoji:'👴', label:'Grandpa', id:'grandpa' }, { emoji:'👵', label:'Grandma', id:'grandma' }] },
+    { row: 1, nodes: [{ emoji:'👨', label:'Dad', id:'dad' }, { emoji:'👩', label:'Mum', id:'mum' }, { emoji:'👩‍🦰', label:'Aunt Sue', id:'aunt' }] },
+    { row: 2, nodes: [{ emoji:'👧', label:'Lily', id:'lily' }, { emoji:'👩‍🦱', label:'Cousin Mia', id:'mia' }] }
+  ]
+};
+
+// reveal order: which node to reveal after each correct sentence
+var REVEAL_ORDER = {
+  supporting: ['dad', 'mum', 'grandpa', 'emma'],
+  standard:   ['dad', 'mum', 'grandma', 'tom', 'uncle'],
+  expansion:  ['dad', 'mum', 'grandpa', 'grandma', 'aunt', 'mia']
+};
+
+// ─── STATE ───
+var currentLevel = 'supporting';
+var sentences = [];
+var currentSentIdx = 0;
+var score = 0;
+var answered = false;
+var draggedChip = null;
+var touchChip = null;
+var touchClone = null;
+var zoneChips = []; // word chips currently in drop zone (in order)
+var bankChips = []; // remaining in word bank
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+function selectDiff(el) {
+  document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.dataset.level;
+}
+
+function startGame() {
+  currentSentIdx = 0; score = 0; answered = false;
+  sentences = SENTENCES[currentLevel].slice();
+  buildTree();
+  showScreen('gameScreen');
+  renderSentence();
+}
+
+// ─── TREE ───
+function buildTree() {
+  var tv = document.getElementById('treeVisual');
+  tv.innerHTML = '';
+
+  // Tree top
+  var leaves = document.createElement('div');
+  leaves.className = 'tree-leaves-visual';
+  leaves.textContent = '🌳';
+  tv.appendChild(leaves);
+
+  var trunk = document.createElement('div');
+  trunk.className = 'tree-trunk-visual';
+  tv.appendChild(trunk);
+
+  var rows = TREE_NODES[currentLevel];
+  rows.forEach(function(rowData, ri) {
+    // Connector
+    var conn = document.createElement('div');
+    conn.className = 'tree-connector';
+    tv.appendChild(conn);
+
+    var row = document.createElement('div');
+    row.className = 'tree-row';
+    rowData.nodes.forEach(function(node, ni) {
+      var nd = document.createElement('div');
+      nd.className = 'tree-node';
+      nd.id = 'node-' + node.id;
+      nd.innerHTML =
+        '<div class="node-emoji">' + node.emoji + '</div>' +
+        '<div class="node-label">' + node.label + '</div>';
+      row.appendChild(nd);
+
+      if (ni < rowData.nodes.length - 1) {
+        var hconn = document.createElement('div');
+        hconn.className = 'tree-connector-h';
+        hconn.style.width = '18px';
+        hconn.style.alignSelf = 'center';
+        row.appendChild(hconn);
+      }
+    });
+    tv.appendChild(row);
+  });
+}
+
+function revealNode(idx) {
+  var order = REVEAL_ORDER[currentLevel];
+  if (idx >= order.length) return;
+  var nodeId = order[idx];
+  var node = document.getElementById('node-' + nodeId);
+  if (node) {
+    node.classList.add('revealed');
+    node.querySelector('.node-label').classList.add('revealed-label');
+  }
+}
+
+// ─── SENTENCE ───
+function renderSentence() {
+  answered = false;
+  zoneChips = []; bankChips = [];
+
+  var sent = sentences[currentSentIdx];
+  var total = sentences.length;
+
+  document.getElementById('sentNum').textContent = currentSentIdx + 1;
+  document.getElementById('sentTotal').textContent = total;
+  document.getElementById('sentNumBadge').textContent = (currentSentIdx+1) + '/' + total;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('whoEmoji').textContent = sent.who;
+  document.getElementById('whoName').textContent = sent.name;
+
+  // Hint
+  if (currentLevel !== 'expansion' && sent.hint) {
+    document.getElementById('hintText').textContent = sent.hint;
+    document.getElementById('hintBox').classList.add('visible');
+  } else {
+    document.getElementById('hintBox').classList.remove('visible');
+  }
+
+  // Clear zone
+  var zone = document.getElementById('dropZone');
+  zone.innerHTML = '<span style="color:#ccc;font-size:0.85rem;font-style:italic;" id="dropPlaceholder">Kelimeleri buraya sürükle veya tıkla...</span>';
+  zone.className = 'drop-zone';
+
+  // Word bank
+  var bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  var shuffled = shuffle(sent.words.slice());
+  shuffled.forEach(function(word) {
+    bank.appendChild(makeChip(word, false));
+  });
+
+  // Feedback & buttons
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('feedbackMsg').className = 'feedback-msg';
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function makeChip(word, inZone) {
+  var el = document.createElement('div');
+  el.className = 'word-chip' + (inZone ? ' in-zone' : '');
+  el.textContent = word;
+  el.draggable = true;
+  el.dataset.word = word;
+
+  el.addEventListener('dragstart', function(){ draggedChip = this; setTimeout(function(){ el.classList.add('dragging'); }, 0); });
+  el.addEventListener('dragend', function(){ el.classList.remove('dragging'); draggedChip = null; });
+  el.addEventListener('click', function(){ toggleChip(this); });
+  el.addEventListener('touchstart', onTouchStart, { passive: false });
+  el.addEventListener('touchmove', onTouchMove, { passive: false });
+  el.addEventListener('touchend', onTouchEnd, { passive: false });
+  return el;
+}
+
+// Click chip: from bank → validate immediately; from zone → remove back to bank
+function toggleChip(chip) {
+  if (answered) return;
+  if (chip.classList.contains('word-correct')) return; // locked correct chip
+  var zone = document.getElementById('dropZone');
+  var bank = document.getElementById('wordBank');
+
+  if (chip.classList.contains('in-zone') || chip.classList.contains('word-wrong')) {
+    // Remove from zone back to bank
+    chip.classList.remove('in-zone', 'word-wrong');
+    if (chip.parentNode === zone) zone.removeChild(chip);
+    bank.appendChild(chip);
+  } else {
+    // Coming from bank → validate
+    placeChip(chip);
+  }
+}
+
+function placeChip(chip) {
+  var zone = document.getElementById('dropZone');
+  var bank = document.getElementById('wordBank');
+  var ph = document.getElementById('dropPlaceholder');
+  var correctWords = sentences[currentSentIdx].answer.split(' ');
+  // Count how many correct chips already in zone
+  var correctInZone = zone.querySelectorAll('.word-correct').length;
+  var expected = correctWords[correctInZone];
+
+  if (ph) ph.remove();
+  if (chip.parentNode === bank) bank.removeChild(chip);
+
+  if (chip.dataset.word === expected) {
+    chip.classList.add('in-zone', 'word-correct');
+    chip.classList.remove('word-wrong');
+    zone.appendChild(chip);
+    // Check if sentence complete
+    var totalCorrect = zone.querySelectorAll('.word-correct').length;
+    if (totalCorrect === correctWords.length) {
+      completeSentence();
+    }
+  } else {
+    chip.classList.add('in-zone', 'word-wrong');
+    zone.appendChild(chip);
+    // Shake and return after delay
+    setTimeout(function() {
+      chip.classList.remove('in-zone', 'word-wrong');
+      if (chip.parentNode === zone) zone.removeChild(chip);
+      bank.appendChild(chip);
+      if (zone.querySelectorAll('.word-chip').length === 0) {
+        var newPh = document.createElement('span');
+        newPh.id = 'dropPlaceholder';
+        newPh.style.cssText = 'color:#ccc;font-size:0.85rem;font-style:italic;';
+        newPh.textContent = 'Kelimeleri buraya sürükle veya tıkla...';
+        zone.appendChild(newPh);
+      }
+    }, 600);
+  }
+}
+
+function dropToZone(e) {
+  if (!draggedChip || answered) return;
+  if (draggedChip.classList.contains('word-correct')) return;
+  if (draggedChip.classList.contains('in-zone')) {
+    // Dragged from zone back (to anywhere outside) — ignore, handled by dragend
+    return;
+  }
+  placeChip(draggedChip);
+}
+
+function completeSentence() {
+  answered = true;
+  var zone = document.getElementById('dropZone');
+  zone.classList.add('correct');
+  var fb = document.getElementById('feedbackMsg');
+  fb.textContent = '✅ Harika! ' + sentences[currentSentIdx].answer;
+  fb.className = 'feedback-msg correct';
+  score++;
+  document.getElementById('scoreNum').textContent = score;
+  revealNode(currentSentIdx);
+  var nextBtn = document.getElementById('nextBtn');
+  nextBtn.classList.add('visible');
+  nextBtn.textContent = currentSentIdx === sentences.length - 1 ? '🏁 Aile Ağacını Gör!' : 'Sonraki Cümle →';
+}
+
+// ─── CHECK (removed — now per-word) ───
+
+// ─── TOUCH ───
+function onTouchStart(e) {
+  touchChip = this;
+  touchChip.classList.add('touch-active');
+  var touch = e.touches[0];
+  touchClone = touchChip.cloneNode(true);
+  touchClone.style.cssText =
+    'position:fixed;pointer-events:none;z-index:999;border-radius:8px;' +
+    'width:' + touchChip.offsetWidth + 'px;' +
+    'font-family:Baloo 2,cursive;font-weight:700;font-size:0.9rem;' +
+    'background:' + (touchChip.classList.contains('in-zone') ? '#FF6B35' : '#1B2845') + ';' +
+    'color:white;padding:8px 14px;' +
+    'transform:scale(1.08);transition:none;' +
+    'left:' + (touch.clientX - touchChip.offsetWidth/2) + 'px;' +
+    'top:' + (touch.clientY - touchChip.offsetHeight/2) + 'px;';
+  document.body.appendChild(touchClone);
+  e.preventDefault();
+}
+function onTouchMove(e) {
+  if (!touchClone) return;
+  var touch = e.touches[0];
+  touchClone.style.left = (touch.clientX - touchChip.offsetWidth/2) + 'px';
+  touchClone.style.top  = (touch.clientY - touchChip.offsetHeight/2) + 'px';
+  e.preventDefault();
+}
+function onTouchEnd(e) {
+  if (!touchClone || !touchChip) return;
+  touchChip.classList.remove('touch-active');
+  var touch = e.changedTouches[0];
+  touchClone.remove(); touchClone = null;
+  var target = document.elementFromPoint(touch.clientX, touch.clientY);
+  var zone = document.getElementById('dropZone');
+  var bank = document.getElementById('wordBank');
+
+  if (zone && (zone === target || zone.contains(target))) {
+    if (!touchChip.classList.contains('word-correct')) {
+      placeChip(touchChip);
+    }
+  } else if (bank && (bank === target || bank.contains(target))) {
+    if (touchChip.classList.contains('in-zone') && !touchChip.classList.contains('word-correct')) {
+      touchChip.classList.remove('in-zone', 'word-wrong');
+      if (touchChip.parentNode) touchChip.parentNode.removeChild(touchChip);
+      bank.appendChild(touchChip);
+    }
+  }
+  touchChip = null;
+  e.preventDefault();
+}
+
+function nextSentence() {
+  currentSentIdx++;
+  if (currentSentIdx >= sentences.length) {
+    showEndScreen();
+  } else {
+    renderSentence();
+  }
+}
+
+function showEndScreen() {
+  var total = sentences.length;
+  var ratio = score / total;
+  var stars = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : 1;
+
+  document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statTotal').textContent = total;
+
+  if (stars === 3) {
+    document.getElementById('trophyEmoji').textContent = '🏆';
+    document.getElementById('endTitle').textContent = 'Muhteşem!';
+    document.getElementById('endMsg').textContent = "Lily'nin aile ağacını tamamen doldurdun! Tüm cümleler doğruydu. Sen harika bir yazar olacaksın!";
+    launchConfetti();
+  } else if (stars === 2) {
+    document.getElementById('trophyEmoji').textContent = '🥈';
+    document.getElementById('endTitle').textContent = 'Çok İyi!';
+    document.getElementById('endMsg').textContent = 'Aile ağacının büyük kısmını doldurdun! Biraz daha pratik yaparsan mükemmel olursun.';
+  } else {
+    document.getElementById('trophyEmoji').textContent = '💪';
+    document.getElementById('endTitle').textContent = 'Devam Et!';
+    document.getElementById('endMsg').textContent = 'Kelime sırasını tekrar gözden geçir — sonra aile ağacına geri dön!';
+  }
+  showScreen('endScreen');
+}
+
+function replayGame() { startGame(); }
+function goHome() { window.location.href = 'family-life.html'; }
+
+function shuffle(arr) {
+  for (var i=arr.length-1; i>0; i--) {
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#1B2845'];
+  for (var i=0; i<80; i++) {
+    (function(i){ setTimeout(function(){
+      var el=document.createElement('div'); el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      el.style.width=(8+Math.random()*8)+'px'; el.style.height=(8+Math.random()*8)+'px';
+      el.style.animationDuration=(1.5+Math.random()*2)+'s';
+      el.style.animationDelay=(Math.random()*0.5)+'s';
+      document.body.appendChild(el);
+      setTimeout(function(){ el.remove(); },4000);
+    },i*30); })(i);
+  }
+}
+</script>
+</body>
+</html>

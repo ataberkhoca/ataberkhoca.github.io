@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Picnic Day — Family Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2845;
+    --navy-light: #274472;
+    --orange: #FF6B35;
+    --orange-glow: #FF8C5A;
+    --yellow: #FFC857;
+    --yellow-light: #FFE4A0;
+    --teal: #2EC4B6;
+    --white: #FFFFFF;
+    --cream: #FFF9F0;
+    --green: #22C55E;
+    --red: #EF4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Quicksand', sans-serif; background: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+  /* NAVBAR */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(27,40,69,0.95); backdrop-filter: blur(10px);
+    padding: 0 24px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .navbar-brand {
+    font-family: 'Baloo 2', cursive; font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-decoration: none;
+  }
+  .navbar-brand span { color: var(--orange); -webkit-text-fill-color: var(--orange); }
+
+  /* GAME HEADER */
+  .game-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 80px 24px 32px; text-align: center; position: relative; overflow: hidden;
+  }
+  .game-header::before { content: '🧺'; position: absolute; font-size: 120px; opacity: 0.05; top: 10px; right: 30px; }
+  .breadcrumb { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .breadcrumb a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--orange); }
+  .game-header h1 { font-family: 'Baloo 2', cursive; font-size: 2.2rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+  .game-header h1 span { color: var(--yellow); }
+  .game-header p { color: rgba(255,255,255,0.7); font-size: 1rem; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-screen { max-width: 680px; margin: 0 auto; padding: 40px 24px 60px; }
+  .story-box {
+    background: #f0fdf4; border: 3px solid #86efac;
+    border-radius: 16px; padding: 28px; margin-bottom: 32px;
+    position: relative; box-shadow: 4px 4px 0 #86efac;
+  }
+  .story-box::before { content: '🌿'; position: absolute; top: -18px; left: 24px; font-size: 2rem; background: var(--cream); padding: 0 8px; }
+  .story-box h2 { font-family: 'Baloo 2', cursive; font-size: 1.3rem; color: #166534; margin-bottom: 12px; }
+  .story-box p { color: #15803d; line-height: 1.7; font-size: 0.95rem; }
+
+  /* STOP MAP */
+  .stop-map {
+    display: flex; gap: 6px; align-items: center; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .stop-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #e5e7eb; border: 2px solid #d1d5db;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.3s;
+  }
+  .stop-dot.done { background: var(--green); border-color: var(--green); }
+  .stop-dot.current { background: var(--orange); border-color: var(--orange); transform: scale(1.2); }
+  .stop-connector { width: 20px; height: 2px; background: #e5e7eb; }
+  .stop-connector.done { background: var(--green); }
+
+  .difficulty-label { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--navy); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+  .difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+  .diff-btn {
+    border: 3px solid transparent; border-radius: 14px; padding: 16px 8px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .diff-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .diff-btn.selected { border-color: var(--orange); background: #fff5f0; }
+  .diff-btn .diff-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .diff-btn .diff-name { font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 4px; }
+  .diff-btn .diff-desc { font-size: 0.72rem; color: #888; line-height: 1.4; }
+  .start-btn {
+    display: block; width: 100%; padding: 18px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: var(--white); font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 800; border: none;
+    border-radius: 16px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4); transition: all 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+
+  /* GAME SCREEN */
+  .game-screen { padding: 24px 16px 60px; }
+  .game-topbar {
+    max-width: 680px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .stat-pill {
+    background: var(--white); border-radius: 30px; padding: 8px 18px;
+    font-weight: 700; font-size: 0.9rem; color: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill span { color: var(--orange); }
+
+  /* PROGRESS MAP */
+  .progress-map {
+    max-width: 680px; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap;
+  }
+
+  /* HINT */
+  .hint-box {
+    max-width: 680px; margin: 0 auto 16px;
+    background: var(--yellow-light); border-left: 4px solid var(--yellow);
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 0.88rem; color: #5c4a00; display: none;
+  }
+  .hint-box.visible { display: block; }
+
+  /* SCENE CARD */
+  .scene-card {
+    max-width: 680px; margin: 0 auto;
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    animation: sceneIn 0.4s ease;
+  }
+  @keyframes sceneIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .scene-visual {
+    min-height: 180px; padding: 28px 24px 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    position: relative; overflow: hidden;
+  }
+  .scene-visual::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+  }
+  .scene-bg-emoji {
+    position: absolute; font-size: 5rem; opacity: 0.12;
+    top: 10px; right: 20px; z-index: 0;
+  }
+  .scene-characters {
+    display: flex; gap: 12px; align-items: flex-end;
+    position: relative; z-index: 1;
+  }
+  .scene-char { text-align: center; }
+  .scene-char .s-emoji { font-size: 3rem; line-height: 1; display: block; }
+  .scene-char .s-name {
+    font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.3); border-radius: 4px; padding: 1px 5px; margin-top: 3px;
+    display: block;
+  }
+  .scene-char.speaker .s-emoji { font-size: 3.6rem; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+
+  .scene-label {
+    position: absolute; top: 14px; left: 16px; z-index: 2;
+    background: rgba(0,0,0,0.35); color: white; border-radius: 20px;
+    padding: 4px 12px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;
+  }
+
+  /* SPEECH BUBBLE */
+  .speech-area {
+    background: var(--white); padding: 20px 24px 24px;
+  }
+  .speech-bubble {
+    background: #f1f5f9; border-radius: 16px 16px 16px 4px;
+    padding: 14px 18px; margin-bottom: 16px;
+    border-left: 3px solid var(--teal);
+    position: relative;
+  }
+  .speech-bubble .speaker-name {
+    font-size: 0.72rem; font-weight: 700; color: var(--teal);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .speech-bubble .speech-text {
+    font-family: 'Baloo 2', cursive; font-size: 1.05rem;
+    font-weight: 700; color: var(--navy); line-height: 1.4;
+  }
+
+  .question-label {
+    font-size: 0.78rem; font-weight: 700; color: #aaa;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  /* OPTIONS */
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: var(--white); border: 2px solid #e5e7eb;
+    border-radius: 14px; padding: 14px 18px;
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    color: var(--navy); cursor: pointer; text-align: left;
+    transition: all 0.15s; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--orange); transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .opt-btn .opt-letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #f3f4f6; display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800; flex-shrink: 0; transition: all 0.15s;
+  }
+  .opt-btn:hover:not(:disabled) .opt-letter { background: var(--orange); color: white; }
+  .opt-btn.correct { background: #f0fdf4; border-color: var(--green); }
+  .opt-btn.correct .opt-letter { background: var(--green); color: white; }
+  .opt-btn.wrong { background: #fef2f2; border-color: var(--red); }
+  .opt-btn.wrong .opt-letter { background: var(--red); color: white; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* FEEDBACK & NEXT */
+  .feedback-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; gap: 12px; flex-wrap: wrap;
+  }
+  .feedback-text { font-weight: 700; font-size: 0.9rem; }
+  .feedback-text.correct { color: var(--green); }
+  .feedback-text.wrong   { color: var(--red); }
+  .next-btn {
+    display: none; padding: 12px 24px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: white; font-family: 'Baloo 2', cursive;
+    font-size: 0.95rem; font-weight: 700; border: none;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(27,40,69,0.25); transition: all 0.2s; white-space: nowrap;
+  }
+  .next-btn.visible { display: block; }
+  .next-btn:hover { transform: translateY(-1px); }
+
+  /* END SCREEN */
+  .end-screen { max-width: 560px; margin: 0 auto; padding: 40px 24px 60px; text-align: center; }
+  .trophy { font-size: 5rem; margin-bottom: 16px; animation: bounce 1s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .end-title { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .end-msg { color: #666; font-size: 1rem; margin-bottom: 24px; line-height: 1.6; }
+  .stars { font-size: 2.5rem; margin-bottom: 20px; }
+  .stats-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 16px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .stat-card .val { font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--orange); }
+  .stat-card .lbl { font-size: 0.75rem; color: #aaa; font-weight: 600; }
+  .end-btns { display: flex; flex-direction: column; gap: 12px; }
+  .btn-replay {
+    padding: 16px; background: linear-gradient(135deg, var(--orange), var(--orange-glow));
+    color: white; font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 700;
+    border: none; border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,107,53,0.35); transition: all 0.2s;
+  }
+  .btn-replay:hover { transform: translateY(-2px); }
+  .btn-home {
+    padding: 14px; background: var(--white); color: var(--navy);
+    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+    border: 2px solid #e0e0e0; border-radius: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-home:hover { border-color: var(--navy); }
+
+  .confetti-piece {
+    position: fixed; width: 10px; height: 10px; top: -10px; z-index: 999; border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+
+  @media (max-width: 600px) {
+    .game-header h1 { font-size: 1.6rem; }
+    .difficulty-grid { grid-template-columns: 1fr; }
+    .scene-visual { min-height: 140px; }
+    .scene-char .s-emoji { font-size: 2.4rem; }
+    .scene-char.speaker .s-emoji { font-size: 2.8rem; }
+    .opt-btn { font-size: 0.88rem; padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">ataberk<span>hoca</span>ingilizce</a>
+</nav>
+
+<div class="game-header">
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a> › <a href="2-sinif.html">2. Sınıf</a> › <a href="family-life.html">Family Life</a> › Family Picnic Day
+  </div>
+  <h1>🌿 Family Picnic <span>Day!</span></h1>
+  <p>Talk to Lily's family at the picnic — choose the right words!</p>
+</div>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+  <div class="start-screen">
+    <div class="story-box">
+      <h2>It's Picnic Day! 🧺</h2>
+      <p>Lily's whole family is at the park for a big picnic! She's going to walk around and talk to everyone. Help Lily say the right things as she meets her family — from the picnic blanket to the big oak tree!</p>
+    </div>
+
+    <div class="stop-map" id="startStopMap"></div>
+
+    <div class="difficulty-label">Zorluk Seviyesi Seç</div>
+    <div class="difficulty-grid">
+      <div class="diff-btn selected" data-level="supporting" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐</div>
+        <div class="diff-name">Başlangıç</div>
+        <div class="diff-desc">Kısa diyaloglar<br>6 durak · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="standard" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐</div>
+        <div class="diff-name">Standart</div>
+        <div class="diff-desc">Orta diyaloglar<br>6 durak · ipucu var</div>
+      </div>
+      <div class="diff-btn" data-level="expansion" onclick="selectDiff(this)">
+        <div class="diff-icon">⭐⭐⭐</div>
+        <div class="diff-name">İleri</div>
+        <div class="diff-desc">Uzun diyaloglar<br>6 durak · ipucu yok</div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🎮 Oyunu Başlat!</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+  <div class="game-screen">
+    <div class="game-topbar">
+      <div class="stat-pill">🗺️ Durak: <span id="stopNum">1</span> / 6</div>
+      <div class="stat-pill">⭐ Puan: <span id="scoreNum">0</span></div>
+    </div>
+    <div class="progress-map" id="progressMap"></div>
+    <div id="hintBox" class="hint-box">💡 <span id="hintText"></span></div>
+
+    <div class="scene-card" id="sceneCard">
+      <div class="scene-visual" id="sceneVisual">
+        <div class="scene-label" id="sceneLabel">Stop 1</div>
+        <div class="scene-bg-emoji" id="sceneBgEmoji"></div>
+        <div class="scene-characters" id="sceneChars"></div>
+      </div>
+      <div class="speech-area">
+        <div class="speech-bubble">
+          <div class="speaker-name" id="speakerName"></div>
+          <div class="speech-text" id="speechText"></div>
+        </div>
+        <div class="question-label">Lily ne demeliydi? 👇</div>
+        <div class="options-list" id="optionsList"></div>
+        <div class="feedback-row">
+          <div class="feedback-text" id="feedbackText"></div>
+          <button class="next-btn" id="nextBtn" onclick="nextStop()"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen">
+  <div class="end-screen">
+    <div class="trophy" id="trophyEmoji">🏆</div>
+    <div class="stars" id="starsDisplay"></div>
+    <div class="end-title" id="endTitle">Harika!</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" id="statScore">0</div><div class="lbl">Puan</div></div>
+      <div class="stat-card"><div class="val" id="statTotal">6</div><div class="lbl">Durak</div></div>
+    </div>
+    <div class="end-btns">
+      <button class="btn-replay" onclick="replayGame()">🔄 Tekrar Oyna</button>
+      <button class="btn-home" onclick="goHome()">🏠 Ana Sayfaya Dön</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STOPS DATA ───
+// Each stop: label, bgColor, bgEmoji, characters[], speaker, variations per level
+// variation: { speech, question (optional), answer, options, hint }
+
+var STOPS = [
+  {
+    label: 'Stop 1 — Picnic Blanket',
+    bgColor: 'linear-gradient(135deg, #bbf7d0 0%, #86efac 100%)',
+    bgEmoji: '🧺',
+    characters: [
+      { emoji:'👨', name:'Dad', speaker: false },
+      { emoji:'👧', name:'Lily', speaker: true },
+      { emoji:'👩', name:'Mum', speaker: false }
+    ],
+    speakerName: 'Dad',
+    levels: {
+      supporting: {
+        speech: 'Hello, Lily! Who is she?',
+        answer: "She's my mum.",
+        options: ["She's my mum.", "He's my dad.", "She's my sister."],
+        hint: '💡 Lily\'nin babası, annesini göstererek soruyor — Lily nasıl tanıtır?'
+      },
+      standard: {
+        speech: 'Lily, who is she? Is she your mum or your sister?',
+        answer: "She's my mum. She's tall and beautiful.",
+        options: ["She's my mum. She's tall and beautiful.", "He's my dad. He's tall.", "She's my sister. She's short."],
+        hint: '💡 Lily annesini tanıtıyor ve onun özelliklerinden bahsediyor.'
+      },
+      expansion: {
+        speech: 'Lily, who is the tall woman next to you?',
+        answer: "She's my mum. She's got long blond hair.",
+        options: ["She's my mum. She's got long blond hair.", "She's my mum. He's got long blond hair.", "She's my sister. She's got long blond hair."],
+        hint: ''
+      }
+    }
+  },
+  {
+    label: 'Stop 2 — Oak Tree',
+    bgColor: 'linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)',
+    bgEmoji: '🌳',
+    characters: [
+      { emoji:'👴', name:'Grandpa', speaker: true },
+      { emoji:'👧', name:'Lily', speaker: false }
+    ],
+    speakerName: 'Grandpa',
+    levels: {
+      supporting: {
+        speech: 'Hello, Lily! Who am I?',
+        answer: "You're my grandfather!",
+        options: ["You're my grandfather!", "You're my father!", "You're my brother!"],
+        hint: '💡 Lily\'nin dedesi soruyor — Lily onu nasıl çağırır?'
+      },
+      standard: {
+        speech: 'Lily, is your grandfather tall or short?',
+        answer: 'You are tall, Grandpa!',
+        options: ['You are tall, Grandpa!', 'You are short, Grandpa!', 'He is tall, Grandpa!'],
+        hint: '💡 Dede kendisini soruyor — Lily doğrudan ona konuşuyor, "you" kullanmalı!'
+      },
+      expansion: {
+        speech: 'Lily, what colour hair has your grandfather got?',
+        answer: "You've got white hair, Grandpa!",
+        options: ["You've got white hair, Grandpa!", "He's got white hair, Grandpa!", "You've got blond hair, Grandpa!"],
+        hint: ''
+      }
+    }
+  },
+  {
+    label: 'Stop 3 — River Bank',
+    bgColor: 'linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%)',
+    bgEmoji: '🌊',
+    characters: [
+      { emoji:'👵', name:'Grandma', speaker: true },
+      { emoji:'👧', name:'Lily', speaker: false },
+      { emoji:'👦', name:'Tom', speaker: false }
+    ],
+    speakerName: 'Grandma',
+    levels: {
+      supporting: {
+        speech: 'Lily, who is he?',
+        answer: "He's my brother.",
+        options: ["He's my brother.", "She's my sister.", "He's my father."],
+        hint: '💡 Büyükanne Tom\'u gösteriyor — Lily nasıl tanıtır?'
+      },
+      standard: {
+        speech: 'Lily, is Tom your brother or your son?',
+        answer: "He's my brother. He's short.",
+        options: ["He's my brother. He's short.", "He's my son. He's short.", "She's my brother. She's short."],
+        hint: '💡 Tom Lily\'nin erkek kardeşi — "brother" kelimesini kullan!'
+      },
+      expansion: {
+        speech: 'Lily, tell me about Tom. What colour hair has he got?',
+        answer: "He's my brother. He's got dark hair.",
+        options: ["He's my brother. He's got dark hair.", "He's my brother. She's got dark hair.", "He's my brother. He's got blond hair."],
+        hint: ''
+      }
+    }
+  },
+  {
+    label: 'Stop 4 — Barbecue',
+    bgColor: 'linear-gradient(135deg, #fecaca 0%, #fca5a5 100%)',
+    bgEmoji: '🔥',
+    characters: [
+      { emoji:'👱‍♂️', name:'Uncle Bob', speaker: true },
+      { emoji:'👧', name:'Lily', speaker: false }
+    ],
+    speakerName: 'Uncle Bob',
+    levels: {
+      supporting: {
+        speech: 'Hi Lily! Is your dad handsome?',
+        answer: 'Yes, he is!',
+        options: ['Yes, he is!', 'No, she is!', 'Yes, she is!'],
+        hint: '💡 Amca babayı soruyor — "he" mi "she" mi kullanmalı?'
+      },
+      standard: {
+        speech: 'Lily, what colour eyes has your mum got?',
+        answer: "My mum's got blue eyes.",
+        options: ["My mum's got blue eyes.", "My mum's got brown eyes.", "My dad's got blue eyes."],
+        hint: '💡 Annenin göz rengi soruluyor — possessive ile cevapla!'
+      },
+      expansion: {
+        speech: 'Lily, describe your mum for me! What colour eyes and hair has she got?',
+        answer: "She's got blue eyes and long blond hair.",
+        options: ["She's got blue eyes and long blond hair.", "She's got brown eyes and long blond hair.", "He's got blue eyes and long blond hair."],
+        hint: ''
+      }
+    }
+  },
+  {
+    label: 'Stop 5 — Flower Patch',
+    bgColor: 'linear-gradient(135deg, #f3e8ff 0%, #d8b4fe 100%)',
+    bgEmoji: '🌸',
+    characters: [
+      { emoji:'👩‍🦰', name:'Aunt Sue', speaker: true },
+      { emoji:'👧', name:'Lily', speaker: false },
+      { emoji:'👶', name:'Baby Emma', speaker: false }
+    ],
+    speakerName: 'Aunt Sue',
+    levels: {
+      supporting: {
+        speech: 'Lily, who is the baby?',
+        answer: "She's my sister.",
+        options: ["She's my sister.", "He's my brother.", "She's my daughter."],
+        hint: '💡 Bebek Emma, Lily\'nin kız kardeşi — nasıl tanıtır?'
+      },
+      standard: {
+        speech: 'Lily, is Baby Emma lovely?',
+        answer: 'Yes, she is! She is very lovely!',
+        options: ['Yes, she is! She is very lovely!', 'Yes, he is! He is very lovely!', 'No, she is not lovely.'],
+        hint: '💡 Emma için "she" kullan — güzel bir sıfatla cevapla!'
+      },
+      expansion: {
+        speech: 'Oh, Baby Emma is so cute! What colour eyes has she got, Lily?',
+        answer: "She's my sister. She's got big blue eyes!",
+        options: ["She's my sister. She's got big blue eyes!", "She's my sister. She's got big brown eyes!", "He's my brother. He's got big blue eyes!"],
+        hint: ''
+      }
+    }
+  },
+  {
+    label: 'Stop 6 — Group Photo!',
+    bgColor: 'linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%)',
+    bgEmoji: '📷',
+    characters: [
+      { emoji:'👨', name:'Dad', speaker: false },
+      { emoji:'👩', name:'Mum', speaker: false },
+      { emoji:'👴', name:'Grandpa', speaker: false },
+      { emoji:'👵', name:'Grandma', speaker: true },
+      { emoji:'👦', name:'Tom', speaker: false },
+      { emoji:'👧', name:'Lily', speaker: false }
+    ],
+    speakerName: 'Grandma',
+    levels: {
+      supporting: {
+        speech: "It's a beautiful family! Who is the tall man?",
+        answer: "He's my dad!",
+        options: ["He's my dad!", "She's my mum!", "He's my brother!"],
+        hint: '💡 Uzun boylu adam Lily\'nin babası — "He\'s my ___" ile cevapla!'
+      },
+      standard: {
+        speech: "Lily, tell me about your family! Is your dad tall?",
+        answer: "Yes, he is! My dad is tall and handsome.",
+        options: ["Yes, he is! My dad is tall and handsome.", "No, he isn't! My dad is short.", "Yes, she is! My mum is tall and beautiful."],
+        hint: '💡 Babayı tanımla — "tall" ve "handsome" kelimelerini kullan!'
+      },
+      expansion: {
+        speech: "Tell me about your whole family, Lily! Who is the lovely short woman?",
+        answer: "She's my grandmother. She's short and lovely!",
+        options: ["She's my grandmother. She's short and lovely!", "He's my grandfather. He's short and lovely!", "She's my grandmother. She's tall and lovely!"],
+        hint: ''
+      }
+    }
+  }
+];
+
+// ─── STATE ───
+var currentLevel = 'supporting';
+var currentStop = 0;
+var score = 0;
+var answered = false;
+var chosenVariations = [];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentLevel = el.dataset.level;
+}
+
+// Build start screen stop map
+function buildStartMap() {
+  var map = document.getElementById('startStopMap');
+  map.innerHTML = '';
+  STOPS.forEach(function(stop, i) {
+    var dot = document.createElement('div');
+    dot.className = 'stop-dot';
+    dot.textContent = stop.bgEmoji;
+    map.appendChild(dot);
+    if (i < STOPS.length - 1) {
+      var conn = document.createElement('div');
+      conn.className = 'stop-connector';
+      map.appendChild(conn);
+    }
+  });
+}
+
+function buildProgressMap(currentIdx) {
+  var map = document.getElementById('progressMap');
+  map.innerHTML = '';
+  STOPS.forEach(function(stop, i) {
+    var dot = document.createElement('div');
+    dot.className = 'stop-dot';
+    if (i < currentIdx) dot.classList.add('done');
+    else if (i === currentIdx) dot.classList.add('current');
+    dot.textContent = stop.bgEmoji;
+    map.appendChild(dot);
+    if (i < STOPS.length - 1) {
+      var conn = document.createElement('div');
+      conn.className = 'stop-connector';
+      if (i < currentIdx) conn.classList.add('done');
+      map.appendChild(conn);
+    }
+  });
+}
+
+function startGame() {
+  currentStop = 0; score = 0; answered = false;
+  showScreen('gameScreen');
+  renderStop();
+}
+
+function renderStop() {
+  answered = false;
+  var stop = STOPS[currentStop];
+  var data = stop.levels[currentLevel];
+
+  buildProgressMap(currentStop);
+  document.getElementById('stopNum').textContent = currentStop + 1;
+  document.getElementById('scoreNum').textContent = score;
+
+  // Hint
+  if (currentLevel !== 'expansion' && data.hint) {
+    document.getElementById('hintText').textContent = data.hint;
+    document.getElementById('hintBox').classList.add('visible');
+  } else {
+    document.getElementById('hintBox').classList.remove('visible');
+  }
+
+  // Scene visual
+  document.getElementById('sceneVisual').style.background = stop.bgColor;
+  document.getElementById('sceneBgEmoji').textContent = stop.bgEmoji;
+  document.getElementById('sceneLabel').textContent = stop.label;
+
+  var charsHtml = '';
+  stop.characters.forEach(function(c) {
+    var cls = 'scene-char' + (c.speaker ? ' speaker' : '');
+    charsHtml +=
+      '<div class="' + cls + '">' +
+        '<span class="s-emoji">' + c.emoji + '</span>' +
+        '<span class="s-name">' + c.name + '</span>' +
+      '</div>';
+  });
+  document.getElementById('sceneChars').innerHTML = charsHtml;
+
+  // Speech
+  document.getElementById('speakerName').textContent = stop.speakerName + ' says:';
+  document.getElementById('speechText').textContent = data.speech;
+
+  // Feedback clear
+  document.getElementById('feedbackText').textContent = '';
+  document.getElementById('feedbackText').className = 'feedback-text';
+  document.getElementById('nextBtn').classList.remove('visible');
+
+  // Options
+  var list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  var letters = ['A', 'B', 'C'];
+  var opts = shuffle(data.options.slice());
+  opts.forEach(function(opt, i) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = '<span class="opt-letter">' + letters[i] + '</span>' + opt;
+    btn.addEventListener('click', function(){ selectAnswer(opt, btn, data.answer); });
+    list.appendChild(btn);
+  });
+
+  // Animate scene
+  var card = document.getElementById('sceneCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'sceneIn 0.4s ease';
+}
+
+function selectAnswer(chosen, btn, correctAnswer) {
+  if (answered) return;
+  answered = true;
+
+  document.querySelectorAll('.opt-btn').forEach(function(b){ b.disabled = true; });
+
+  var fb = document.getElementById('feedbackText');
+  var nextBtn = document.getElementById('nextBtn');
+
+  if (chosen === correctAnswer) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ Harika!';
+    fb.className = 'feedback-text correct';
+    score++;
+    document.getElementById('scoreNum').textContent = score;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(function(b){
+      if (b.textContent.indexOf(correctAnswer) !== -1) b.classList.add('correct');
+    });
+    fb.textContent = '❌ Doğrusu: ' + correctAnswer;
+    fb.className = 'feedback-text wrong';
+  }
+
+  nextBtn.classList.add('visible');
+  nextBtn.textContent = currentStop === STOPS.length - 1 ? '🏁 Pikniği Bitir!' : 'Sonraki Durak →';
+}
+
+function nextStop() {
+  currentStop++;
+  if (currentStop >= STOPS.length) {
+    showEndScreen();
+  } else {
+    renderStop();
+  }
+}
+
+function showEndScreen() {
+  var total = STOPS.length;
+  var ratio = score / total;
+  var stars = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : 1;
+
+  document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statTotal').textContent = total;
+
+  if (stars === 3) {
+    document.getElementById('trophyEmoji').textContent = '🏆';
+    document.getElementById('endTitle').textContent = 'Muhteşem!';
+    document.getElementById('endMsg').textContent = "Lily'nin ailesindeki herkesle mükemmel konuştun! Piknik çok güzel geçti. Sen harika bir konuşmacısın!";
+    launchConfetti();
+  } else if (stars === 2) {
+    document.getElementById('trophyEmoji').textContent = '🥈';
+    document.getElementById('endTitle').textContent = 'Çok İyi!';
+    document.getElementById('endMsg').textContent = "Pikniğin büyük kısmında doğru şeyleri söyledin! Biraz daha pratik yaparsan mükemmel olursun.";
+  } else {
+    document.getElementById('trophyEmoji').textContent = '💪';
+    document.getElementById('endTitle').textContent = 'Devam Et!';
+    document.getElementById('endMsg').textContent = "Aile üyelerini ve sıfatları tekrar gözden geçir — sonra pikniğe geri dön!";
+  }
+  showScreen('endScreen');
+}
+
+function replayGame() { currentStop = 0; score = 0; showScreen('gameScreen'); renderStop(); }
+function goHome() { window.location.href = 'family-life.html'; }
+
+function shuffle(arr) {
+  for (var i=arr.length-1; i>0; i--) {
+    var j=Math.floor(Math.random()*(i+1));
+    var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+  return arr;
+}
+
+function launchConfetti() {
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#22C55E','#1B2845'];
+  for (var i=0; i<80; i++) {
+    (function(i){ setTimeout(function(){
+      var el=document.createElement('div'); el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      el.style.width=(8+Math.random()*8)+'px'; el.style.height=(8+Math.random()*8)+'px';
+      el.style.animationDuration=(1.5+Math.random()*2)+'s';
+      el.style.animationDelay=(Math.random()*0.5)+'s';
+      document.body.appendChild(el);
+      setTimeout(function(){ el.remove(); },4000);
+    },i*30); })(i);
+  }
+}
+
+// Init
+buildStartMap();
+</script>
+</body>
+</html>
