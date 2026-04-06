@@ -258,10 +258,10 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
     <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
   </a>
   <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
     <li><a href="index.html#ozellikler">Özellikler</a></li>
-    <li><a href="index.html#siniflar">Sınıflar</a></li>
-    <li><a href="hakkimda.html">Hakkımda</a></li>
-    <li><a href="2-sinif.html" class="nav-cta">2. Sınıf →</a></li>
+    <li><a href="school-life.html" class="nav-cta">← School Life</a></li>
   </ul>
   <div class="nav-hamburger"><span></span><span></span><span></span></div>
 </nav>
@@ -636,7 +636,7 @@ function trySort(word, droppedCat) {
 
     updateProgress();
     fb.className = 'feedback good show';
-    fb.textContent = '✅ ' + word + ' → ' + (droppedCat === 'people' ? 'People' : 'Places') + ' ✓';
+    fb.textContent = '✅ Well done! — ' + word + ' → ' + (droppedCat === 'people' ? 'People ✓' : 'Places ✓');
     setTimeout(function(){ fb.className = 'feedback'; }, 1200);
 
     if (correct === total) setTimeout(showEnd, 700);
@@ -650,7 +650,7 @@ function trySort(word, droppedCat) {
       }, 10);
     }
     fb.className = 'feedback bad show';
-    fb.textContent = '❌ ' + word + ' buraya gitmiyor — tekrar dene!';
+    fb.textContent = '❌ Try again! — ' + word + ' buraya gitmiyor.';
     setTimeout(function(){ fb.className = 'feedback'; }, 1600);
   }
 }

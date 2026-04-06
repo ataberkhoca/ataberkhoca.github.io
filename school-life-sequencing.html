@@ -248,10 +248,10 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
     <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
   </a>
   <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
     <li><a href="index.html#ozellikler">Özellikler</a></li>
-    <li><a href="index.html#siniflar">Sınıflar</a></li>
-    <li><a href="hakkimda.html">Hakkımda</a></li>
-    <li><a href="2-sinif.html" class="nav-cta">2. Sınıf →</a></li>
+    <li><a href="school-life.html" class="nav-cta">← School Life</a></li>
   </ul>
   <div class="nav-hamburger"><span></span><span></span><span></span></div>
 </nav>
@@ -602,7 +602,7 @@ function tryPlace(dayEn, slotIndex) {
     correct++;
     updateProgress();
     updateHint();
-    showFeedback(true, expected.en + ' — ' + expected.tr + ' ✓');
+    showFeedback(true, 'Well done! — ' + expected.en + ' · ' + expected.tr);
     if (correct === days.length) {
       setTimeout(finishGame, 700);
     }
@@ -610,7 +610,7 @@ function tryPlace(dayEn, slotIndex) {
     // Wrong
     slot.classList.add('wrong-flash');
     setTimeout(function(){ slot.classList.remove('wrong-flash'); }, 500);
-    showFeedback(false, 'Bu gün bu sıraya gitmiyor — tekrar dene!');
+    showFeedback(false, 'Try again! — Bu gün buraya gitmiyor.');
   }
 }
 
