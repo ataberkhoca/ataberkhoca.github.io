@@ -284,17 +284,17 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
       <div class="diff-card" data-diff="easy" onclick="pickDiff('easy')">
         <span class="card-icon">🌟</span>
         <div class="card-name">Kolay</div>
-        <div class="card-desc">3 çift · 6 kart</div>
+        <div class="card-desc">4 çift · 8 kart</div>
       </div>
       <div class="diff-card selected" data-diff="medium" onclick="pickDiff('medium')">
         <span class="card-icon">🚀</span>
         <div class="card-name">Orta</div>
-        <div class="card-desc">6 çift · 12 kart</div>
+        <div class="card-desc">8 çift · 16 kart</div>
       </div>
       <div class="diff-card" data-diff="hard" onclick="pickDiff('hard')">
         <span class="card-icon">🏆</span>
         <div class="card-name">Zor</div>
-        <div class="card-desc">9 çift · 18 kart</div>
+        <div class="card-desc">16 çift · 32 kart</div>
       </div>
     </div>
 
@@ -382,20 +382,30 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 <script>
 // ===== DATA =====
 const ALL = [
+  // PLACES
   { id:'library',      emoji:'📚', word:'library' },
   { id:'classroom',    emoji:'✏️', word:'classroom' },
   { id:'canteen',      emoji:'🍽️', word:'canteen' },
-  { id:'teachersroom', emoji:'👩‍🏫', word:"teacher's room" },
+  { id:'teachersroom', emoji:'🚪', word:"teacher's room" },
   { id:'playground',   emoji:'🛝', word:'playground' },
   { id:'sportshall',   emoji:'🏀', word:'sports hall' },
   { id:'lunchhall',    emoji:'🥗', word:'lunch hall' },
   { id:'garden',       emoji:'🌳', word:'garden' },
-  { id:'school',       emoji:'🏫', word:'school' }
+  { id:'school',       emoji:'🏫', word:'school' },
+  // PEOPLE
+  { id:'teacher',      emoji:'👩‍🏫', word:'teacher' },
+  { id:'pupil',        emoji:'🧒', word:'pupil' },
+  { id:'headmaster',   emoji:'👨‍💼', word:'headmaster' },
+  { id:'headmistress', emoji:'👩‍💼', word:'headmistress' },
+  { id:'friend',       emoji:'🤝', word:'friend' },
+  { id:'boy',          emoji:'👦', word:'boy' },
+  { id:'girl',         emoji:'👧', word:'girl' },
+  { id:'kid',          emoji:'😊', word:'kid' }
 ];
 const DIFF = {
-  easy:  {n:3, cols:'cols-3'},
-  medium:{n:6, cols:'cols-4'},
-  hard:  {n:9, cols:'cols-6'}
+  easy:  {n:4, cols:'cols-4'},
+  medium:{n:8, cols:'cols-4'},
+  hard:  {n:16, cols:'cols-6'}
 };
 const MSGS = ['Well done!','Great job!','Excellent!','Perfect!','Awesome!','Super!','Brilliant!','Fantastic!'];
 
