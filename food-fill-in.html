@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutfakta Ne Var? | Food & Drinks | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:       #2A9D8F;
+  --teal-light: #E8F8F5;
+  --teal-dark:  #1D7A6E;
+  --orange:     #F4742B;
+  --yellow:     #F9C030;
+  --yellow-lt:  #FFF7D6;
+  --navy:       #1B2845;
+  --navy2:      #2D3A55;
+  --cream:      #F0FAF8;
+  --white:      #FFFFFF;
+  --gray-100:   #F3F4F2;
+  --gray-200:   #DDE0DC;
+  --gray-500:   #7A8077;
+  --green:      #22C55E;
+  --green-lt:   #DCFCE7;
+  --red:        #EF4444;
+  --red-lt:     #FEE2E2;
+  --shadow:     0 4px 20px rgba(27,40,69,.09);
+  --shadow-lg:  0 8px 32px rgba(27,40,69,.15);
+  --r:          14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:66px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(240,250,248,.94);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(42,157,143,.12);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--teal),var(--yellow));
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  box-shadow:0 3px 10px rgba(42,157,143,.28);
+}
+.brand{font-size:1.2rem;font-weight:800;color:var(--navy);}
+.nav-back{
+  display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--navy2);
+  font-weight:700;font-size:.9rem;background:var(--white);
+  border:1.5px solid var(--gray-200);padding:.4rem .9rem;border-radius:99px;transition:all .2s;
+}
+.nav-back:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* HERO */
+.hero{
+  margin-top:66px;
+  background:linear-gradient(135deg,#1D7A6E 0%,#2A9D8F 55%,#52C9BB 100%);
+  padding:2.2rem 32px 2rem;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'🥛🍳🥦🥕🍞🧅🥚🍅';
+  position:absolute;font-size:3.5rem;opacity:.07;
+  top:50%;left:0;right:0;transform:translateY(-50%);
+  letter-spacing:14px;text-align:center;white-space:nowrap;
+  animation:drift 20s linear infinite alternate;
+}
+@keyframes drift{from{letter-spacing:14px;}to{letter-spacing:28px;}}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto;text-align:center;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.2);color:#fff;
+  font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3rem .85rem;border-radius:99px;margin-bottom:.8rem;
+  border:1px solid rgba(255,255,255,.28);
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.15);}
+.hero p{color:rgba(255,255,255,.88);font-size:1rem;font-weight:600;}
+
+/* DIFFICULTY BAR */
+.diff-bar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:.9rem 32px;display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;
+}
+.diff-btn{
+  padding:.45rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:700;
+  border:2px solid var(--gray-200);background:var(--gray-100);color:var(--navy2);
+  cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.diff-btn:hover{border-color:var(--teal);color:var(--teal);}
+.diff-btn.active-sup{background:#E8F8F5;border-color:var(--teal);color:var(--teal);}
+.diff-btn.active-std{background:#FEF0E8;border-color:var(--orange);color:var(--orange);}
+.diff-btn.active-exp{background:var(--yellow-lt);border-color:#D4A017;color:#A07A00;}
+
+/* MAIN */
+.main{max-width:780px;margin:0 auto;padding:1.8rem 20px 4rem;}
+
+/* PROGRESS */
+.progress-row{
+  display:flex;align-items:center;gap:1rem;
+  background:var(--white);border-radius:var(--r);padding:.7rem 1.2rem;
+  margin-bottom:1.4rem;box-shadow:var(--shadow);font-weight:700;font-size:.9rem;
+}
+.q-counter{font-family:'Baloo 2',cursive;color:var(--teal);font-size:1rem;white-space:nowrap;}
+.progress-wrap{height:7px;background:var(--gray-200);border-radius:99px;overflow:hidden;flex:1;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--yellow));border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.score-badge{font-family:'Baloo 2',cursive;color:var(--orange);font-size:1rem;white-space:nowrap;}
+
+/* HINT BOX */
+.hint-box{
+  background:var(--yellow-lt);border:1.5px dashed var(--yellow);border-radius:var(--r);
+  padding:.75rem 1.1rem;margin-bottom:1.2rem;
+  display:none;align-items:center;gap:.7rem;
+  font-size:.88rem;font-weight:700;color:#7A5500;
+}
+.hint-box.visible{display:flex;}
+
+/* SCENE CARD */
+.scene-card{
+  background:var(--white);border-radius:20px;
+  box-shadow:var(--shadow-lg);overflow:hidden;
+  margin-bottom:1.4rem;
+  border:2px solid transparent;
+  transition:border-color .3s;
+}
+.scene-card.correct-flash{border-color:var(--green);}
+.scene-card.wrong-flash{border-color:var(--red);}
+
+/* Kitchen scene illustration */
+.kitchen-scene{
+  background:linear-gradient(180deg,#E8F8F5 0%,#C8EEE9 100%);
+  padding:1.4rem 1.5rem 1rem;
+  position:relative;min-height:160px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.fridge{
+  position:relative;width:140px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#EAF8F5 100%);
+  border-radius:16px;border:3px solid #B2DDD8;
+  box-shadow:0 6px 20px rgba(42,157,143,.15);
+  padding:.8rem .6rem 1rem;
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+}
+.fridge-top{
+  width:100%;background:#F0FAFA;border-radius:8px;
+  border:1.5px solid #C8EEE9;padding:.4rem;
+  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:44px;
+}
+.fridge-divider{width:90%;height:2px;background:#B2DDD8;border-radius:99px;}
+.fridge-bottom{
+  width:100%;background:#F0FAFA;border-radius:8px;
+  border:1.5px solid #C8EEE9;padding:.4rem;
+  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:36px;
+}
+.fridge-item{font-size:1.3rem;line-height:1;}
+.fridge-handle{
+  position:absolute;right:-10px;top:50%;transform:translateY(-50%);
+  width:8px;height:32px;background:#B2DDD8;border-radius:99px;
+}
+
+.question-area{
+  background:var(--white);padding:1.3rem 1.5rem;
+}
+
+/* Speech bubble from character */
+.char-row{display:flex;align-items:flex-end;gap:.8rem;margin-bottom:1rem;}
+.char-avatar{font-size:2.2rem;flex-shrink:0;}
+.speech-bubble{
+  background:#F0FAF8;border-radius:18px 18px 18px 4px;
+  padding:.75rem 1.1rem;max-width:85%;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:1.05rem;color:var(--navy);
+  border:2px solid #C8EEE9;
+  position:relative;
+}
+
+/* Answer options */
+.options{display:flex;flex-direction:column;gap:.55rem;margin-top:.2rem;}
+.option-btn{
+  width:100%;padding:.75rem 1.1rem;
+  border-radius:12px;font-size:.95rem;font-weight:700;
+  font-family:'Nunito',sans-serif;
+  border:2px solid var(--gray-200);background:var(--gray-100);
+  color:var(--navy);cursor:pointer;text-align:left;
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  display:flex;align-items:center;gap:.6rem;
+}
+.option-btn:hover:not(:disabled){
+  border-color:var(--teal);background:var(--teal-light);
+  transform:translateX(4px);
+}
+.option-btn.correct{border-color:var(--green);background:var(--green-lt);color:#166534;}
+.option-btn.wrong  {border-color:var(--red);  background:var(--red-lt);  color:#991B1B;}
+.option-btn:disabled{cursor:default;}
+.option-letter{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--gray-200);color:var(--navy2);
+  font-size:.75rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:'Baloo 2',cursive;
+}
+.option-btn.correct .option-letter{background:#BBF7D0;color:#166534;}
+.option-btn.wrong   .option-letter{background:#FECACA;color:#991B1B;}
+
+/* Feedback row */
+.feedback{
+  margin-top:.8rem;padding:.7rem 1rem;border-radius:10px;
+  font-size:.9rem;font-weight:700;display:none;align-items:center;gap:.5rem;
+}
+.feedback.visible{display:flex;}
+.feedback.ok{background:var(--green-lt);color:#166534;}
+.feedback.no{background:var(--red-lt);color:#991B1B;}
+
+/* NEXT btn */
+.next-btn{
+  display:none;width:100%;margin-top:1rem;
+  padding:.8rem;border-radius:12px;font-size:1rem;font-weight:800;
+  font-family:'Baloo 2',cursive;
+  background:linear-gradient(135deg,var(--teal),#52C9BB);
+  color:#fff;border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(42,157,143,.3);
+  transition:transform .2s,box-shadow .2s;
+}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(42,157,143,.4);}
+.next-btn.visible{display:block;}
+
+/* WIN */
+.win-screen{
+  display:none;text-align:center;background:var(--white);border-radius:20px;
+  padding:2.5rem 2rem;box-shadow:var(--shadow-lg);border:2px solid var(--teal);
+}
+.win-screen.visible{display:block;}
+.win-emoji{font-size:4rem;margin-bottom:.8rem;animation:pop .5s cubic-bezier(.4,0,.2,1);}
+@keyframes pop{0%{transform:scale(.4);}70%{transform:scale(1.2);}100%{transform:scale(1);}}
+.win-screen h2{font-size:2rem;font-weight:800;color:var(--teal);margin-bottom:.4rem;}
+.win-score{font-size:1.3rem;font-weight:800;color:var(--orange);margin-bottom:.4rem;}
+.win-screen p{color:var(--navy2);font-size:.95rem;font-weight:600;margin-bottom:1.5rem;}
+.btn-restart{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,var(--teal),var(--yellow));
+  color:#fff;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;
+  padding:.7rem 2rem;border-radius:99px;cursor:pointer;border:none;
+  box-shadow:0 4px 16px rgba(42,157,143,.35);transition:transform .2s;
+}
+.btn-restart:hover{transform:translateY(-2px);}
+
+footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--gray-500);font-weight:600;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">🍳</div>
+    <span class="brand">Ataberk Hoca</span>
+  </a>
+  <a href="index.html" class="nav-back">← Temalar</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🧊 Theme 6 · Food &amp; Drinks</div>
+    <h1>Mutfakta Ne Var? 🍳</h1>
+    <p>Buzdolabına bak ve soruları yanıtla!</p>
+  </div>
+</section>
+
+<div class="diff-bar">
+  <button class="diff-btn" id="btn-sup" onclick="setDiff('supporting')">🟢 Supporting</button>
+  <button class="diff-btn" id="btn-std" onclick="setDiff('standard')">🔵 Standard</button>
+  <button class="diff-btn" id="btn-exp" onclick="setDiff('expansion')">🟣 Expansion</button>
+</div>
+
+<main class="main">
+
+  <div class="progress-row">
+    <div class="q-counter">❓ <span id="q-num">1</span> / <span id="q-total">1</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="score-badge">⭐ <span id="score">0</span></div>
+  </div>
+
+  <div class="hint-box" id="hint-box">
+    <span>💡</span><span id="hint-text"></span>
+  </div>
+
+  <div id="game-wrap" style="display:none;">
+
+    <div class="scene-card" id="scene-card">
+      <!-- Kitchen visual -->
+      <div class="kitchen-scene">
+        <div class="fridge">
+          <div class="fridge-top" id="fridge-top"></div>
+          <div class="fridge-divider"></div>
+          <div class="fridge-bottom" id="fridge-bottom"></div>
+          <div class="fridge-handle"></div>
+        </div>
+      </div>
+
+      <!-- Question + answers -->
+      <div class="question-area">
+        <div class="char-row">
+          <div class="char-avatar">🧒</div>
+          <div class="speech-bubble" id="question-text"></div>
+        </div>
+
+        <div class="options" id="options"></div>
+
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Sonraki soru →</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="win-screen" id="win-screen">
+    <div class="win-emoji">🎉</div>
+    <h2>Muhteşemsin!</h2>
+    <div class="win-score" id="win-score"></div>
+    <p id="win-msg"></p>
+    <button class="btn-restart" onclick="restart()">🔄 Tekrar Oyna</button>
+  </div>
+
+</main>
+
+<footer>© Ataberk Hoca İngilizce · TYMM 2025 · MEB Maarif Modeli</footer>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// Target structures:
+//   Is there a/an ___ in the kitchen?  Yes, there is. / No, there isn't.
+//   Are there any ___s in the kitchen? Yes, there are. / No, there aren't.
+//   Can I have ___?                    Yes, you can.  / No, you can't.
+// ══════════════════════════════════════════
+
+const QUESTIONS = [
+  // ── IS THERE / THERE ISN'T ──
+  {
+    id: 'q1',
+    fridge: { top:['🥛','🥚','🥕'], bottom:['🍞','🍅'] },
+    question: 'Is there any milk in the kitchen?',
+    answer: 'Yes, there is.',
+    wrong2: 'No, there isn\'t.',
+    wrong3: 'Yes, there are.',
+    wrong4: 'No, there aren\'t.',
+    hint: 'Buzdolabına bak — süt var mı? "Is there" → tekil bir şeyi soruyoruz.',
+    type: 'singular-yes',
+  },
+  {
+    id: 'q2',
+    fridge: { top:['🥚','🥕','🍞'], bottom:['🍅','🥦'] },
+    question: 'Is there any milk in the kitchen?',
+    answer: 'No, there isn\'t.',
+    wrong2: 'Yes, there is.',
+    wrong3: 'No, there aren\'t.',
+    wrong4: 'Yes, there are.',
+    hint: 'Buzdolabına bak — süt var mı? Yoksa "No" ile cevap vermeliyiz.',
+    type: 'singular-no',
+  },
+  {
+    id: 'q3',
+    fridge: { top:['🍎','🍌','🥕'], bottom:['🥚','🍞'] },
+    question: 'Is there a banana in the kitchen?',
+    answer: 'Yes, there is.',
+    wrong2: 'No, there isn\'t.',
+    wrong3: 'Yes, there are.',
+    wrong4: 'No, there aren\'t.',
+    hint: 'Buzdolabında muz var mı? Evet varsa "Yes, there is" deriz.',
+    type: 'singular-yes',
+  },
+  {
+    id: 'q4',
+    fridge: { top:['🥛','🥚','🍅'], bottom:['🍞','🥦'] },
+    question: 'Is there a banana in the kitchen?',
+    answer: 'No, there isn\'t.',
+    wrong2: 'Yes, there is.',
+    wrong3: 'No, there aren\'t.',
+    wrong4: 'Yes, there are.',
+    hint: 'Buzdolabında muz görebiliyor musun? Yoksa "isn\'t" kullanırız.',
+    type: 'singular-no',
+  },
+  // ── ARE THERE / THERE AREN'T ──
+  {
+    id: 'q5',
+    fridge: { top:['🍎','🍎','🍌'], bottom:['🥛','🍞'] },
+    question: 'Are there any apples in the kitchen?',
+    answer: 'Yes, there are.',
+    wrong2: 'No, there aren\'t.',
+    wrong3: 'Yes, there is.',
+    wrong4: 'No, there isn\'t.',
+    hint: 'Buzdolabında elma var mı? "Are there" → çoğul soruyoruz.',
+    type: 'plural-yes',
+  },
+  {
+    id: 'q6',
+    fridge: { top:['🥕','🥦','🍅'], bottom:['🥛','🍞'] },
+    question: 'Are there any apples in the kitchen?',
+    answer: 'No, there aren\'t.',
+    wrong2: 'Yes, there are.',
+    wrong3: 'No, there isn\'t.',
+    wrong4: 'Yes, there is.',
+    hint: 'Buzdolabında elma var mı? Yoksa "aren\'t" kullanırız.',
+    type: 'plural-no',
+  },
+  {
+    id: 'q7',
+    fridge: { top:['🥦','🥦','🥕'], bottom:['🍅','🥚'] },
+    question: 'Are there any vegetables in the kitchen?',
+    answer: 'Yes, there are.',
+    wrong2: 'No, there aren\'t.',
+    wrong3: 'Yes, there is.',
+    wrong4: 'No, there isn\'t.',
+    hint: 'Buzdolabında sebze var mı? Brokoli ve havuç sebzedir!',
+    type: 'plural-yes',
+  },
+  {
+    id: 'q8',
+    fridge: { top:['🍎','🍌','🍊'], bottom:['🥛','🍞'] },
+    question: 'Are there any vegetables in the kitchen?',
+    answer: 'No, there aren\'t.',
+    wrong2: 'Yes, there are.',
+    wrong3: 'No, there isn\'t.',
+    wrong4: 'Yes, there is.',
+    hint: 'Buzdolabında sebze var mı? Sadece meyve ve içecek görüyorsun.',
+    type: 'plural-no',
+  },
+  // ── CAN I HAVE ──
+  {
+    id: 'q9',
+    fridge: { top:['🍎','🥛','🍞'], bottom:['🥕','🥚'] },
+    question: 'Can I have an apple, please?',
+    answer: 'Yes, you can.',
+    wrong2: 'No, you can\'t.',
+    wrong3: 'Yes, there is.',
+    wrong4: 'No, there isn\'t.',
+    hint: 'Birileri elma istiyor — buzdolabında elma var mı? Varsa "Yes, you can" deriz.',
+    type: 'can-yes',
+  },
+  {
+    id: 'q10',
+    fridge: { top:['🥦','🥛','🥕'], bottom:['🥚','🍅'] },
+    question: 'Can I have some bread, please?',
+    answer: 'No, you can\'t.',
+    wrong2: 'Yes, you can.',
+    wrong3: 'No, there aren\'t.',
+    wrong4: 'Yes, there are.',
+    hint: 'Birileri ekmek istiyor — buzdolabında ekmek var mı? Yoksa "No, you can\'t" deriz.',
+    type: 'can-no',
+  },
+];
+
+// ══════════════ DIFFICULTY CONFIG ══════════════
+// supporting: 2 options,  standard: 3 options,  expansion: 4 options
+const DIFF = {
+  supporting: { optCount:2, showHint:true,  qIds:['q1','q2','q3','q5','q6','q9'] },
+  standard:   { optCount:3, showHint:true,  qIds:['q1','q2','q3','q4','q5','q6','q7','q9','q10'] },
+  expansion:  { optCount:4, showHint:false, qIds:['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'] },
+};
+
+// ══════════════ STATE ══════════════
+let currentDiff = null;
+let queue       = [];
+let qIndex      = 0;
+let score       = 0;
+let answered    = false;
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+// ══════════════ DIFFICULTY SELECT ══════════════
+function setDiff(diff) {
+  currentDiff = diff;
+  ['sup','std','exp'].forEach(k => document.getElementById('btn-'+k).className='diff-btn');
+  const map = {supporting:'sup',standard:'std',expansion:'exp'};
+  const cls = {supporting:'active-sup',standard:'active-std',expansion:'active-exp'};
+  document.getElementById('btn-'+map[diff]).className = 'diff-btn ' + cls[diff];
+  buildGame();
+}
+
+function buildGame() {
+  const cfg = DIFF[currentDiff];
+  queue     = shuffle(cfg.qIds.map(id => QUESTIONS.find(q=>q.id===id)));
+  qIndex    = 0;
+  score     = 0;
+
+  document.getElementById('q-total').textContent = queue.length;
+  document.getElementById('score').textContent   = 0;
+  document.getElementById('prog').style.width    = '0%';
+  document.getElementById('game-wrap').style.display = 'block';
+  document.getElementById('win-screen').classList.remove('visible');
+
+  // Hint bar
+  const hintBox = document.getElementById('hint-box');
+  if (cfg.showHint) hintBox.classList.add('visible');
+  else hintBox.classList.remove('visible');
+
+  renderQuestion();
+}
+
+// ══════════════ RENDER ══════════════
+function renderQuestion() {
+  const cfg = DIFF[currentDiff];
+  const q   = queue[qIndex];
+  answered  = false;
+
+  // Counter & progress
+  document.getElementById('q-num').textContent  = qIndex + 1;
+  document.getElementById('prog').style.width   = (qIndex / queue.length * 100) + '%';
+
+  // Fridge items
+  document.getElementById('fridge-top').innerHTML    = q.fridge.top.map(e=>`<span class="fridge-item">${e}</span>`).join('');
+  document.getElementById('fridge-bottom').innerHTML = q.fridge.bottom.map(e=>`<span class="fridge-item">${e}</span>`).join('');
+
+  // Question text
+  document.getElementById('question-text').textContent = q.question;
+
+  // Hint
+  if (cfg.showHint) {
+    document.getElementById('hint-text').textContent = q.hint;
+  }
+
+  // Options — always include correct answer + pick from wrong pool
+  const wrongPool = [q.wrong2, q.wrong3, q.wrong4].slice(0, cfg.optCount - 1);
+  const opts      = shuffle([q.answer, ...wrongPool]);
+  const letters   = ['A','B','C','D'];
+
+  const optEl = document.getElementById('options');
+  optEl.innerHTML = '';
+  opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.addEventListener('click', () => pickAnswer(opt === q.answer, btn, q.answer));
+    optEl.appendChild(btn);
+  });
+
+  // Reset feedback & next
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+  document.getElementById('next-btn').classList.remove('visible');
+  document.getElementById('scene-card').className = 'scene-card';
+}
+
+// ══════════════ ANSWER ══════════════
+function pickAnswer(isCorrect, clickedBtn, correctAnswer) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => {
+    b.disabled = true;
+    // Highlight the correct answer
+    if (b.textContent.trim().slice(1) === correctAnswer || b.innerText.includes(correctAnswer)) {
+      b.classList.add('correct');
+    }
+  });
+
+  const fb   = document.getElementById('feedback');
+  const card = document.getElementById('scene-card');
+
+  if (isCorrect) {
+    clickedBtn.classList.add('correct');
+    score++;
+    document.getElementById('score').textContent = score;
+    fb.className = 'feedback visible ok';
+    fb.innerHTML = '✅ Harika! Doğru cevap!';
+    card.classList.add('correct-flash');
+  } else {
+    clickedBtn.classList.add('wrong');
+    fb.className = 'feedback visible no';
+    fb.innerHTML = `❌ Tekrar dene! Doğrusu: <strong>${correctAnswer}</strong>`;
+    card.classList.add('wrong-flash');
+  }
+
+  document.getElementById('next-btn').classList.add('visible');
+}
+
+// ══════════════ NEXT ══════════════
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= queue.length) {
+    showWin();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ══════════════ WIN ══════════════
+function showWin() {
+  document.getElementById('prog').style.width = '100%';
+  const total  = queue.length;
+  const pct    = Math.round(score / total * 100);
+  const msgs   = {
+    supporting: 'Buzdolabını çok iyi tanıyorsun! 🌟',
+    standard:   'Is there / Are there ustası oldun! 🚀',
+    expansion:  'Tüm soruları doğru yanıtladın! 👑',
+  };
+  document.getElementById('win-score').textContent = `${score} / ${total} (${pct}%)`;
+  document.getElementById('win-msg').textContent   = msgs[currentDiff];
+  document.getElementById('win-screen').classList.add('visible');
+  document.getElementById('game-wrap').style.display = 'none';
+}
+
+function restart() { buildGame(); }
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>10);
+});
+
+setDiff('standard');
+</script>
+</body>
+</html>

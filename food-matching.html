@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Turu | Food & Drinks | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --tomato:   #E83B2A;
+  --carrot:   #F4742B;
+  --lemon:    #F9C030;
+  --grass:    #3CB371;
+  --sky:      #4BA3C3;
+  --purple:   #8B5CF6;
+  --cream:    #FFF8EE;
+  --white:    #FFFFFF;
+  --navy:     #1B2845;
+  --navy2:    #2D3A55;
+  --gray-100: #F5F5F0;
+  --gray-200: #E0DED8;
+  --gray-500: #888880;
+  --green:    #22C55E;
+  --green-lt: #DCFCE7;
+  --red:      #EF4444;
+  --red-lt:   #FEE2E2;
+  --yellow-lt:#FFF7D6;
+  --shadow:   0 4px 20px rgba(27,40,69,.10);
+  --shadow-lg:0 8px 32px rgba(27,40,69,.16);
+  --r:        14px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);
+  color:var(--navy);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
+
+/* ── NAVBAR ── */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:66px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,248,238,.92);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(27,40,69,.07);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--tomato),var(--lemon));
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  box-shadow:0 3px 10px rgba(232,59,42,.28);
+}
+.brand{font-size:1.2rem;font-weight:800;color:var(--navy);}
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  text-decoration:none;color:var(--navy2);font-weight:700;font-size:.9rem;
+  background:var(--white);border:1.5px solid var(--gray-200);
+  padding:.4rem .9rem;border-radius:99px;transition:all .2s;
+}
+.nav-back:hover{background:var(--carrot);color:#fff;border-color:var(--carrot);}
+
+/* ── HERO BANNER ── */
+.hero{
+  margin-top:66px;
+  background:linear-gradient(135deg,#E8523A 0%,#F4742B 45%,#F9C030 100%);
+  padding:2.2rem 32px 2rem;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'🥕🍅🍌🥦🍎🧅🍋🍇';
+  position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);
+  font-size:4rem;opacity:.08;letter-spacing:12px;
+  white-space:nowrap;text-align:center;
+  animation:scroll-bg 18s linear infinite;
+}
+@keyframes scroll-bg{from{letter-spacing:12px;opacity:.08}50%{letter-spacing:24px;opacity:.12}to{letter-spacing:12px;opacity:.08}}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto;text-align:center;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.22);color:#fff;
+  font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3rem .85rem;border-radius:99px;margin-bottom:.8rem;
+  border:1px solid rgba(255,255,255,.3);
+}
+.hero h1{
+  font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;color:#fff;
+  line-height:1.15;margin-bottom:.5rem;
+  text-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+.hero p{color:rgba(255,255,255,.88);font-size:1rem;font-weight:600;}
+
+/* ── DIFFICULTY SELECTOR ── */
+.diff-bar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:.9rem 32px;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  flex-wrap:wrap;
+}
+.diff-btn{
+  padding:.45rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:700;
+  border:2px solid var(--gray-200);background:var(--gray-100);
+  color:var(--navy2);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.diff-btn:hover{border-color:var(--carrot);color:var(--carrot);}
+.diff-btn.active-sup{background:#EEF9F1;border-color:var(--grass);color:var(--grass);}
+.diff-btn.active-std{background:#EEF4FF;border-color:var(--sky);color:var(--sky);}
+.diff-btn.active-exp{background:#F5F0FF;border-color:var(--purple);color:var(--purple);}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:900px;margin:0 auto;padding:2rem 24px 4rem;}
+
+/* ── INSTRUCTION BOX ── */
+.instruction{
+  background:var(--white);border-radius:var(--r);
+  padding:1rem 1.3rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.8rem;
+  box-shadow:var(--shadow);border-left:4px solid var(--carrot);
+}
+.instruction .icon{font-size:1.6rem;flex-shrink:0;}
+.instruction p{font-size:.95rem;font-weight:600;color:var(--navy2);}
+
+/* ── HINT BOX ── */
+.hint-global{
+  background:var(--yellow-lt);border-radius:var(--r);
+  padding:.8rem 1.1rem;margin-bottom:1.5rem;
+  display:none;align-items:center;gap:.7rem;
+  font-size:.88rem;font-weight:700;color:#7A5500;
+  border:1.5px dashed #F9C030;
+}
+.hint-global.visible{display:flex;}
+
+/* ── GAME GRID ── */
+.game-area{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.8rem;
+  align-items:start;
+}
+@media(max-width:600px){.game-area{grid-template-columns:1fr;}}
+
+.col-label{
+  text-align:center;font-size:.78rem;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:var(--gray-500);margin-bottom:.7rem;
+}
+
+/* ── CARDS ── */
+.cards-col{display:flex;flex-direction:column;gap:.7rem;}
+
+.img-card{
+  background:var(--white);border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:1rem;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  cursor:pointer;border:2.5px solid transparent;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  user-select:none;
+}
+.img-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.img-card.selected{border-color:var(--sky);background:#EEF4FF;}
+.img-card.matched{border-color:var(--green);background:var(--green-lt);pointer-events:none;}
+.img-card.wrong{border-color:var(--red);background:var(--red-lt);animation:shake .35s ease;}
+.img-card .food-emoji{font-size:2.8rem;line-height:1;}
+.img-card .hint-text{
+  font-size:.75rem;font-weight:700;color:var(--gray-500);
+  text-align:center;display:none;
+}
+.img-card.show-hint .hint-text{display:block;}
+
+.word-card{
+  background:var(--white);border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:.85rem 1.1rem;
+  cursor:pointer;border:2.5px solid transparent;
+  text-align:center;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:1.05rem;
+  color:var(--navy);
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  user-select:none;
+}
+.word-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--carrot);}
+.word-card.selected{border-color:var(--sky);background:#EEF4FF;color:var(--sky);}
+.word-card.matched{border-color:var(--green);background:var(--green-lt);color:var(--grass);pointer-events:none;}
+.word-card.wrong{border-color:var(--red);background:var(--red-lt);animation:shake .35s ease;}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-6px);}
+  40%{transform:translateX(6px);}
+  60%{transform:translateX(-4px);}
+  80%{transform:translateX(4px);}
+}
+
+/* ── SCORE / PROGRESS ── */
+.score-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border-radius:var(--r);
+  padding:.7rem 1.2rem;margin-bottom:1.2rem;
+  box-shadow:var(--shadow);
+  font-weight:700;font-size:.9rem;
+}
+.score-item{display:flex;align-items:center;gap:.4rem;color:var(--navy2);}
+.score-item span{font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--navy);}
+.progress-wrap{height:6px;background:var(--gray-200);border-radius:99px;overflow:hidden;flex:1;margin:0 1rem;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--carrot),var(--lemon));border-radius:99px;transition:width .4s ease;}
+
+/* ── WIN SCREEN ── */
+.win-screen{
+  display:none;text-align:center;
+  background:var(--white);border-radius:20px;
+  padding:2.5rem 2rem;box-shadow:var(--shadow-lg);
+  border:2px solid var(--green);
+}
+.win-screen.visible{display:block;}
+.win-emoji{font-size:4rem;margin-bottom:.8rem;animation:pop .5s cubic-bezier(.4,0,.2,1);}
+@keyframes pop{0%{transform:scale(0.4);}70%{transform:scale(1.2);}100%{transform:scale(1);}}
+.win-screen h2{font-size:2rem;font-weight:800;color:var(--grass);margin-bottom:.5rem;}
+.win-screen p{color:var(--navy2);font-size:1rem;font-weight:600;margin-bottom:1.5rem;}
+.btn-restart{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,var(--carrot),var(--lemon));
+  color:#fff;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;
+  padding:.7rem 2rem;border-radius:99px;cursor:pointer;
+  border:none;box-shadow:0 4px 16px rgba(244,116,43,.35);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-restart:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(244,116,43,.45);}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:1.5rem;
+  font-size:.8rem;color:var(--gray-500);font-weight:600;
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--carrot);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">🍎</div>
+    <span class="brand">Ataberk Hoca</span>
+  </a>
+  <a href="index.html" class="nav-back">← Temalar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🛒 Theme 6 · Food &amp; Drinks</div>
+    <h1>Market Turu 🥕</h1>
+    <p>Manav tezgahındaki yiyecekleri doğru kelimeyle eşleştir!</p>
+  </div>
+</section>
+
+<!-- DIFFICULTY BAR -->
+<div class="diff-bar">
+  <button class="diff-btn" id="btn-sup" onclick="setDiff('supporting')">🟢 Supporting</button>
+  <button class="diff-btn" id="btn-std" onclick="setDiff('standard')">🔵 Standard</button>
+  <button class="diff-btn" id="btn-exp" onclick="setDiff('expansion')">🟣 Expansion</button>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Score -->
+  <div class="score-bar">
+    <div class="score-item">✅ <span id="score-matched">0</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="score-item">🎯 <span id="score-total">0</span> eşleşme</div>
+  </div>
+
+  <!-- Global hint (Supporting only) -->
+  <div class="hint-global" id="global-hint">
+    <span>💡</span><span id="global-hint-text"></span>
+  </div>
+
+  <!-- Instruction -->
+  <div class="instruction">
+    <div class="icon">👆</div>
+    <p id="instruction-text">Önce sol sütundan bir yiyecek seç, sonra sağ sütundan doğru kelimeyi bul!</p>
+  </div>
+
+  <!-- Game (hidden until diff chosen) -->
+  <div id="game-area" style="display:none;">
+    <div class="game-area">
+      <div>
+        <div class="col-label">🖼 Yiyecekler</div>
+        <div class="cards-col" id="img-col"></div>
+      </div>
+      <div>
+        <div class="col-label">🔤 Kelimeler</div>
+        <div class="cards-col" id="word-col"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Win -->
+  <div class="win-screen" id="win-screen">
+    <div class="win-emoji">🎉</div>
+    <h2>Harika!</h2>
+    <p id="win-msg">Tüm eşleşmeleri buldun!</p>
+    <button class="btn-restart" onclick="restart()">🔄 Tekrar Oyna</button>
+  </div>
+
+</main>
+
+<footer>© Ataberk Hoca İngilizce · TYMM 2025 · MEB Maarif Modeli</footer>
+
+<script>
+// ══════════════ DATA ══════════════
+// All food items with emoji and Turkish hints (contextual, not answer-revealing)
+const ALL_ITEMS = [
+  { id:'apple',       emoji:'🍎', word:'apple',       hint:'Kırmızı veya yeşil, sert ve çıtır bir meyve!' },
+  { id:'banana',      emoji:'🍌', word:'banana',      hint:'Sarı, eğri, maymunların en sevdiği!' },
+  { id:'carrot',      emoji:'🥕', word:'carrot',      hint:'Turuncu, uzun ve yerde yetişen bir sebze.' },
+  { id:'tomato',      emoji:'🍅', word:'tomato',      hint:'Kırmızı, yuvarlak — salata ve soslarda kullanılır.' },
+  { id:'egg',         emoji:'🥚', word:'egg',         hint:'Tavuktan gelir, kahvaltılık!' },
+  { id:'milk',        emoji:'🥛', word:'milk',        hint:'Beyaz, içecek — ineği hatırlatır.' },
+  { id:'bread',       emoji:'🍞', word:'bread',       hint:'Fırından gelir, kahvaltıda yersin.' },
+  { id:'orange',      emoji:'🍊', word:'orange',      hint:'Turuncu, yuvarlak, portakal gibi bir meyve.' },
+  { id:'grape',       emoji:'🍇', word:'grape',       hint:'Küçük, mor ya da yeşil salkımlar hâlinde gelir.' },
+  { id:'strawberry',  emoji:'🍓', word:'strawberry',  hint:'Kırmızı, küçük, çilek gibi — nefis kokar!' },
+  { id:'cherry',      emoji:'🍒', word:'cherry',      hint:'İki tanesi birbirine bağlı, küçük ve kırmızı.' },
+  { id:'fish',        emoji:'🐟', word:'fish',        hint:'Denizde yaşar, pul pul — akşam yemeği!' },
+];
+
+// Difficulty sets — ids to include
+const DIFF = {
+  supporting: { ids:['apple','banana','carrot','tomato'],         showHint:true  },
+  standard:   { ids:['apple','banana','carrot','tomato','egg','milk','bread'], showHint:true  },
+  expansion:  { ids:['apple','banana','carrot','tomato','egg','milk','bread','orange','grape','strawberry','cherry','fish'], showHint:false },
+};
+
+// ══════════════ STATE ══════════════
+let currentDiff = null;
+let items       = [];
+let selectedImg = null;
+let selectedWord= null;
+let matched     = 0;
+
+// ══════════════ HELPERS ══════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ══════════════ SETUP ══════════════
+function setDiff(diff) {
+  currentDiff = diff;
+  document.getElementById('btn-sup').className = 'diff-btn' + (diff==='supporting'?' active-sup':'');
+  document.getElementById('btn-std').className = 'diff-btn' + (diff==='standard' ?' active-std':'');
+  document.getElementById('btn-exp').className = 'diff-btn' + (diff==='expansion' ?' active-exp':'');
+  buildGame();
+}
+
+function buildGame() {
+  const cfg  = DIFF[currentDiff];
+  items      = cfg.ids.map(id => ALL_ITEMS.find(x=>x.id===id));
+  matched    = 0;
+  selectedImg= null;
+  selectedWord=null;
+
+  // Hints
+  const hintBox = document.getElementById('global-hint');
+  if (cfg.showHint) {
+    hintBox.classList.add('visible');
+    document.getElementById('global-hint-text').textContent = '💡 İpucu: Bir yiyecek seçince açıklamasını okuyabilirsin!';
+  } else {
+    hintBox.classList.remove('visible');
+  }
+
+  // Shuffled copies for each column
+  const imgOrder  = shuffle(items);
+  const wordOrder = shuffle(items);
+
+  // Image column
+  const imgCol  = document.getElementById('img-col');
+  imgCol.innerHTML = '';
+  imgOrder.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'img-card' + (cfg.showHint?' show-hint':'');
+    card.id = 'img-' + item.id;
+    card.innerHTML = `<div class="food-emoji">${item.emoji}</div><div class="hint-text">${item.hint}</div>`;
+    card.addEventListener('click', () => clickImg(item.id));
+    imgCol.appendChild(card);
+  });
+
+  // Word column
+  const wordCol = document.getElementById('word-col');
+  wordCol.innerHTML = '';
+  wordOrder.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.id = 'word-' + item.id;
+    card.textContent = item.word;
+    card.addEventListener('click', () => clickWord(item.id));
+    wordCol.appendChild(card);
+  });
+
+  // Score
+  updateScore();
+
+  // Show game
+  document.getElementById('game-area').style.display = 'block';
+  document.getElementById('win-screen').classList.remove('visible');
+}
+
+// ══════════════ GAME LOGIC ══════════════
+function clickImg(id) {
+  const card = document.getElementById('img-' + id);
+  if (card.classList.contains('matched')) return;
+
+  // Deselect previous
+  if (selectedImg) {
+    document.getElementById('img-' + selectedImg).classList.remove('selected');
+  }
+  selectedImg = id;
+  card.classList.add('selected');
+  tryMatch();
+}
+
+function clickWord(id) {
+  const card = document.getElementById('word-' + id);
+  if (card.classList.contains('matched')) return;
+
+  if (selectedWord) {
+    document.getElementById('word-' + selectedWord).classList.remove('selected');
+  }
+  selectedWord = id;
+  card.classList.add('selected');
+  tryMatch();
+}
+
+function tryMatch() {
+  if (!selectedImg || !selectedWord) return;
+
+  const imgCard  = document.getElementById('img-'  + selectedImg);
+  const wordCard = document.getElementById('word-' + selectedWord);
+
+  if (selectedImg === selectedWord) {
+    // ✅ Correct
+    imgCard.classList.remove('selected');
+    wordCard.classList.remove('selected');
+    imgCard.classList.add('matched');
+    wordCard.classList.add('matched');
+    matched++;
+    updateScore();
+    selectedImg  = null;
+    selectedWord = null;
+    if (matched === items.length) setTimeout(showWin, 400);
+  } else {
+    // ❌ Wrong
+    imgCard.classList.add('wrong');
+    wordCard.classList.add('wrong');
+    setTimeout(() => {
+      imgCard.classList.remove('wrong','selected');
+      wordCard.classList.remove('wrong','selected');
+      selectedImg  = null;
+      selectedWord = null;
+    }, 700);
+  }
+}
+
+function updateScore() {
+  const total = items.length;
+  document.getElementById('score-matched').textContent = matched;
+  document.getElementById('score-total').textContent   = total;
+  document.getElementById('prog').style.width = (matched/total*100) + '%';
+}
+
+function showWin() {
+  const msgs = {
+    supporting: '4 eşleşmeyi buldun! Muhteşemsin! 🌟',
+    standard:   '7 eşleşmeyi buldun! Süpersin! 🚀',
+    expansion:  '12 eşleşmenin tamamını buldun! Efsanesin! 👑',
+  };
+  document.getElementById('win-msg').textContent = msgs[currentDiff] || 'Tüm eşleşmeleri buldun!';
+  document.getElementById('win-screen').classList.add('visible');
+  document.getElementById('game-area').style.display = 'none';
+}
+
+function restart() {
+  buildGame();
+}
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+// Auto-start on Standard
+setDiff('standard');
+</script>
+</body>
+</html>

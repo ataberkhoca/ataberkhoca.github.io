@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festival Sepeti | Food & Drinks | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fruit-color:  #E85D75;
+  --fruit-light:  #FDEEF2;
+  --veg-color:    #3CB371;
+  --veg-light:    #EBF8F0;
+  --drink-color:  #4BA3C3;
+  --drink-light:  #EAF5FB;
+  --basic-color:  #F4742B;
+  --basic-light:  #FEF0E8;
+  --lemon:        #F9C030;
+  --navy:         #1B2845;
+  --navy2:        #2D3A55;
+  --cream:        #FFF8EE;
+  --white:        #FFFFFF;
+  --gray-100:     #F5F5F0;
+  --gray-200:     #E0DED8;
+  --gray-500:     #888880;
+  --green:        #22C55E;
+  --green-lt:     #DCFCE7;
+  --red:          #EF4444;
+  --red-lt:       #FEE2E2;
+  --shadow:       0 4px 20px rgba(27,40,69,.10);
+  --shadow-lg:    0 8px 32px rgba(27,40,69,.16);
+  --r:            14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:66px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,248,238,.92);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(27,40,69,.07);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,#E85D75,#F9C030);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  box-shadow:0 3px 10px rgba(232,93,117,.28);
+}
+.brand{font-size:1.2rem;font-weight:800;color:var(--navy);}
+.nav-back{
+  display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--navy2);
+  font-weight:700;font-size:.9rem;background:var(--white);
+  border:1.5px solid var(--gray-200);padding:.4rem .9rem;border-radius:99px;transition:all .2s;
+}
+.nav-back:hover{background:var(--fruit-color);color:#fff;border-color:var(--fruit-color);}
+
+/* HERO */
+.hero{
+  margin-top:66px;
+  background:linear-gradient(135deg,#E85D75 0%,#F4742B 50%,#F9C030 100%);
+  padding:2.2rem 32px 2rem;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto;text-align:center;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.22);color:#fff;
+  font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3rem .85rem;border-radius:99px;margin-bottom:.8rem;
+  border:1px solid rgba(255,255,255,.3);
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.15);}
+.hero p{color:rgba(255,255,255,.88);font-size:1rem;font-weight:600;}
+
+/* DIFFICULTY BAR */
+.diff-bar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:.9rem 32px;display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;
+}
+.diff-btn{
+  padding:.45rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:700;
+  border:2px solid var(--gray-200);background:var(--gray-100);color:var(--navy2);
+  cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.diff-btn:hover{border-color:var(--fruit-color);color:var(--fruit-color);}
+.diff-btn.active-sup{background:#EEF9F1;border-color:var(--veg-color);color:var(--veg-color);}
+.diff-btn.active-std{background:#EAF5FB;border-color:var(--drink-color);color:var(--drink-color);}
+.diff-btn.active-exp{background:#FDEEF2;border-color:var(--fruit-color);color:var(--fruit-color);}
+
+/* MAIN */
+.main{max-width:960px;margin:0 auto;padding:1.8rem 20px 4rem;}
+
+/* SCORE BAR */
+.score-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border-radius:var(--r);padding:.7rem 1.2rem;
+  margin-bottom:1.2rem;box-shadow:var(--shadow);font-weight:700;font-size:.9rem;
+}
+.score-item{display:flex;align-items:center;gap:.4rem;color:var(--navy2);}
+.score-item span{font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--navy);}
+.progress-wrap{height:6px;background:var(--gray-200);border-radius:99px;overflow:hidden;flex:1;margin:0 1rem;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--fruit-color),var(--lemon));border-radius:99px;transition:width .4s ease;}
+
+/* HINT */
+.hint-box{
+  background:#FFF7D6;border:1.5px dashed var(--lemon);border-radius:var(--r);
+  padding:.75rem 1.1rem;margin-bottom:1.2rem;
+  display:none;align-items:center;gap:.7rem;
+  font-size:.88rem;font-weight:700;color:#7A5500;
+}
+.hint-box.visible{display:flex;}
+
+/* ITEMS TRAY */
+.tray-label{font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--gray-500);margin-bottom:.6rem;text-align:center;}
+.tray{
+  background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:1rem;min-height:88px;
+  display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:center;
+  margin-bottom:1.6rem;border:2px dashed var(--gray-200);
+  transition:border-color .2s;
+}
+.tray:empty::after{content:'Tüm yiyecekleri kategorilere yerleştir!';color:var(--gray-500);font-size:.85rem;font-weight:600;}
+
+/* FOOD ITEMS */
+.food-item{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  background:var(--gray-100);border-radius:12px;
+  padding:.65rem .9rem;cursor:grab;
+  border:2px solid transparent;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  user-select:none;min-width:72px;
+}
+.food-item:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--lemon);}
+.food-item.selected{border-color:var(--lemon);background:#FFF7D6;transform:translateY(-3px);}
+.food-item.dragging{opacity:.35;cursor:grabbing;transform:scale(.95);}
+.food-item.placed{opacity:.45;pointer-events:none;filter:grayscale(1);}
+
+/* drag ghost */
+#drag-ghost{
+  position:fixed;pointer-events:none;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  background:var(--white);border-radius:12px;border:2.5px solid var(--lemon);
+  padding:.65rem .9rem;box-shadow:0 12px 32px rgba(27,40,69,.25);
+  min-width:72px;transform:translate(-50%,-50%) rotate(4deg) scale(1.08);
+  transition:transform .08s;opacity:.95;
+}
+
+/* zone drag-over highlight */
+.cat-zone.drag-over{
+  border-style:solid;
+  box-shadow:0 0 0 4px rgba(249,192,48,.45);
+  transform:scale(1.02);
+}
+.food-emoji-lg{font-size:2.2rem;line-height:1;}
+.food-name{font-family:'Baloo 2',cursive;font-size:.78rem;font-weight:700;color:var(--navy2);}
+
+/* CATEGORIES */
+.cats-grid{
+  display:grid;gap:1rem;
+  grid-template-columns:1fr 1fr;
+}
+.cats-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.cats-grid.four{grid-template-columns:1fr 1fr 1fr 1fr;}
+@media(max-width:640px){
+  .cats-grid,.cats-grid.three,.cats-grid.four{grid-template-columns:1fr 1fr;}
+}
+
+.cat-zone{
+  border-radius:var(--r);padding:1rem;
+  border:2.5px dashed var(--zone-color,#ccc);
+  background:var(--zone-light,#f9f9f9);
+  min-height:110px;transition:all .2s;
+}
+.cat-zone.highlight{border-style:solid;box-shadow:0 0 0 3px rgba(var(--zone-rgb),0.18);}
+.cat-zone.wrong-flash{animation:zone-shake .35s ease;}
+@keyframes zone-shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-5px);}60%{transform:translateX(5px);}}
+
+.cat-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;}
+.cat-emoji{font-size:1.5rem;}
+.cat-title{font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;}
+.cat-count{margin-left:auto;font-size:.78rem;font-weight:700;opacity:.6;}
+
+.cat-items{display:flex;flex-wrap:wrap;gap:.5rem;min-height:44px;}
+.cat-item{
+  display:flex;flex-direction:column;align-items:center;gap:.2rem;
+  background:rgba(255,255,255,.75);border-radius:10px;
+  padding:.5rem .7rem;font-size:.72rem;font-weight:700;color:var(--navy);
+  animation:pop-in .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes pop-in{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.cat-item .ci-emoji{font-size:1.4rem;}
+
+/* WIN */
+.win-screen{
+  display:none;text-align:center;background:var(--white);border-radius:20px;
+  padding:2.5rem 2rem;box-shadow:var(--shadow-lg);border:2px solid var(--veg-color);
+}
+.win-screen.visible{display:block;}
+.win-emoji{font-size:4rem;margin-bottom:.8rem;animation:pop-in .5s cubic-bezier(.4,0,.2,1);}
+.win-screen h2{font-size:2rem;font-weight:800;color:var(--veg-color);margin-bottom:.5rem;}
+.win-screen p{color:var(--navy2);font-size:1rem;font-weight:600;margin-bottom:1.5rem;}
+.btn-restart{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,var(--fruit-color),var(--lemon));
+  color:#fff;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;
+  padding:.7rem 2rem;border-radius:99px;cursor:pointer;border:none;
+  box-shadow:0 4px 16px rgba(232,93,117,.35);transition:transform .2s,box-shadow .2s;
+}
+.btn-restart:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(232,93,117,.45);}
+
+footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--gray-500);font-weight:600;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--fruit-color);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">🎪</div>
+    <span class="brand">Ataberk Hoca</span>
+  </a>
+  <a href="index.html" class="nav-back">← Temalar</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🎪 Theme 6 · Food &amp; Drinks</div>
+    <h1>Healthy Food Festival 🛒</h1>
+    <p>Yiyecekleri doğru kategoriye yerleştirerek festival sepetini hazırla!</p>
+  </div>
+</section>
+
+<div class="diff-bar">
+  <button class="diff-btn" id="btn-sup" onclick="setDiff('supporting')">🟢 Supporting</button>
+  <button class="diff-btn" id="btn-std" onclick="setDiff('standard')">🔵 Standard</button>
+  <button class="diff-btn" id="btn-exp" onclick="setDiff('expansion')">🟣 Expansion</button>
+</div>
+
+<main class="main">
+
+  <div class="score-bar">
+    <div class="score-item">✅ <span id="score-placed">0</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="score-item">🎯 <span id="score-total">0</span> yiyecek</div>
+  </div>
+
+  <div class="hint-box" id="hint-box">
+    <span>💡</span><span id="hint-text">Bir yiyeceğe tıkla, sonra onu hangi kategoriye ait olduğunu düşün!</span>
+  </div>
+
+  <div id="game-wrap" style="display:none;">
+    <div class="tray-label">🧺 Yerleştirilecek Yiyecekler</div>
+    <div class="tray" id="tray"></div>
+
+    <div class="tray-label" id="cats-label">📦 Kategoriler</div>
+    <div class="cats-grid" id="cats-grid"></div>
+  </div>
+
+  <div class="win-screen" id="win-screen">
+    <div class="win-emoji">🎊</div>
+    <h2>Bravo!</h2>
+    <p id="win-msg">Festival sepetini mükemmel doldurdun!</p>
+    <button class="btn-restart" onclick="restart()">🔄 Tekrar Oyna</button>
+  </div>
+
+</main>
+
+<footer>© Ataberk Hoca İngilizce · TYMM 2025 · MEB Maarif Modeli</footer>
+
+<script>
+// ══════════════ DATA ══════════════
+const ALL_ITEMS = [
+  // Fruits
+  { id:'apple',      emoji:'🍎', word:'apple',      cat:'fruits'   },
+  { id:'banana',     emoji:'🍌', word:'banana',     cat:'fruits'   },
+  { id:'orange',     emoji:'🍊', word:'orange',     cat:'fruits'   },
+  { id:'grape',      emoji:'🍇', word:'grape',      cat:'fruits'   },
+  { id:'strawberry', emoji:'🍓', word:'strawberry', cat:'fruits'   },
+  { id:'cherry',     emoji:'🍒', word:'cherry',     cat:'fruits'   },
+  { id:'pear',       emoji:'🍐', word:'pear',       cat:'fruits'   },
+  // Vegetables
+  { id:'carrot',     emoji:'🥕', word:'carrot',     cat:'vegs'     },
+  { id:'tomato',     emoji:'🍅', word:'tomato',     cat:'vegs'     },
+  { id:'broccoli',   emoji:'🥦', word:'broccoli',   cat:'vegs'     },
+  { id:'cucumber',   emoji:'🥒', word:'cucumber',   cat:'vegs'     },
+  { id:'pepper',     emoji:'🫑', word:'pepper',     cat:'vegs'     },
+  { id:'spinach',    emoji:'🌿', word:'spinach',    cat:'vegs'     },
+  { id:'potato',     emoji:'🥔', word:'potato',     cat:'vegs'     },
+  // Drinks
+  { id:'milk',       emoji:'🥛', word:'milk',       cat:'drinks'   },
+  { id:'water',      emoji:'💧', word:'water',      cat:'drinks'   },
+  { id:'tea',        emoji:'🍵', word:'tea',        cat:'drinks'   },
+  { id:'coffee',     emoji:'☕', word:'coffee',     cat:'drinks'   },
+  // Basic food
+  { id:'bread',      emoji:'🍞', word:'bread',      cat:'basic'    },
+  { id:'egg',        emoji:'🥚', word:'egg',        cat:'basic'    },
+  { id:'meat',       emoji:'🥩', word:'meat',       cat:'basic'    },
+  { id:'fish',       emoji:'🐟', word:'fish',       cat:'basic'    },
+  { id:'chicken',    emoji:'🍗', word:'chicken',    cat:'basic'    },
+];
+
+const CATS = {
+  fruits:  { emoji:'🍎', label:'Fruits',     color:'#E85D75', light:'#FDEEF2', rgb:'232,93,117'  },
+  vegs:    { emoji:'🥦', label:'Vegetables', color:'#3CB371', light:'#EBF8F0', rgb:'60,179,113'  },
+  drinks:  { emoji:'🥛', label:'Drinks',     color:'#4BA3C3', light:'#EAF5FB', rgb:'75,163,195'  },
+  basic:   { emoji:'🍞', label:'Basic Food', color:'#F4742B', light:'#FEF0E8', rgb:'244,116,43'  },
+};
+
+// Supporting: fruits vs vegs (6 items)
+// Standard:   fruits / vegs / drinks (9 items)
+// Expansion:  all 4 categories (12 items — 3 per cat)
+const DIFF = {
+  supporting: {
+    cats: ['fruits','vegs'],
+    items: ['apple','banana','strawberry','carrot','tomato','broccoli'],
+    showHint: true,
+  },
+  standard: {
+    cats: ['fruits','vegs','drinks'],
+    items: ['apple','banana','orange','carrot','tomato','pepper','milk','water','tea'],
+    showHint: true,
+  },
+  expansion: {
+    cats: ['fruits','vegs','drinks','basic'],
+    items: ['apple','banana','grape','carrot','broccoli','spinach','milk','water','tea','bread','egg','chicken'],
+    showHint: false,
+  },
+};
+
+// ══════════════ STATE ══════════════
+let currentDiff = null;
+let items       = [];
+let cats        = [];
+let placed      = 0;
+let selectedId  = null;   // click-mode selected item
+let dragId      = null;   // currently dragged item id
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+// ══════════════ GHOST ELEMENT ══════════════
+const ghost = document.createElement('div');
+ghost.id = 'drag-ghost';
+ghost.style.display = 'none';
+document.body.appendChild(ghost);
+
+function showGhost(item, x, y) {
+  ghost.innerHTML = `<div class="food-emoji-lg">${item.emoji}</div><div class="food-name">${item.word}</div>`;
+  ghost.style.display = 'flex';
+  ghost.style.left = x + 'px';
+  ghost.style.top  = y + 'px';
+}
+function moveGhost(x, y) {
+  ghost.style.left = x + 'px';
+  ghost.style.top  = y + 'px';
+}
+function hideGhost() { ghost.style.display = 'none'; }
+
+// ══════════════ SETUP ══════════════
+function setDiff(diff) {
+  currentDiff = diff;
+  ['sup','std','exp'].forEach(k => document.getElementById('btn-'+k).className='diff-btn');
+  const map = {supporting:'sup',standard:'std',expansion:'exp'};
+  const cls = {supporting:'active-sup',standard:'active-std',expansion:'active-exp'};
+  document.getElementById('btn-'+map[diff]).className = 'diff-btn ' + cls[diff];
+  buildGame();
+}
+
+function buildGame() {
+  const cfg = DIFF[currentDiff];
+  cats      = cfg.cats;
+  items     = shuffle(cfg.items.map(id => ALL_ITEMS.find(x=>x.id===id)));
+  placed    = 0;
+  selectedId= null;
+  dragId    = null;
+  hideGhost();
+
+  // Hint
+  const hintBox = document.getElementById('hint-box');
+  if (cfg.showHint) {
+    hintBox.classList.add('visible');
+    document.getElementById('hint-text').textContent = 'Sürükle veya tıkla — yiyeceği doğru kategoriye yerleştir!';
+  } else {
+    hintBox.classList.remove('visible');
+  }
+
+  // Score
+  document.getElementById('score-total').textContent   = items.length;
+  document.getElementById('score-placed').textContent  = 0;
+  document.getElementById('prog').style.width          = '0%';
+
+  // Tray
+  const tray = document.getElementById('tray');
+  tray.innerHTML = '';
+  items.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'food-item';
+    el.id = 'item-' + item.id;
+    el.innerHTML = `<div class="food-emoji-lg">${item.emoji}</div><div class="food-name">${item.word}</div>`;
+
+    // ── CLICK ──
+    el.addEventListener('click', (e) => {
+      // If we just dropped via drag, skip the click that fires after touchend
+      if (el.dataset.skipClick === '1') { el.dataset.skipClick = '0'; return; }
+      selectItem(item.id);
+    });
+
+    // ── MOUSE DRAG ──
+    el.addEventListener('mousedown', (e) => startDrag(item.id, e.clientX, e.clientY, e));
+
+    // ── TOUCH DRAG ──
+    el.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      startDrag(item.id, t.clientX, t.clientY, e);
+    }, { passive: false });
+
+    tray.appendChild(el);
+  });
+
+  // Categories
+  const grid = document.getElementById('cats-grid');
+  grid.innerHTML = '';
+  grid.className = 'cats-grid' + (cats.length===3?' three':cats.length===4?' four':'');
+
+  cats.forEach(catId => {
+    const cat  = CATS[catId];
+    const zone = document.createElement('div');
+    zone.className = 'cat-zone';
+    zone.id = 'zone-' + catId;
+    zone.style.setProperty('--zone-color', cat.color);
+    zone.style.setProperty('--zone-light', cat.light);
+    zone.style.setProperty('--zone-rgb',   cat.rgb);
+    zone.style.background = cat.light;
+    zone.innerHTML = `
+      <div class="cat-header">
+        <span class="cat-emoji">${cat.emoji}</span>
+        <span class="cat-title" style="color:${cat.color}">${cat.label}</span>
+        <span class="cat-count" id="count-${catId}">0 / ${items.filter(i=>i.cat===catId).length}</span>
+      </div>
+      <div class="cat-items" id="cat-${catId}"></div>`;
+    // Click-mode drop target
+    zone.addEventListener('click', () => { if (!dragId) placeItem(catId); });
+    grid.appendChild(zone);
+  });
+
+  document.getElementById('game-wrap').style.display = 'block';
+  document.getElementById('win-screen').classList.remove('visible');
+}
+
+// ══════════════ DRAG ENGINE ══════════════
+let isDragging = false;
+let dragMoved  = false;
+
+function startDrag(id, x, y, e) {
+  const el = document.getElementById('item-'+id);
+  if (el.classList.contains('placed')) return;
+
+  isDragging = false;
+  dragMoved  = false;
+  dragId     = id;
+
+  const item = items.find(i=>i.id===id);
+
+  // We detect "real drag" only after the pointer moves > 6px
+  const THRESHOLD = 6;
+  let startX = x, startY = y;
+
+  function onMove(cx, cy) {
+    if (!dragMoved) {
+      if (Math.abs(cx-startX)<THRESHOLD && Math.abs(cy-startY)<THRESHOLD) return;
+      // Confirmed drag — suppress click
+      el.dataset.skipClick = '1';
+      isDragging = true;
+      dragMoved  = true;
+      // Deselect click-mode
+      if (selectedId) {
+        const prev = document.getElementById('item-'+selectedId);
+        if (prev) prev.classList.remove('selected');
+        selectedId = null;
+      }
+      el.classList.add('dragging');
+      showGhost(item, cx, cy);
+    }
+    moveGhost(cx, cy);
+
+    // Highlight zone under cursor
+    document.querySelectorAll('.cat-zone').forEach(z => z.classList.remove('drag-over'));
+    const target = zoneAt(cx, cy);
+    if (target) document.getElementById('zone-'+target).classList.add('drag-over');
+  }
+
+  function onEnd(cx, cy) {
+    cleanup();
+    document.querySelectorAll('.cat-zone').forEach(z => z.classList.remove('drag-over'));
+    if (isDragging) {
+      el.classList.remove('dragging');
+      hideGhost();
+      const target = zoneAt(cx, cy);
+      if (target) {
+        placeItem(target);
+      } else {
+        // Dropped outside — just cancel drag
+        dragId = null;
+      }
+      isDragging = false;
+    }
+    dragId = null;
+  }
+
+  // Mouse events
+  function onMouseMove(e) { onMove(e.clientX, e.clientY); }
+  function onMouseUp(e)   { onEnd(e.clientX, e.clientY); }
+
+  // Touch events
+  function onTouchMove(e) {
+    e.preventDefault();
+    const t = e.touches[0];
+    onMove(t.clientX, t.clientY);
+  }
+  function onTouchEnd(e) {
+    const t = e.changedTouches[0];
+    onEnd(t.clientX, t.clientY);
+  }
+
+  function cleanup() {
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup',   onMouseUp);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend',  onTouchEnd);
+  }
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup',   onMouseUp);
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('touchend',  onTouchEnd);
+}
+
+// Returns catId of the zone element at (x,y), or null
+function zoneAt(x, y) {
+  const els = document.elementsFromPoint(x, y);
+  for (const el of els) {
+    if (el.classList && el.classList.contains('cat-zone')) {
+      return el.id.replace('zone-','');
+    }
+    // Check ancestors
+    let p = el.parentElement;
+    while (p) {
+      if (p.classList && p.classList.contains('cat-zone')) return p.id.replace('zone-','');
+      p = p.parentElement;
+    }
+  }
+  return null;
+}
+
+// ══════════════ CLICK INTERACTION ══════════════
+function selectItem(id) {
+  const el = document.getElementById('item-'+id);
+  if (el.classList.contains('placed')) return;
+
+  if (selectedId) {
+    const prev = document.getElementById('item-'+selectedId);
+    if (prev) prev.classList.remove('selected');
+  }
+  if (selectedId === id) { selectedId = null; return; }
+  selectedId = id;
+  el.classList.add('selected');
+
+  if (DIFF[currentDiff].showHint) {
+    const item = items.find(x=>x.id===id);
+    const cat  = CATS[item.cat];
+    document.getElementById('hint-text').textContent =
+      `Düşün: "${item.word}" hangi gruba giriyor? ${cat.emoji} ${cat.label} mı?`;
+  }
+}
+
+// ══════════════ PLACE LOGIC (shared by click & drag) ══════════════
+function placeItem(catId) {
+  const activeId = dragId || selectedId;
+  if (!activeId) return;
+
+  const item = items.find(x=>x.id===activeId);
+  const el   = document.getElementById('item-'+activeId);
+
+  if (item.cat === catId) {
+    // ✅ Correct
+    el.classList.remove('selected','dragging');
+    el.classList.add('placed');
+
+    const cat   = CATS[catId];
+    const catEl = document.getElementById('cat-'+catId);
+    const mini  = document.createElement('div');
+    mini.className = 'cat-item';
+    mini.innerHTML  = `<div class="ci-emoji">${item.emoji}</div><div>${item.word}</div>`;
+    mini.style.background = cat.light;
+    catEl.appendChild(mini);
+
+    const catItems  = items.filter(x=>x.cat===catId);
+    const placedCnt = catItems.filter(x=>document.getElementById('item-'+x.id)?.classList.contains('placed')).length;
+    document.getElementById('count-'+catId).textContent = `${placedCnt} / ${catItems.length}`;
+
+    placed++;
+    document.getElementById('score-placed').textContent = placed;
+    document.getElementById('prog').style.width = (placed/items.length*100)+'%';
+
+    selectedId = null;
+    dragId     = null;
+    if (DIFF[currentDiff].showHint) {
+      document.getElementById('hint-text').textContent = 'Sürükle veya tıkla — yiyeceği doğru kategoriye yerleştir!';
+    }
+    if (placed === items.length) setTimeout(showWin, 400);
+
+  } else {
+    // ❌ Wrong
+    el.classList.remove('dragging');
+    el.style.background   = '#FEE2E2';
+    el.style.borderColor  = '#EF4444';
+    const zone = document.getElementById('zone-'+catId);
+    zone.classList.add('wrong-flash');
+    setTimeout(() => {
+      el.style.background  = '';
+      el.style.borderColor = '';
+      zone.classList.remove('wrong-flash');
+    }, 600);
+
+    if (DIFF[currentDiff].showHint) {
+      const correctCat = CATS[item.cat];
+      document.getElementById('hint-text').textContent =
+        `Tekrar dene! "${item.word}" ${correctCat.emoji} ${correctCat.label} grubuna giriyor.`;
+    }
+    selectedId = null;
+    dragId     = null;
+  }
+}
+
+function showWin() {
+  const msgs = {
+    supporting: '6 yiyeceği doğru kategorilere koydun! Aferin! 🌟',
+    standard:   '9 yiyeceği doğru sıraladın! Süpersin! 🚀',
+    expansion:  '12 yiyecekle tüm kategorileri doldurdun! Efsanesin! 👑',
+  };
+  document.getElementById('win-msg').textContent = msgs[currentDiff];
+  document.getElementById('win-screen').classList.add('visible');
+  document.getElementById('game-wrap').style.display = 'none';
+}
+
+function restart() { buildGame(); }
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>10);
+});
+
+setDiff('standard');
+</script>
+</body>
+</html>

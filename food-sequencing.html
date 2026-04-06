@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yemek Zamanı! | Food & Drinks | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --breakfast-c: #F59E0B;
+  --breakfast-l: #FEF3C7;
+  --lunch-c:     #10B981;
+  --lunch-l:     #D1FAE5;
+  --dinner-c:    #6366F1;
+  --dinner-l:    #EDE9FE;
+  --orange:      #F4742B;
+  --navy:        #1B2845;
+  --navy2:       #2D3A55;
+  --cream:       #FFFDF5;
+  --white:       #FFFFFF;
+  --gray-100:    #F4F3EE;
+  --gray-200:    #E2DFD6;
+  --gray-500:    #878279;
+  --green:       #22C55E;
+  --green-lt:    #DCFCE7;
+  --red:         #EF4444;
+  --red-lt:      #FEE2E2;
+  --yellow:      #F9C030;
+  --yellow-lt:   #FFF7D6;
+  --shadow:      0 4px 20px rgba(27,40,69,.09);
+  --shadow-lg:   0 8px 32px rgba(27,40,69,.15);
+  --r:           14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:66px;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,253,245,.94);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(245,158,11,.12);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--breakfast-c),var(--dinner-c));
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  box-shadow:0 3px 10px rgba(245,158,11,.28);
+}
+.brand{font-size:1.2rem;font-weight:800;color:var(--navy);}
+.nav-back{
+  display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--navy2);
+  font-weight:700;font-size:.9rem;background:var(--white);
+  border:1.5px solid var(--gray-200);padding:.4rem .9rem;border-radius:99px;transition:all .2s;
+}
+.nav-back:hover{background:var(--breakfast-c);color:#fff;border-color:var(--breakfast-c);}
+
+/* HERO */
+.hero{
+  margin-top:66px;
+  background:linear-gradient(135deg,#92400E 0%,#F59E0B 40%,#10B981 70%,#6366F1 100%);
+  padding:2.2rem 32px 2rem;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'🌅🌤️🌙';
+  position:absolute;font-size:6rem;opacity:.08;
+  top:50%;right:5%;transform:translateY(-50%);
+  letter-spacing:10px;pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto;text-align:center;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.2);color:#fff;
+  font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.3rem .85rem;border-radius:99px;margin-bottom:.8rem;
+  border:1px solid rgba(255,255,255,.28);
+}
+.hero h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.2);}
+.hero p{color:rgba(255,255,255,.88);font-size:1rem;font-weight:600;}
+
+/* DIFFICULTY BAR */
+.diff-bar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:.9rem 32px;display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;
+}
+.diff-btn{
+  padding:.45rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:700;
+  border:2px solid var(--gray-200);background:var(--gray-100);color:var(--navy2);
+  cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;
+}
+.diff-btn:hover{border-color:var(--breakfast-c);color:var(--breakfast-c);}
+.diff-btn.active-sup{background:var(--breakfast-l);border-color:var(--breakfast-c);color:#92400E;}
+.diff-btn.active-std{background:var(--lunch-l);border-color:var(--lunch-c);color:#065F46;}
+.diff-btn.active-exp{background:var(--dinner-l);border-color:var(--dinner-c);color:#3730A3;}
+
+/* MAIN */
+.main{max-width:820px;margin:0 auto;padding:1.8rem 20px 4rem;}
+
+/* PROGRESS */
+.progress-row{
+  display:flex;align-items:center;gap:1rem;
+  background:var(--white);border-radius:var(--r);padding:.7rem 1.2rem;
+  margin-bottom:1.4rem;box-shadow:var(--shadow);font-weight:700;font-size:.9rem;
+}
+.q-counter{font-family:'Baloo 2',cursive;color:var(--breakfast-c);font-size:1rem;white-space:nowrap;}
+.progress-wrap{height:7px;background:var(--gray-200);border-radius:99px;overflow:hidden;flex:1;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--breakfast-c),var(--lunch-c),var(--dinner-c));border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.score-badge{font-family:'Baloo 2',cursive;color:var(--dinner-c);font-size:1rem;white-space:nowrap;}
+
+/* HINT */
+.hint-box{
+  background:var(--yellow-lt);border:1.5px dashed var(--yellow);border-radius:var(--r);
+  padding:.75rem 1.1rem;margin-bottom:1.2rem;
+  display:none;align-items:center;gap:.7rem;
+  font-size:.88rem;font-weight:700;color:#7A5500;
+}
+.hint-box.visible{display:flex;}
+
+/* TASK CARD */
+.task-card{
+  background:var(--white);border-radius:20px;
+  box-shadow:var(--shadow-lg);overflow:hidden;
+  margin-bottom:1.2rem;
+  border:2.5px solid transparent;
+  transition:border-color .3s;
+}
+.task-card.correct-flash{border-color:var(--green);}
+.task-card.wrong-flash  {border-color:var(--red);}
+
+/* Meal header strip */
+.meal-strip{
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.meal-icon{font-size:2.4rem;line-height:1;}
+.meal-info{}
+.meal-label{font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.7;margin-bottom:.1rem;}
+.meal-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;}
+
+/* ── GAME BODY ── */
+.game-body{padding:1.2rem 1.5rem 1.5rem;}
+
+/* Section header */
+.section-head{
+  font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--gray-500);margin-bottom:.7rem;
+}
+
+/* ── WORD POOL ── */
+.word-pool{
+  display:flex;flex-wrap:wrap;gap:.5rem;
+  min-height:52px;margin-bottom:1.4rem;
+  padding:.6rem;
+  background:var(--gray-100);border-radius:var(--r);
+  border:2px dashed var(--gray-200);
+}
+
+/* ── DROP ZONES (sentence slots) ── */
+.sentence-wrap{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;
+  margin-bottom:1.2rem;
+}
+.fixed-word{
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;color:var(--navy2);
+  padding:.35rem .2rem;
+}
+.drop-slot{
+  min-width:90px;height:42px;
+  border-radius:10px;border:2px dashed var(--gray-200);
+  background:var(--gray-100);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.92rem;
+  color:var(--gray-500);cursor:pointer;
+  transition:all .2s;position:relative;padding:0 .5rem;
+  user-select:none;
+}
+.drop-slot.drag-over{border-color:var(--yellow);background:var(--yellow-lt);color:var(--navy);}
+.drop-slot.filled{border-style:solid;background:var(--white);color:var(--navy);}
+.drop-slot.correct{border-color:var(--green);background:var(--green-lt);color:#166534;}
+.drop-slot.wrong  {border-color:var(--red);  background:var(--red-lt);  color:#991B1B;}
+.drop-slot .remove-btn{
+  position:absolute;top:-7px;right:-7px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:.65rem;font-weight:800;
+  display:none;align-items:center;justify-content:center;cursor:pointer;
+  border:none;line-height:1;
+}
+.drop-slot.filled .remove-btn{display:flex;}
+
+/* ── WORD CHIPS ── */
+.word-chip{
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;
+  padding:.38rem .85rem;border-radius:99px;
+  cursor:grab;user-select:none;border:2px solid transparent;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  background:var(--white);box-shadow:var(--shadow);
+}
+.word-chip:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.word-chip.selected{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.word-chip.used{opacity:.3;pointer-events:none;filter:grayscale(1);}
+.word-chip.dragging{opacity:.3;cursor:grabbing;}
+
+/* ghost */
+#wc-ghost{
+  position:fixed;pointer-events:none;z-index:9999;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;
+  padding:.38rem .85rem;border-radius:99px;
+  background:var(--white);box-shadow:var(--shadow-lg);
+  transform:translate(-50%,-50%) rotate(3deg) scale(1.1);
+  white-space:nowrap;display:none;
+}
+
+/* Check button */
+.check-btn{
+  width:100%;padding:.8rem;border-radius:12px;font-size:1rem;font-weight:800;
+  font-family:'Baloo 2',cursive;
+  background:linear-gradient(135deg,var(--breakfast-c),var(--dinner-c));
+  color:#fff;border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(99,102,241,.28);
+  transition:transform .2s,box-shadow .2s;margin-bottom:.8rem;
+}
+.check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(99,102,241,.4);}
+.check-btn:disabled{opacity:.5;cursor:default;transform:none;}
+
+/* Feedback */
+.feedback{
+  padding:.65rem 1rem;border-radius:10px;
+  font-size:.88rem;font-weight:700;display:none;align-items:center;gap:.5rem;margin-bottom:.8rem;
+}
+.feedback.visible{display:flex;}
+.feedback.ok{background:var(--green-lt);color:#166534;}
+.feedback.no{background:var(--red-lt);color:#991B1B;}
+
+/* Next btn */
+.next-btn{
+  display:none;width:100%;padding:.78rem;border-radius:12px;font-size:1rem;font-weight:800;
+  font-family:'Baloo 2',cursive;
+  background:linear-gradient(135deg,var(--lunch-c),var(--dinner-c));
+  color:#fff;border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(16,185,129,.28);transition:transform .2s;
+}
+.next-btn:hover{transform:translateY(-2px);}
+.next-btn.visible{display:block;}
+
+/* WIN */
+.win-screen{
+  display:none;text-align:center;background:var(--white);border-radius:20px;
+  padding:2.5rem 2rem;box-shadow:var(--shadow-lg);border:2px solid var(--lunch-c);
+}
+.win-screen.visible{display:block;}
+.win-emoji{font-size:4rem;margin-bottom:.8rem;animation:pop .5s cubic-bezier(.4,0,.2,1);}
+@keyframes pop{0%{transform:scale(.4);}70%{transform:scale(1.2);}100%{transform:scale(1);}}
+.win-screen h2{font-size:2rem;font-weight:800;color:var(--lunch-c);margin-bottom:.4rem;}
+.win-score{font-size:1.3rem;font-weight:800;color:var(--dinner-c);margin-bottom:.4rem;}
+.win-screen p{color:var(--navy2);font-size:.95rem;font-weight:600;margin-bottom:1.5rem;}
+.btn-restart{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,var(--breakfast-c),var(--dinner-c));
+  color:#fff;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;
+  padding:.7rem 2rem;border-radius:99px;cursor:pointer;border:none;
+  box-shadow:0 4px 16px rgba(245,158,11,.35);transition:transform .2s;
+}
+.btn-restart:hover{transform:translateY(-2px);}
+
+footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--gray-500);font-weight:600;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--breakfast-c);border-radius:99px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">🍽️</div>
+    <span class="brand">Ataberk Hoca</span>
+  </a>
+  <a href="index.html" class="nav-back">← Temalar</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🍽️ Theme 6 · Food &amp; Drinks</div>
+    <h1>Yemek Zamanı! 🌅🌤️🌙</h1>
+    <p>Kelimeleri doğru sıraya koyarak cümleleri tamamla!</p>
+  </div>
+</section>
+
+<div class="diff-bar">
+  <button class="diff-btn" id="btn-sup" onclick="setDiff('supporting')">🟢 Supporting</button>
+  <button class="diff-btn" id="btn-std" onclick="setDiff('standard')">🔵 Standard</button>
+  <button class="diff-btn" id="btn-exp" onclick="setDiff('expansion')">🟣 Expansion</button>
+</div>
+
+<main class="main">
+
+  <div class="progress-row">
+    <div class="q-counter">🍽️ <span id="q-num">1</span> / <span id="q-total">1</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="score-badge">⭐ <span id="score">0</span></div>
+  </div>
+
+  <div class="hint-box" id="hint-box">
+    <span>💡</span><span id="hint-text"></span>
+  </div>
+
+  <div id="game-wrap" style="display:none;">
+    <div class="task-card" id="task-card">
+
+      <div class="meal-strip" id="meal-strip">
+        <div class="meal-icon" id="meal-icon"></div>
+        <div class="meal-info">
+          <div class="meal-label" id="meal-label"></div>
+          <div class="meal-title" id="meal-title"></div>
+        </div>
+      </div>
+
+      <div class="game-body">
+        <div class="section-head">📦 Kelime havuzu — sürükle veya tıkla</div>
+        <div class="word-pool" id="word-pool"></div>
+
+        <div class="section-head">✏️ Cümleyi tamamla</div>
+        <div class="sentence-wrap" id="sentence-wrap"></div>
+
+        <button class="check-btn" id="check-btn" onclick="checkAnswer()" disabled>✔ Kontrol Et</button>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Sonraki →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="win-screen" id="win-screen">
+    <div class="win-emoji">🎊</div>
+    <h2>Aferin!</h2>
+    <div class="win-score" id="win-score"></div>
+    <p id="win-msg"></p>
+    <button class="btn-restart" onclick="restart()">🔄 Tekrar Oyna</button>
+  </div>
+
+</main>
+
+<!-- drag ghost -->
+<div id="wc-ghost"></div>
+
+<footer>© Ataberk Hoca İngilizce · TYMM 2025 · MEB Maarif Modeli</footer>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// Each question has:
+//   meal      — visual context (breakfast/lunch/dinner)
+//   sentence  — array of parts: {type:'fixed'|'slot', word, color?}
+//   pool      — shuffled word chips for the slots
+//   hint      — Turkish contextual hint (Supporting/Standard only)
+//
+// Slot words are placed into drop-slots by the student.
+// Fixed words are shown as grey labels.
+// ══════════════════════════════════════════
+
+const MEALS = {
+  breakfast: { icon:'🌅', label:'Breakfast', color:'var(--breakfast-c)', light:'var(--breakfast-l)', title:'Günaydın! Kahvaltı zamanı!' },
+  lunch:     { icon:'🌤️', label:'Lunch',     color:'var(--lunch-c)',     light:'var(--lunch-l)',     title:'Öğle yemeği vakti!' },
+  dinner:    { icon:'🌙', label:'Dinner',    color:'var(--dinner-c)',    light:'var(--dinner-l)',    title:'Akşam yemeği!' },
+};
+
+// sentence: array of token objects
+//   {type:'fixed', text:'I have got'}   → rendered as plain text
+//   {type:'slot',  answer:'bread'}      → rendered as drop zone
+// pool: ALL the chips shown in word-pool (includes correct + distractors)
+
+const QUESTIONS = [
+  // ── SUPPORTING / STANDARD ──
+  {
+    id:'q1', meal:'breakfast',
+    sentence:[
+      {type:'fixed', text:'I have got'},
+      {type:'slot',  answer:'an egg'},
+      {type:'fixed', text:'for breakfast.'},
+    ],
+    pool:['an egg','some milk','a banana'],
+    hint:'Sabah ne yiyorsun? "I have got ___ for breakfast." cümlesini tamamla.',
+  },
+  {
+    id:'q2', meal:'breakfast',
+    sentence:[
+      {type:'fixed', text:'I have got'},
+      {type:'slot',  answer:'some bread'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some milk'},
+      {type:'fixed', text:'for breakfast.'},
+    ],
+    pool:['some bread','some milk','an apple','a carrot'],
+    hint:'Kahvaltı menüsünde ekmek ve süt var — boşlukları doğru kelimelerle doldur.',
+  },
+  {
+    id:'q3', meal:'lunch',
+    sentence:[
+      {type:'fixed', text:'I have got'},
+      {type:'slot',  answer:'some chicken'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some vegetables'},
+      {type:'fixed', text:'for lunch.'},
+    ],
+    pool:['some chicken','some vegetables','some milk','an egg'],
+    hint:'Öğle yemeğinde tavuk ve sebze var. Doğru kelimeleri seç!',
+  },
+  {
+    id:'q4', meal:'lunch',
+    sentence:[
+      {type:'fixed', text:'I have got'},
+      {type:'slot',  answer:'a tomato'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some bread'},
+      {type:'fixed', text:'for lunch.'},
+    ],
+    pool:['a tomato','some bread','a banana','some tea'],
+    hint:'Öğle yemeğinde domates ve ekmek var. Boşlukları tamamla!',
+  },
+  {
+    id:'q5', meal:'dinner',
+    sentence:[
+      {type:'fixed', text:'I have got'},
+      {type:'slot',  answer:'some fish'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some rice'},
+      {type:'fixed', text:'for dinner.'},
+    ],
+    pool:['some fish','some rice','an orange','some milk'],
+    hint:'Akşam yemeğinde balık ve pirinç var. Doğru kelimeleri bul!',
+  },
+  // ── STANDARD / EXPANSION — longer sentences ──
+  {
+    id:'q6', meal:'breakfast',
+    sentence:[
+      {type:'fixed', text:'For breakfast, I have got'},
+      {type:'slot',  answer:'an apple'},
+      {type:'fixed', text:', some'},
+      {type:'slot',  answer:'yoghurt'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some tea'},
+      {type:'fixed', text:'.'},
+    ],
+    pool:['an apple','yoghurt','some tea','some bread','a carrot','some milk'],
+    hint:'Kahvaltıda elma, yoğurt ve çay var. Üç boşluğu doğru doldur.',
+  },
+  {
+    id:'q7', meal:'lunch',
+    sentence:[
+      {type:'fixed', text:'For lunch, I have got'},
+      {type:'slot',  answer:'some meat'},
+      {type:'fixed', text:', a'},
+      {type:'slot',  answer:'potato'},
+      {type:'fixed', text:'and some'},
+      {type:'slot',  answer:'water'},
+      {type:'fixed', text:'.'},
+    ],
+    pool:['some meat','potato','water','some fish','an egg','some milk'],
+    hint:'Öğle yemeğinde et, patates ve su var. Üç boşluğu doldur!',
+  },
+  {
+    id:'q8', meal:'dinner',
+    sentence:[
+      {type:'fixed', text:'For dinner, I have got'},
+      {type:'slot',  answer:'some chicken'},
+      {type:'fixed', text:', some'},
+      {type:'slot',  answer:'broccoli'},
+      {type:'fixed', text:'and'},
+      {type:'slot',  answer:'some grape juice'},
+      {type:'fixed', text:'.'},
+    ],
+    pool:['some chicken','broccoli','some grape juice','some milk','a tomato','some rice'],
+    hint:'Akşam yemeğinde tavuk, brokoli ve üzüm suyu var.',
+  },
+];
+
+// ══════════════ DIFFICULTY ══════════════
+const DIFF = {
+  supporting: { showHint:true,  qIds:['q1','q2','q3','q4','q5'] },
+  standard:   { showHint:true,  qIds:['q1','q2','q3','q4','q5','q6','q7'] },
+  expansion:  { showHint:false, qIds:['q1','q2','q3','q4','q5','q6','q7','q8'] },
+};
+
+// ══════════════ STATE ══════════════
+let currentDiff = null;
+let queue       = [];
+let qIndex      = 0;
+let score       = 0;
+let answered    = false;
+
+// slot state: slotIndex → word placed
+let slotState   = {};
+let selectedChip= null;   // click-mode
+let dragWord    = null;   // drag-mode
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ══════════════ DIFF SELECT ══════════════
+function setDiff(diff){
+  currentDiff=diff;
+  ['sup','std','exp'].forEach(k=>document.getElementById('btn-'+k).className='diff-btn');
+  const map={supporting:'sup',standard:'std',expansion:'exp'};
+  const cls={supporting:'active-sup',standard:'active-std',expansion:'active-exp'};
+  document.getElementById('btn-'+map[diff]).className='diff-btn '+cls[diff];
+  buildGame();
+}
+
+function buildGame(){
+  const cfg=DIFF[currentDiff];
+  queue   = shuffle(cfg.qIds.map(id=>QUESTIONS.find(q=>q.id===id)));
+  qIndex  = 0;
+  score   = 0;
+  document.getElementById('q-total').textContent  = queue.length;
+  document.getElementById('score').textContent    = 0;
+  document.getElementById('prog').style.width     = '0%';
+  document.getElementById('game-wrap').style.display='block';
+  document.getElementById('win-screen').classList.remove('visible');
+  const hintBox=document.getElementById('hint-box');
+  if(cfg.showHint) hintBox.classList.add('visible');
+  else hintBox.classList.remove('visible');
+  renderQuestion();
+}
+
+// ══════════════ RENDER ══════════════
+function renderQuestion(){
+  answered   =false;
+  slotState  ={};
+  selectedChip=null;
+  dragWord   =null;
+
+  const q   = queue[qIndex];
+  const meal= MEALS[q.meal];
+  const cfg = DIFF[currentDiff];
+
+  // counter
+  document.getElementById('q-num').textContent=qIndex+1;
+  document.getElementById('prog').style.width=(qIndex/queue.length*100)+'%';
+
+  // meal strip
+  const strip=document.getElementById('meal-strip');
+  strip.style.background=`linear-gradient(135deg, ${meal.color}22 0%, ${meal.color}08 100%)`;
+  strip.style.borderBottom=`3px solid ${meal.color}44`;
+  document.getElementById('meal-icon').textContent  = meal.icon;
+  document.getElementById('meal-label').textContent = meal.label;
+  document.getElementById('meal-label').style.color = meal.color;
+  document.getElementById('meal-title').textContent = meal.title;
+
+  // hint
+  if(cfg.showHint) document.getElementById('hint-text').textContent=q.hint;
+
+  // word pool
+  buildPool(q);
+
+  // sentence slots
+  buildSentence(q);
+
+  // reset ui
+  document.getElementById('check-btn').disabled=true;
+  const fb=document.getElementById('feedback');
+  fb.className='feedback';fb.innerHTML='';
+  document.getElementById('next-btn').classList.remove('visible');
+  document.getElementById('task-card').className='task-card';
+}
+
+// ── POOL ──
+function buildPool(q){
+  const pool=document.getElementById('word-pool');
+  pool.innerHTML='';
+  shuffle(q.pool).forEach(word=>{
+    const chip=createChip(word);
+    pool.appendChild(chip);
+  });
+}
+
+function createChip(word){
+  const chip=document.createElement('div');
+  chip.className='word-chip';
+  chip.id='chip-'+word.replace(/\s/g,'-');
+  chip.textContent=word;
+  chip.dataset.word=word;
+
+  // CLICK
+  chip.addEventListener('click',()=>clickChip(word,chip));
+
+  // DRAG (mouse + touch)
+  chip.addEventListener('mousedown',e=>startChipDrag(word,chip,e.clientX,e.clientY,e));
+  chip.addEventListener('touchstart',e=>{
+    const t=e.touches[0];
+    startChipDrag(word,chip,t.clientX,t.clientY,e);
+  },{passive:false});
+
+  return chip;
+}
+
+// ── SENTENCE ──
+function buildSentence(q){
+  const wrap=document.getElementById('sentence-wrap');
+  wrap.innerHTML='';
+  let slotIndex=0;
+  q.sentence.forEach(part=>{
+    if(part.type==='fixed'){
+      const span=document.createElement('span');
+      span.className='fixed-word';
+      span.textContent=part.text;
+      wrap.appendChild(span);
+    } else {
+      const slot=document.createElement('div');
+      const si=slotIndex;
+      slot.className='drop-slot';
+      slot.id='slot-'+si;
+      slot.dataset.answer=part.answer;
+      slot.dataset.index=si;
+      slot.textContent='???';
+
+      // remove btn
+      const rm=document.createElement('button');
+      rm.className='remove-btn';
+      rm.textContent='×';
+      rm.addEventListener('click',e=>{e.stopPropagation();removeFromSlot(si);});
+      slot.appendChild(rm);
+
+      // click-to-place
+      slot.addEventListener('click',()=>clickSlot(si));
+
+      // drag-over / drop (mouse)
+      slot.addEventListener('dragover',e=>e.preventDefault());
+      slot.addEventListener('mouseup', ()=>dropOnSlot(si));
+      slot.addEventListener('touchend', e=>{
+        const t=e.changedTouches[0];
+        const el=document.elementFromPoint(t.clientX,t.clientY);
+        const targetSlot=el?.closest('.drop-slot');
+        if(targetSlot) dropOnSlot(parseInt(targetSlot.dataset.index));
+        else endDragNoTarget();
+      });
+
+      wrap.appendChild(slot);
+      slotIndex++;
+    }
+  });
+}
+
+// ══════════════ CLICK MODE ══════════════
+function clickChip(word,chip){
+  if(chip.classList.contains('used')) return;
+  // If already selected → deselect
+  if(selectedChip===word){
+    chip.classList.remove('selected');
+    selectedChip=null;
+    return;
+  }
+  // Deselect prev
+  if(selectedChip){
+    const prev=document.querySelector(`.word-chip[data-word="${selectedChip}"]`);
+    if(prev) prev.classList.remove('selected');
+  }
+  selectedChip=word;
+  chip.classList.add('selected');
+}
+
+function clickSlot(si){
+  const slot=document.getElementById('slot-'+si);
+  // If already filled — remove first
+  if(slotState[si]){
+    removeFromSlot(si);
+    return;
+  }
+  if(!selectedChip) return;
+  placeWord(selectedChip,si);
+  const chip=document.querySelector(`.word-chip[data-word="${selectedChip}"]`);
+  if(chip) chip.classList.remove('selected');
+  selectedChip=null;
+}
+
+// ══════════════ DRAG MODE ══════════════
+const ghost=document.getElementById('wc-ghost');
+let isDragging=false;
+
+function startChipDrag(word,chip,x,y,e){
+  if(chip.classList.contains('used')) return;
+  isDragging=false;
+  dragWord=word;
+
+  const THRESHOLD=6;
+  let startX=x,startY=y;
+
+  function onMove(cx,cy){
+    if(!isDragging){
+      if(Math.abs(cx-startX)<THRESHOLD&&Math.abs(cy-startY)<THRESHOLD) return;
+      isDragging=true;
+      chip.dataset.skipClick='1';
+      chip.classList.add('dragging');
+      // deselect click mode
+      if(selectedChip){
+        const prev=document.querySelector(`.word-chip[data-word="${selectedChip}"]`);
+        if(prev) prev.classList.remove('selected');
+        selectedChip=null;
+      }
+      ghost.textContent=word;
+      ghost.style.display='block';
+    }
+    ghost.style.left=cx+'px';
+    ghost.style.top =cy+'px';
+
+    // highlight slot under cursor
+    document.querySelectorAll('.drop-slot').forEach(s=>s.classList.remove('drag-over'));
+    const el=document.elementFromPoint(cx,cy);
+    const targetSlot=el?.closest('.drop-slot');
+    if(targetSlot&&!slotState[parseInt(targetSlot.dataset.index)]){
+      targetSlot.classList.add('drag-over');
+    }
+  }
+
+  function onEnd(cx,cy){
+    cleanup();
+    ghost.style.display='none';
+    chip.classList.remove('dragging');
+    document.querySelectorAll('.drop-slot').forEach(s=>s.classList.remove('drag-over'));
+    if(isDragging){
+      const el=document.elementFromPoint(cx,cy);
+      const targetSlot=el?.closest('.drop-slot');
+      if(targetSlot){
+        dropOnSlot(parseInt(targetSlot.dataset.index));
+      }
+    }
+    isDragging=false;
+    dragWord=null;
+  }
+
+  function onMouseMove(e){onMove(e.clientX,e.clientY);}
+  function onMouseUp(e){onEnd(e.clientX,e.clientY);}
+  function onTouchMove(e){e.preventDefault();const t=e.touches[0];onMove(t.clientX,t.clientY);}
+  function onTouchEnd(e){const t=e.changedTouches[0];onEnd(t.clientX,t.clientY);}
+
+  function cleanup(){
+    window.removeEventListener('mousemove',onMouseMove);
+    window.removeEventListener('mouseup',  onMouseUp);
+    window.removeEventListener('touchmove',onTouchMove);
+    window.removeEventListener('touchend', onTouchEnd);
+  }
+
+  window.addEventListener('mousemove',onMouseMove);
+  window.addEventListener('mouseup',  onMouseUp);
+  window.addEventListener('touchmove',onTouchMove,{passive:false});
+  window.addEventListener('touchend', onTouchEnd);
+}
+
+function dropOnSlot(si){
+  const word=dragWord||selectedChip;
+  if(!word) return;
+  if(slotState[si]) return; // already filled
+  placeWord(word,si);
+  if(dragWord){
+    const chip=document.querySelector(`.word-chip[data-word="${dragWord}"]`);
+    if(chip) chip.classList.remove('selected','dragging');
+  }
+  dragWord=null;
+  selectedChip=null;
+}
+
+function endDragNoTarget(){
+  const chip=document.querySelector(`.word-chip[data-word="${dragWord}"]`);
+  if(chip) chip.classList.remove('dragging');
+  ghost.style.display='none';
+  isDragging=false;
+  dragWord=null;
+}
+
+// ══════════════ PLACE / REMOVE ══════════════
+function placeWord(word,si){
+  // Mark chip as used
+  const chip=document.querySelector(`.word-chip[data-word="${word}"]`);
+  if(chip) chip.classList.add('used');
+
+  slotState[si]=word;
+
+  const slot=document.getElementById('slot-'+si);
+  slot.classList.add('filled');
+  // Set text (keep remove btn)
+  slot.childNodes[0]?.remove?.();
+  const txt=document.createTextNode(word);
+  slot.insertBefore(txt,slot.firstChild);
+
+  checkAllFilled();
+}
+
+function removeFromSlot(si){
+  const word=slotState[si];
+  if(!word) return;
+  delete slotState[si];
+
+  const chip=document.querySelector(`.word-chip[data-word="${word}"]`);
+  if(chip) chip.classList.remove('used');
+
+  const slot=document.getElementById('slot-'+si);
+  slot.classList.remove('filled','correct','wrong');
+  // Restore placeholder text
+  slot.childNodes[0]?.remove?.();
+  const txt=document.createTextNode('???');
+  slot.insertBefore(txt,slot.firstChild);
+
+  document.getElementById('check-btn').disabled=true;
+}
+
+function checkAllFilled(){
+  const slots=document.querySelectorAll('.drop-slot');
+  const allFilled=[...slots].every(s=>slotState[parseInt(s.dataset.index)]);
+  document.getElementById('check-btn').disabled=!allFilled;
+}
+
+// ══════════════ CHECK ══════════════
+function checkAnswer(){
+  if(answered) return;
+  answered=true;
+  document.getElementById('check-btn').disabled=true;
+
+  const slots=document.querySelectorAll('.drop-slot');
+  let allCorrect=true;
+  slots.forEach(slot=>{
+    const si   =parseInt(slot.dataset.index);
+    const placed=slotState[si];
+    const answer=slot.dataset.answer;
+    if(placed===answer){
+      slot.classList.add('correct');
+    } else {
+      slot.classList.add('wrong');
+      allCorrect=false;
+    }
+  });
+
+  const fb  =document.getElementById('feedback');
+  const card=document.getElementById('task-card');
+
+  if(allCorrect){
+    score++;
+    document.getElementById('score').textContent=score;
+    fb.className='feedback visible ok';
+    fb.innerHTML='✅ Mükemmel! Cümle doğru!';
+    card.classList.add('correct-flash');
+  } else {
+    fb.className='feedback visible no';
+    fb.innerHTML='❌ Bazı kelimeler yanlış — kırmızı kutulara bak!';
+    card.classList.add('wrong-flash');
+  }
+
+  document.getElementById('next-btn').classList.add('visible');
+}
+
+// ══════════════ NEXT ══════════════
+function nextQuestion(){
+  qIndex++;
+  if(qIndex>=queue.length) showWin();
+  else renderQuestion();
+}
+
+// ══════════════ WIN ══════════════
+function showWin(){
+  document.getElementById('prog').style.width='100%';
+  const total=queue.length;
+  const pct  =Math.round(score/total*100);
+  const msgs={
+    supporting:'Sabah, öğle ve akşam yemeklerini harika anlattın! 🌟',
+    standard:  '"I have got" yapısını çok iyi kullanıyorsun! 🚀',
+    expansion: 'Tüm öğünleri eksiksiz tamamladın! Efsanesin! 👑',
+  };
+  document.getElementById('win-score').textContent=`${score} / ${total} (${pct}%)`;
+  document.getElementById('win-msg').textContent  =msgs[currentDiff];
+  document.getElementById('win-screen').classList.add('visible');
+  document.getElementById('game-wrap').style.display='none';
+}
+
+function restart(){buildGame();}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>10);
+});
+
+setDiff('standard');
+</script>
+</body>
+</html>
