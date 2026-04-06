@@ -117,6 +117,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .bg-classroom { background:linear-gradient(180deg,#FFFDE7 0%,#FFF9C4 55%,#F9A825 100%); }
 .bg-canteen   { background:linear-gradient(180deg,#FCE4EC 0%,#F8BBD0 55%,#E91E8C 100%); }
 .bg-playground{ background:linear-gradient(180deg,#E3F2FD 0%,#BBDEFB 45%,#42A5F5 100%); }
+.bg-sportshall{ background:linear-gradient(180deg,#E8F5E9 0%,#A5D6A7 45%,#388E3C 100%); }
 .scene-ground { position:absolute;bottom:0;left:0;right:0;height:48px; background:rgba(255,255,255,.22);backdrop-filter:blur(4px); }
 .scene-chars { position:absolute;bottom:0;left:0;right:0; display:flex;align-items:flex-end;justify-content:space-evenly; padding:0 32px; }
 .s-char { display:flex;flex-direction:column;align-items:center; }
@@ -250,7 +251,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 <div class="screen" id="scr-game">
   <div class="game-screen">
     <div class="prog-wrap">
-      <span class="prog-label" id="progLabel">Stop 1 / 7</span>
+      <span class="prog-label" id="progLabel">Stop 1 / 8</span>
       <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
       <span class="prog-score" id="progScore">✓ 0</span>
     </div>
@@ -389,6 +390,24 @@ var STOPS = [
     hard: [
       { who: 'Mrs. Hopkins diyor ki:', says: 'Good morning class! How are you all today?', hint: null, correct: "We're fine, thank you Mrs. Hopkins!", opts: ["We're fine, thank you Mrs. Hopkins!", "I'm fine. And you?", "Good morning! It's Monday.", "Hello! Nice to meet you!"] },
       { who: 'Mrs. Hopkins diyor ki:', says: "Open your books, please! Come to the board!", hint: null, correct: "OK Mrs. Hopkins! Coming!", opts: ["OK Mrs. Hopkins! Coming!", "Goodbye! It's the garden.", "It's Monday, Mrs. Hopkins!", "I'm fine. She's a pupil."] }
+    ]
+  },
+  {
+    name: 'Sports Hall', icon: '⛹️', bg: 'bg-sportshall',
+    chars: [{ emoji: '👩‍🏫', label: 'Mrs. Hopkins' }, { emoji: '🧒', label: 'You' }, { emoji: '👦', label: 'Ali' }],
+    easy: [
+      { who: 'Mrs. Hopkins diyor ki:', says: "Let's start together! Jump and clap! 🤸", hint: 'Öğretmen herkesi bir aktiviteye davet ediyor. Hazır olduğunu söyleyebilirsin!', correct: "OK! Let's start!", opts: ["OK! Let's start!", 'Goodbye!', "It's Monday."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Wait, please! Finish the song first! 🎵', hint: 'Öğretmen beklemeni ve şarkıyı bitirmeni istiyor. Tamam diyebilirsin!', correct: 'OK, Mrs. Hopkins!', opts: ['OK, Mrs. Hopkins!', "I'm in the garden.", 'Goodbye!'] },
+      { who: 'Ali soruyor:', says: 'This is a big sports hall! Do you like it? 😊', hint: 'Ali spor salonunu beğenip beğenmediğini soruyor. Evet diyebilirsin!', correct: 'Yes! I like it!', opts: ['Yes! I like it!', "No, I'm fine.", 'Goodbye!'] }
+    ],
+    medium: [
+      { who: 'Mrs. Hopkins diyor ki:', says: "OK everyone! Let's start together! Jump, clap, and sing!", hint: 'Öğretmen herkese birlikte başlamalarını ve hareketleri yapmalarını söylüyor. Hazır olduğunu ifade edebilirsin.', correct: "Yes! Let's start together!", opts: ["Yes! Let's start together!", "Goodbye Mrs. Hopkins!", "It's Monday today.", "I'm in the garden."] },
+      { who: 'Mrs. Hopkins diyor ki:', says: 'Wait! Finish jumping first, then sing together! 🎶', hint: 'Öğretmen önce zıplamayı bitirmeni sonra birlikte şarkı söylemenizi istiyor. Tamam diyebilirsin.', correct: 'OK! We can sing together!', opts: ['OK! We can sing together!', "I'm fine, thanks!", "It's the playground.", "Goodbye!"] },
+      { who: 'Ali diyor ki:', says: "Wow, this is a big sports hall! Let's jump together!", hint: 'Ali spor salonunun büyük olduğunu söylüyor ve birlikte zıplamak istiyor. Kabul edebilirsin!', correct: "Yes! Let's jump together!", opts: ["Yes! Let's jump together!", "No, I'm a pupil.", "It's Monday.", "She's a teacher."] }
+    ],
+    hard: [
+      { who: 'Mrs. Hopkins diyor ki:', says: "Let's start the game together! First jump, then clap, and sing a big song!", hint: null, correct: "OK Mrs. Hopkins! Let's start!", opts: ["OK Mrs. Hopkins! Let's start!", "Goodbye! I'm fine.", "It's Monday. She's a teacher.", "Hello! It's the garden."] },
+      { who: 'Ali diyor ki:', says: "Wait! Don't start! Mrs. Hopkins says finish clapping first, then jump together!", hint: null, correct: "OK! Let's finish and jump together!", opts: ["OK! Let's finish and jump together!", "I'm fine. It's Monday.", "She's in the classroom.", "Goodbye Ali! See you!"] }
     ]
   },
   {

@@ -501,10 +501,11 @@ function buildBank() {
     el.setAttribute('data-word', card.word);
 
     var showEmoji = diff !== 'hard';
+    var showTr = diff !== 'hard';
     el.innerHTML =
       (showEmoji ? '<span class="word-card-emoji">' + card.emoji + '</span>' : '') +
       '<span>' + card.word + '</span>' +
-      '<span class="word-card-tr">' + card.tr + '</span>';
+      (showTr ? '<span class="word-card-tr">' + card.tr + '</span>' : '');
 
     // Desktop drag
     el.addEventListener('dragstart', function(e){ onCardDragStart(e, card.word); });
