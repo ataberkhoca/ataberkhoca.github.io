@@ -158,6 +158,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .card-back.word-card{background:linear-gradient(135deg,#F0F9FF,#E8F4FD)}
 .card-emoji{font-size:2.6rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
 .card-word{font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:800;color:var(--navy);line-height:1.15;word-break:break-word}
+.card-tr{font-size:.62rem;font-weight:600;color:var(--gray-500);line-height:1.1;margin-top:2px}
 
 /* Match state */
 .card.matched .card-back{border-color:var(--green)!important;background:linear-gradient(135deg,#F0FDF4,#DCFCE7)!important;animation:matchPulse .5s ease}
@@ -282,19 +283,19 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
     <h3 class="section-title">📊 Zorluk Seviyesi</h3>
     <div class="difficulty-cards">
       <div class="diff-card" data-diff="easy" onclick="pickDiff('easy')">
-        <span class="card-icon">🌟</span>
-        <div class="card-name">Kolay</div>
-        <div class="card-desc">4 çift · 8 kart</div>
+        <span class="card-icon">🌱</span>
+        <div class="card-name">Supporting</div>
+        <div class="card-desc">4 çift · Emoji + Kelime · Türkçe ipucu</div>
       </div>
       <div class="diff-card selected" data-diff="medium" onclick="pickDiff('medium')">
-        <span class="card-icon">🚀</span>
-        <div class="card-name">Orta</div>
-        <div class="card-desc">8 çift · 16 kart</div>
+        <span class="card-icon">⭐</span>
+        <div class="card-name">Standard</div>
+        <div class="card-desc">8 çift · Emoji + Kelime · İpucu yok</div>
       </div>
       <div class="diff-card" data-diff="hard" onclick="pickDiff('hard')">
-        <span class="card-icon">🏆</span>
-        <div class="card-name">Zor</div>
-        <div class="card-desc">16 çift · 32 kart</div>
+        <span class="card-icon">🔥</span>
+        <div class="card-name">Expansion</div>
+        <div class="card-desc">16 çift · Kelime + Kelime · İpucu yok</div>
       </div>
     </div>
 
@@ -383,24 +384,24 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 // ===== DATA =====
 const ALL = [
   // PLACES
-  { id:'library',      emoji:'📚', word:'library' },
-  { id:'classroom',    emoji:'✏️', word:'classroom' },
-  { id:'canteen',      emoji:'🍽️', word:'canteen' },
-  { id:'teachersroom', emoji:'🚪', word:"teacher's room" },
-  { id:'playground',   emoji:'🛝', word:'playground' },
-  { id:'sportshall',   emoji:'🏀', word:'sports hall' },
-  { id:'lunchhall',    emoji:'🥗', word:'lunch hall' },
-  { id:'garden',       emoji:'🌳', word:'garden' },
-  { id:'school',       emoji:'🏫', word:'school' },
+  { id:'library',      emoji:'📚', word:'library',         tr:'kütüphane' },
+  { id:'classroom',    emoji:'✏️', word:'classroom',       tr:'sınıf' },
+  { id:'canteen',      emoji:'🍽️', word:'canteen',         tr:'kantin' },
+  { id:'teachersroom', emoji:'🚪', word:"teacher's room",  tr:'öğretmenler odası' },
+  { id:'playground',   emoji:'🛝', word:'playground',      tr:'oyun alanı' },
+  { id:'sportshall',   emoji:'🏀', word:'sports hall',     tr:'spor salonu' },
+  { id:'lunchhall',    emoji:'🥗', word:'lunch hall',      tr:'yemekhane' },
+  { id:'garden',       emoji:'🌳', word:'garden',          tr:'bahçe' },
+  { id:'school',       emoji:'🏫', word:'school',          tr:'okul' },
   // PEOPLE
-  { id:'teacher',      emoji:'👩‍🏫', word:'teacher' },
-  { id:'pupil',        emoji:'🧒', word:'pupil' },
-  { id:'headmaster',   emoji:'👨‍💼', word:'headmaster' },
-  { id:'headmistress', emoji:'👩‍💼', word:'headmistress' },
-  { id:'friend',       emoji:'🤝', word:'friend' },
-  { id:'boy',          emoji:'👦', word:'boy' },
-  { id:'girl',         emoji:'👧', word:'girl' },
-  { id:'kid',          emoji:'😊', word:'kid' }
+  { id:'teacher',      emoji:'👩‍🏫', word:'teacher',        tr:'öğretmen' },
+  { id:'pupil',        emoji:'🧒', word:'pupil',           tr:'öğrenci' },
+  { id:'headmaster',   emoji:'👨‍💼', word:'headmaster',     tr:'erkek müdür' },
+  { id:'headmistress', emoji:'👩‍💼', word:'headmistress',   tr:'kadın müdür' },
+  { id:'friend',       emoji:'🤝', word:'friend',          tr:'arkadaş' },
+  { id:'boy',          emoji:'👦', word:'boy',              tr:'erkek çocuk' },
+  { id:'girl',         emoji:'👧', word:'girl',             tr:'kız çocuk' },
+  { id:'kid',          emoji:'😊', word:'kid',              tr:'çocuk' }
 ];
 const DIFF = {
   easy:  {n:4, cols:'cols-4'},
@@ -461,10 +462,18 @@ function startGame(){
 // ===== CARDS =====
 function mkCards(){
   const d=[];
-  pairs.forEach(p=>{
-    d.push({type:'emoji',content:p.emoji,pid:p.id});
-    d.push({type:'word',content:p.word,pid:p.id});
-  });
+  if(diff==='hard'){
+    // Expansion: both cards are word cards (same word twice)
+    pairs.forEach(p=>{
+      d.push({type:'word',content:p.word,pid:p.id,tr:p.tr});
+      d.push({type:'word',content:p.word,pid:p.id,tr:p.tr});
+    });
+  } else {
+    pairs.forEach(p=>{
+      d.push({type:'emoji',content:p.emoji,pid:p.id,tr:p.tr});
+      d.push({type:'word',content:p.word,pid:p.id,tr:p.tr});
+    });
+  }
   for(let i=d.length-1;i>0;i--){const j=Math.random()*i|0;[d[i],d[j]]=[d[j],d[i]]}
   return d;
 }
@@ -473,17 +482,20 @@ function renderGrid(){
   const g=document.getElementById('grid');
   g.innerHTML='';
   cards=mkCards();
+  const showTr=diff==='easy';
   cards.forEach((c,i)=>{
     const el=document.createElement('div');
     el.className='card';
     el.dataset.i=i;
     const s=i%6;
     const isE=c.type==='emoji';
+    const trHint=showTr?`<span class="card-tr">${c.tr}</span>`:'';
     el.innerHTML=`
       <div class="card-inner">
         <div class="card-front s${s}"><div class="pattern p${s}"></div><span class="front-icon">❓</span></div>
         <div class="card-back ${isE?'emoji-card':'word-card'}">
           ${isE?`<span class="card-emoji">${c.content}</span>`:`<span class="card-word">${c.content}</span>`}
+          ${trHint}
           <span class="match-badge">✓</span>
         </div>
       </div>`;
@@ -505,7 +517,8 @@ function flip(el,i){
 
 function check(){
   const[a,b]=flipped;
-  if(a.pid===b.pid&&a.type!==b.type){
+  const isMatch=a.pid===b.pid&&a.i!==b.i&&(diff==='hard'||a.type!==b.type);
+  if(isMatch){
     locked=true;
     setTimeout(()=>{
       a.el.classList.add('matched');b.el.classList.add('matched');
@@ -588,7 +601,7 @@ function win(){
 
 // ===== SCOREBOARD =====
 function saveSc(st){
-  const dl={easy:'Kolay',medium:'Orta',hard:'Zor'};
+  const dl={easy:'Supporting',medium:'Standard',hard:'Expansion'};
   scores.push({mode:mode==='team'?'Takım':'Solo',diff:dl[diff],moves,time:fmt(secs),secs,stars:st});
   scores.sort((a,b)=>{
     const sa=a.stars.length,sb=b.stars.length;
