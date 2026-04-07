@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound Sorting! | School Life | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --yellow-light: #FFE4A0;
+  --teal: #2EC4B6;
+  --white: #FFFFFF;
+  --cream: #FFF9F0;
+  --gray-200: #E8E8E8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --green: #22C55E;
+  --green-light: #DCFCE7;
+  --red: #EF4444;
+  --red-light: #FEE2E2;
+  --snd-a: #3B82F6;
+  --snd-a-light: #EFF6FF;
+  --snd-a-border: #BFDBFE;
+  --snd-a-mid: #93C5FD;
+  --snd-b: #8B5CF6;
+  --snd-b-light: #F5F3FF;
+  --snd-b-border: #DDD6FE;
+  --snd-b-mid: #C4B5FD;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md: 0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg: 0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Quicksand',sans-serif;color:var(--navy);background:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4,.brand-name{font-family:'Baloo 2',cursive}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:70px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(27,40,69,0.06);transition:all .3s}
+.navbar.scrolled{box-shadow:var(--shadow-soft)}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:42px;height:42px;background:linear-gradient(135deg,var(--orange),var(--yellow));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 3px 12px rgba(255,107,53,.25)}
+.brand-name{font-size:1.25rem;font-weight:800;color:var(--navy);line-height:1.1}
+.brand-name span{color:var(--orange)}
+.nav-links{display:flex;align-items:center;gap:8px;list-style:none}
+.nav-links a{text-decoration:none;font-weight:600;font-size:.9rem;color:var(--gray-700);padding:8px 16px;border-radius:10px;transition:all .2s}
+.nav-links a:hover{background:var(--cream);color:var(--orange)}
+.nav-cta{background:var(--navy)!important;color:var(--white)!important;padding:10px 22px!important;border-radius:12px!important;font-weight:700!important}
+.nav-cta:hover{background:var(--orange)!important;transform:translateY(-1px);box-shadow:var(--shadow-glow-orange)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.nav-hamburger span{width:24px;height:2.5px;background:var(--navy);border-radius:2px}
+
+/* HEADER */
+.game-header{padding:90px 40px 28px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);position:relative;overflow:hidden;text-align:center}
+.game-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.game-header-content{position:relative;z-index:1}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-size:.8rem;font-weight:600}
+.breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--orange)}
+.breadcrumb .sep{color:rgba(255,255,255,.25)}
+.breadcrumb .current{color:var(--yellow)}
+.game-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:6px}
+.game-title .hl{color:var(--orange)}
+.game-subtitle{font-size:.9rem;color:rgba(255,255,255,.55);font-weight:600}
+
+.screen{display:none}.screen.active{display:block}
+
+/* START */
+.start-screen{padding:40px 20px 60px;max-width:760px;margin:0 auto;text-align:center}
+.story-box{background:var(--white);border-radius:var(--radius-xl);padding:36px 32px;margin-bottom:32px;box-shadow:var(--shadow-soft);border:2px solid var(--gray-200);position:relative;overflow:hidden}
+.story-box::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--orange),var(--yellow),var(--teal))}
+.story-emoji{font-size:3.5rem;margin-bottom:12px;display:block;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.story-title{font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:10px}
+.story-text{font-size:1rem;color:var(--gray-700);line-height:1.7;font-weight:500;max-width:520px;margin:0 auto}
+.story-text strong{color:var(--orange)}
+
+/* Sound preview cards */
+.sound-preview{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.snd-card{border-radius:var(--radius-lg);padding:20px 16px;text-align:center;border:2px solid;position:relative;overflow:hidden}
+.snd-card.snd-a{background:var(--snd-a-light);border-color:var(--snd-a-border)}
+.snd-card.snd-b{background:var(--snd-b-light);border-color:var(--snd-b-border)}
+.snd-big{font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;line-height:1}
+.snd-card.snd-a .snd-big{color:var(--snd-a)}
+.snd-card.snd-b .snd-big{color:var(--snd-b)}
+.snd-phonetic{font-size:.85rem;font-weight:700;color:var(--gray-500);margin:4px 0 8px}
+.snd-examples{font-size:.75rem;font-weight:600;color:var(--gray-700);line-height:1.6}
+.snd-examples .snd-hl{color:var(--orange);font-weight:800}
+
+.diff-label{font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:16px}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
+.diff-card{background:var(--white);border-radius:var(--radius-lg);padding:22px 16px;cursor:pointer;transition:all .25s;border:3px solid var(--gray-200);text-align:center}
+.diff-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.diff-card.selected{border-color:var(--orange);background:rgba(255,107,53,.04)}
+.diff-card .di{font-size:2rem;margin-bottom:8px;display:block}
+.diff-card .dn{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:4px}
+.diff-card .dd{font-size:.78rem;color:var(--gray-500);font-weight:600;line-height:1.4}
+.diff-card .db{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.diff-card[data-d="easy"] .db{background:#DCFCE7;color:#16A34A}
+.diff-card[data-d="medium"] .db{background:#FEF3C7;color:#D97706}
+.diff-card[data-d="hard"] .db{background:#FEE2E2;color:#DC2626}
+.start-btn{display:inline-flex;align-items:center;gap:10px;font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;padding:16px 40px;border-radius:var(--radius-lg);border:none;background:var(--orange);color:var(--white);cursor:pointer;box-shadow:0 4px 15px rgba(255,107,53,.3);transition:all .25s}
+.start-btn:hover{background:var(--orange-glow);transform:translateY(-2px);box-shadow:var(--shadow-glow-orange)}
+
+/* GAME */
+.game-screen{max-width:960px;margin:0 auto;padding:32px 20px 60px}
+
+/* Progress */
+.prog-wrap{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.prog-label{font-size:.82rem;font-weight:700;color:var(--gray-500);white-space:nowrap}
+.prog-track{flex:1;height:10px;background:var(--gray-200);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:10px;transition:width .4s ease}
+.prog-score{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--orange);white-space:nowrap}
+
+/* Hint */
+.hint-box{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;padding:11px 16px;background:var(--yellow-light);border-radius:var(--radius-md);border-left:4px solid var(--yellow)}
+.hint-box.hidden{display:none}
+.hint-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.hint-text{font-size:.82rem;font-weight:700;color:var(--navy);line-height:1.5}
+
+/* Current word display */
+.current-word-card{background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow-md);border:2px solid var(--gray-200);padding:28px 24px;margin-bottom:24px;text-align:center}
+.cw-label{font-size:.78rem;font-weight:800;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.cw-emoji{font-size:2.4rem;margin-bottom:6px;display:block}
+.cw-word{font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:var(--navy);margin-bottom:4px}
+.cw-tr{font-size:.8rem;font-weight:600;color:var(--gray-500)}
+.cw-question{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;color:var(--orange);margin-top:12px}
+
+/* Sound choice buttons */
+.sound-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.snd-btn{padding:24px 16px;border-radius:var(--radius-lg);border:3px solid var(--gray-200);background:var(--white);cursor:pointer;transition:all .25s;text-align:center}
+.snd-btn:hover:not(:disabled){transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.snd-btn.snd-btn-a:hover:not(:disabled){border-color:var(--snd-a);background:var(--snd-a-light)}
+.snd-btn.snd-btn-b:hover:not(:disabled){border-color:var(--snd-b);background:var(--snd-b-light)}
+.snd-btn-letter{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;line-height:1;margin-bottom:4px}
+.snd-btn.snd-btn-a .snd-btn-letter{color:var(--snd-a)}
+.snd-btn.snd-btn-b .snd-btn-letter{color:var(--snd-b)}
+.snd-btn-label{font-size:.78rem;font-weight:700;color:var(--gray-500)}
+.snd-btn.correct{border-color:var(--green)!important;background:var(--green-light)!important;animation:popIn .4s ease}
+.snd-btn.wrong{border-color:var(--red)!important;background:var(--red-light)!important;animation:shake .4s ease}
+.snd-btn:disabled{cursor:default}
+@keyframes popIn{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* Reveal box */
+.reveal-box{background:var(--cream);border-radius:var(--radius-lg);border:2px solid var(--gray-200);padding:18px 24px;margin-bottom:16px;text-align:center;opacity:0;transform:translateY(8px);transition:all .4s ease}
+.reveal-box.show{opacity:1;transform:translateY(0)}
+.reveal-word{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:1px}
+.reveal-word .rv-hl{color:var(--orange);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px}
+.reveal-label{font-size:.75rem;font-weight:700;color:var(--gray-500);margin-bottom:2px}
+
+/* Feedback */
+.feedback{padding:11px 18px;border-radius:var(--radius-md);font-weight:700;font-size:.9rem;opacity:0;transform:translateY(5px);transition:all .3s;text-align:center}
+.feedback.show{opacity:1;transform:translateY(0)}
+.feedback.good{background:var(--green-light);color:#15803D}
+.feedback.bad{background:var(--red-light);color:#B91C1C}
+
+/* END */
+.end-screen{max-width:600px;margin:0 auto;padding:40px 20px 80px;text-align:center}
+.end-card{background:var(--white);border-radius:var(--radius-xl);padding:48px 36px;box-shadow:var(--shadow-lg);border:2px solid var(--gray-200);position:relative;overflow:hidden}
+.end-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--orange),var(--yellow),var(--teal))}
+.end-trophy{font-size:4rem;margin-bottom:12px;display:block;animation:bob 1.5s ease-in-out infinite}
+.end-title{font-size:2rem;font-weight:800;color:var(--navy);margin-bottom:6px}
+.end-sub{font-size:.95rem;color:var(--gray-500);font-weight:600;margin-bottom:24px}
+.end-stars{font-size:2.5rem;margin-bottom:20px;letter-spacing:4px}
+
+.sound-summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.sound-col{border-radius:var(--radius-lg);padding:16px 14px;text-align:left}
+.sound-col.col-a{background:var(--snd-a-light);border:2px solid var(--snd-a-border)}
+.sound-col.col-b{background:var(--snd-b-light);border:2px solid var(--snd-b-border)}
+.sound-col-title{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:800;margin-bottom:10px}
+.sound-col.col-a .sound-col-title{color:var(--snd-a)}
+.sound-col.col-b .sound-col-title{color:var(--snd-b)}
+.sound-word{font-size:.82rem;font-weight:700;color:var(--navy);padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;align-items:center;gap:6px}
+.sound-word:last-child{border-bottom:none}
+.sound-word .sw-hl{color:var(--orange);font-weight:800}
+
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.end-stat{background:var(--cream);border-radius:var(--radius-md);padding:14px 10px}
+.end-stat-n{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;color:var(--orange)}
+.end-stat-l{font-size:.7rem;font-weight:700;color:var(--gray-500);margin-top:2px}
+.end-msg{background:rgba(255,107,53,.06);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:28px;font-size:.88rem;font-weight:600;color:var(--navy);line-height:1.6;border-left:4px solid var(--orange);text-align:left}
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.end-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;padding:13px 26px;border-radius:var(--radius-md);border:none;cursor:pointer;transition:all .22s;text-decoration:none}
+.end-btn-p{background:var(--orange);color:var(--white);box-shadow:0 4px 15px rgba(255,107,53,.3)}
+.end-btn-p:hover{background:var(--orange-glow);transform:translateY(-2px)}
+.end-btn-s{background:var(--cream);color:var(--navy);border:2px solid var(--gray-200)}
+.end-btn-s:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px)}
+
+.footer{background:var(--navy);padding:28px 40px;text-align:center}
+.footer-brand{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px}
+.footer-brand span{color:var(--orange)}
+.footer-text{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500}
+
+#confBox{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200}
+.conf{position:absolute;top:-20px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+@media(max-width:700px){
+  .navbar{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}
+  .game-header{padding:80px 20px 24px}.game-title{font-size:1.5rem}
+  .diff-grid{grid-template-columns:1fr}
+  .sound-preview{grid-template-columns:1fr}
+  .sound-summary{grid-template-columns:1fr}
+  .cw-word{font-size:1.8rem}
+  .end-card{padding:32px 20px}
+}
+</style>
+</head>
+<body>
+<div id="confBox"></div>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="school-life.html" class="nav-cta">← School Life</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="game-header">
+  <div class="game-header-content">
+    <div class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+      <a href="school-life.html">School Life</a><span class="sep">›</span>
+      <span class="current">Sound Sorting</span>
+    </div>
+    <div class="game-title">🔊 <span class="hl">Sound Sorting!</span></div>
+    <div class="game-subtitle">Theme 1: School Life · Sounds A & B · Pronunciation Game</div>
+  </div>
+</div>
+
+<!-- START -->
+<div class="screen active" id="scr-start">
+  <div class="start-screen">
+    <div class="story-box">
+      <span class="story-emoji">👂</span>
+      <div class="story-title">Listen to the Sounds!</div>
+      <div class="story-text">
+        Mrs. Hopkins is teaching two sounds today: the <strong>"a" sound</strong> and the <strong>"b" sound</strong>. Read each school word carefully and decide: <strong>which sound do you hear?</strong> 🔊
+      </div>
+    </div>
+
+    <div class="sound-preview">
+      <div class="snd-card snd-a">
+        <div class="snd-big">Aa</div>
+        <div class="snd-phonetic">the "a" sound</div>
+        <div class="snd-examples">c<span class="snd-hl">a</span>nteen · g<span class="snd-hl">a</span>rden · te<span class="snd-hl">a</span>cher</div>
+      </div>
+      <div class="snd-card snd-b">
+        <div class="snd-big">Bb</div>
+        <div class="snd-phonetic">the "b" sound</div>
+        <div class="snd-examples"><span class="snd-hl">b</span>oy · li<span class="snd-hl">b</span>rary · <span class="snd-hl">b</span>ig</div>
+      </div>
+    </div>
+
+    <div class="diff-label">Seviyeni seç:</div>
+    <div class="diff-grid">
+      <div class="diff-card selected" data-d="easy" onclick="pickDiff(this)">
+        <span class="di">🌱</span>
+        <div class="dn">Supporting</div>
+        <div class="dd">5 kelime · Emoji + Türkçe ipucu</div>
+        <span class="db">Başlangıç</span>
+      </div>
+      <div class="diff-card" data-d="medium" onclick="pickDiff(this)">
+        <span class="di">⭐</span>
+        <div class="dn">Standard</div>
+        <div class="dd">7 kelime · Emoji · Türkçe ipucu</div>
+        <span class="db">Standart</span>
+      </div>
+      <div class="diff-card" data-d="hard" onclick="pickDiff(this)">
+        <span class="di">🔥</span>
+        <div class="dn">Expansion</div>
+        <div class="dd">8 kelime · İpucu yok</div>
+        <span class="db">İleri</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🚀 Start Listening!</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="scr-game">
+  <div class="game-screen">
+    <div class="prog-wrap">
+      <span class="prog-label" id="progLabel">1 / 8</span>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <span class="prog-score" id="progScore">✓ 0</span>
+    </div>
+
+    <div class="hint-box" id="hintBox">
+      <span class="hint-icon">💡</span>
+      <span class="hint-text" id="hintText"></span>
+    </div>
+
+    <div class="current-word-card">
+      <div class="cw-label">Bu kelimeyi oku ve dinle:</div>
+      <span class="cw-emoji" id="cwEmoji"></span>
+      <div class="cw-word" id="cwWord"></div>
+      <div class="cw-tr" id="cwTr"></div>
+      <div class="cw-question" id="cwQuestion">Which sound do you hear? "a" or "b"? 🤔</div>
+    </div>
+
+    <div class="sound-choices">
+      <button class="snd-btn snd-btn-a" id="btnA" onclick="answer('a')">
+        <div class="snd-btn-letter">Aa</div>
+        <div class="snd-btn-label">I hear the "a" sound!</div>
+      </button>
+      <button class="snd-btn snd-btn-b" id="btnB" onclick="answer('b')">
+        <div class="snd-btn-letter">Bb</div>
+        <div class="snd-btn-label">I hear the "b" sound!</div>
+      </button>
+    </div>
+
+    <div class="reveal-box" id="revealBox">
+      <div class="reveal-label">The sound is here:</div>
+      <div class="reveal-word" id="revealWord"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+
+<!-- END -->
+<div class="screen" id="scr-end">
+  <div class="end-screen">
+    <div class="end-card">
+      <span class="end-trophy" id="endTrophy">🏆</span>
+      <div class="end-title" id="endTitle">Perfect!</div>
+      <div class="end-sub">You sorted all the sounds!</div>
+      <div class="end-stars" id="endStars">⭐⭐⭐</div>
+      <div class="sound-summary">
+        <div class="sound-col col-a">
+          <div class="sound-col-title">🔵 "a" Sound</div>
+          <div id="summaryA"></div>
+        </div>
+        <div class="sound-col col-b">
+          <div class="sound-col-title">🟣 "b" Sound</div>
+          <div id="summaryB"></div>
+        </div>
+      </div>
+      <div class="end-stats">
+        <div class="end-stat"><div class="end-stat-n" id="endCorrect">0</div><div class="end-stat-l">Doğru</div></div>
+        <div class="end-stat"><div class="end-stat-n" id="endTotal">0</div><div class="end-stat-l">Toplam</div></div>
+        <div class="end-stat"><div class="end-stat-n" id="endPct">0%</div><div class="end-stat-l">Skor</div></div>
+      </div>
+      <div class="end-msg" id="endMsg"></div>
+      <div class="end-btns">
+        <button class="end-btn end-btn-p" onclick="restartGame()">🔄 Tekrar Oyna</button>
+        <a href="school-life.html" class="end-btn end-btn-s">← School Life</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">2. Sınıf · Tema 1: School Life · Sound Sorting</p>
+</footer>
+
+<script>
+/*
+  SOUND DATA
+  cat: which sound group ('a' or 'b')
+  indices: positions in the word where the target sound letter appears
+  hint: Turkish context hint (describes the sound situation, never reveals the answer)
+*/
+var ALL_WORDS = [
+  // /a/ sound words (from coursebook p.13)
+  { word:'canteen',    tr:'kantin',       cat:'a', emoji:'🍽️', indices:[1],
+    hint:'Bu kelimeyi yavaşça söyle: "canteen" — ortasındaki sese dikkat et. Hangi sesi duyuyorsun?' },
+  { word:'playground', tr:'oyun alanı',   cat:'a', emoji:'🛝', indices:[2],
+    hint:'Bu kelimeyi söyle: "playground" — ikinci hecede bir ses gizli. "a" sesi mi "b" sesi mi?' },
+  { word:'garden',     tr:'bahçe',        cat:'a', emoji:'🌳', indices:[1],
+    hint:'Bu kelimeyi dinle: "garden" — başlangıcındaki heceye odaklan. Hangi ses var?' },
+  { word:'teacher',    tr:'öğretmen',     cat:'a', emoji:'👩‍🏫', indices:[2],
+    hint:'Bu kelimeyi söyle: "teacher" — içinde bir "a" veya "b" sesi var. Hangisini duyuyorsun?' },
+  { word:'hall',       tr:'salon',        cat:'a', emoji:'🏫', indices:[1],
+    hint:'Kısa bir kelime: "hall" — içindeki sese kulak ver. "a" sesi mi "b" sesi mi?' },
+  // /b/ sound words (from coursebook p.13 + curriculum)
+  { word:'boy',        tr:'erkek çocuk',  cat:'b', emoji:'👦', indices:[0],
+    hint:'Bu kelime çok kısa: "boy" — en başındaki sese dikkat et. Hangi ses?' },
+  { word:'library',    tr:'kütüphane',    cat:'both', emoji:'📚', indices_a:[4], indices_b:[2],
+    hint:'Bu kelimede İKİ farklı ses gizli! Önce birini seç, sonra diğerini.' },
+  { word:'big',        tr:'büyük',        cat:'b', emoji:'💪', indices:[0],
+    hint:'Bu kelimeyi söyle: "big" — en başta hangi sesi duyuyorsun?' }
+];
+
+var SETS = {
+  easy:   ['canteen','playground','garden','boy','library'],
+  medium: ['canteen','playground','garden','teacher','boy','library','big'],
+  hard:   ALL_WORDS.map(function(w){ return w.word; })
+};
+
+var diff = 'easy';
+var words = [];
+var idx = 0;
+var score = 0;
+var locked = false;
+
+function pickDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  diff = el.dataset.d;
+}
+
+function startGame() {
+  var wordSet = SETS[diff];
+  words = shuffle(ALL_WORDS.filter(function(w){ return wordSet.indexOf(w.word) >= 0; }));
+  idx = 0;
+  score = 0;
+  locked = false;
+  showScreen('scr-game');
+  renderWord();
+}
+
+function renderWord() {
+  locked = false;
+  bothFound = { a: false, b: false };
+  var w = words[idx];
+  var total = words.length;
+
+  document.getElementById('progFill').style.width = Math.round((idx / total) * 100) + '%';
+  document.getElementById('progLabel').textContent = (idx + 1) + ' / ' + total;
+  document.getElementById('progScore').textContent = '✓ ' + score;
+
+  // Word display
+  var showEmoji = diff !== 'hard';
+  var showTr = diff !== 'hard';
+  document.getElementById('cwEmoji').textContent = showEmoji ? w.emoji : '';
+  document.getElementById('cwEmoji').style.display = showEmoji ? '' : 'none';
+  document.getElementById('cwWord').textContent = w.word;
+  document.getElementById('cwTr').textContent = showTr ? w.tr : '';
+  document.getElementById('cwTr').style.display = showTr ? '' : 'none';
+
+  // Hint
+  var hintBox = document.getElementById('hintBox');
+  if (diff === 'hard') {
+    hintBox.className = 'hint-box hidden';
+  } else {
+    hintBox.className = 'hint-box';
+    document.getElementById('hintText').textContent = w.hint;
+  }
+
+  // Dynamic question
+  var qEl = document.getElementById('cwQuestion');
+  if (w.cat === 'both') {
+    qEl.textContent = 'This word has TWO sounds! Find them both! 🤔';
+  } else {
+    qEl.textContent = 'Which sound do you hear? "a" or "b"? 🤔';
+  }
+
+  // Reset buttons
+  document.getElementById('btnA').className = 'snd-btn snd-btn-a';
+  document.getElementById('btnB').className = 'snd-btn snd-btn-b';
+  document.getElementById('btnA').disabled = false;
+  document.getElementById('btnB').disabled = false;
+
+  // Hide reveal
+  document.getElementById('revealBox').className = 'reveal-box';
+
+  // Clear feedback
+  var fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+}
+
+var bothFound = { a: false, b: false }; // track for 'both' words
+
+function answer(chosen) {
+  if (locked) return;
+
+  var w = words[idx];
+  var btnA = document.getElementById('btnA');
+  var btnB = document.getElementById('btnB');
+  var fb = document.getElementById('feedback');
+
+  if (w.cat === 'both') {
+    // BOTH: student must find both sounds
+    var chosenBtn = chosen === 'a' ? btnA : btnB;
+
+    if (bothFound[chosen]) return; // already found this one
+    bothFound[chosen] = true;
+    chosenBtn.classList.add('correct');
+    chosenBtn.disabled = true;
+    score++;
+    document.getElementById('progScore').textContent = '✓ ' + score;
+
+    if (bothFound.a && bothFound.b) {
+      // Both found!
+      locked = true;
+      fb.className = 'feedback good show';
+      fb.textContent = '✅ Excellent! "' + w.word + '" has BOTH the "a" and "b" sounds!';
+
+      setTimeout(function() {
+        var revealBox = document.getElementById('revealBox');
+        document.getElementById('revealWord').innerHTML = highlightBoth(w.word, w.indices_a, w.indices_b);
+        revealBox.className = 'reveal-box show';
+      }, 400);
+
+      setTimeout(function() {
+        idx++;
+        if (idx >= words.length) showEnd();
+        else renderWord();
+      }, 2800);
+    } else {
+      // One found, waiting for the other
+      var remaining = !bothFound.a ? '"a"' : '"b"';
+      fb.className = 'feedback good show';
+      fb.textContent = '✅ Great! Now find the ' + remaining + ' sound too!';
+    }
+  } else {
+    // Single sound word
+    locked = true;
+    var isCorrect = chosen === w.cat;
+
+    if (isCorrect) {
+      var correctBtn = chosen === 'a' ? btnA : btnB;
+      correctBtn.classList.add('correct');
+      btnA.disabled = true;
+      btnB.disabled = true;
+      score++;
+      document.getElementById('progScore').textContent = '✓ ' + score;
+      fb.className = 'feedback good show';
+      fb.textContent = '✅ Well done! "' + w.word + '" has the "' + w.cat + '" sound!';
+    } else {
+      var wrongBtn = chosen === 'a' ? btnA : btnB;
+      var rightBtn = w.cat === 'a' ? btnA : btnB;
+      wrongBtn.classList.add('wrong');
+      rightBtn.classList.add('correct');
+      btnA.disabled = true;
+      btnB.disabled = true;
+      fb.className = 'feedback bad show';
+      fb.textContent = '❌ Not quite! "' + w.word + '" has the "' + w.cat + '" sound, not "' + chosen + '".';
+    }
+
+    setTimeout(function() {
+      var revealBox = document.getElementById('revealBox');
+      document.getElementById('revealWord').innerHTML = highlightWord(w.word, w.indices);
+      revealBox.className = 'reveal-box show';
+    }, 400);
+
+    setTimeout(function() {
+      idx++;
+      if (idx >= words.length) showEnd();
+      else renderWord();
+    }, 2400);
+  }
+}
+
+function highlightBoth(word, indicesA, indicesB) {
+  var html = '';
+  for (var i = 0; i < word.length; i++) {
+    if (indicesA.indexOf(i) >= 0) {
+      html += '<span class="rv-hl" style="color:var(--snd-a)">' + word[i] + '</span>';
+    } else if (indicesB.indexOf(i) >= 0) {
+      html += '<span class="rv-hl" style="color:var(--snd-b)">' + word[i] + '</span>';
+    } else {
+      html += word[i];
+    }
+  }
+  return html;
+}
+
+function highlightWord(word, indices) {
+  var html = '';
+  for (var i = 0; i < word.length; i++) {
+    if (indices.indexOf(i) >= 0) {
+      html += '<span class="rv-hl">' + word[i] + '</span>';
+    } else {
+      html += word[i];
+    }
+  }
+  return html;
+}
+
+function showEnd() {
+  // both words give 2 points, so total must account for that
+  var total = 0;
+  words.forEach(function(w) { total += w.cat === 'both' ? 2 : 1; });
+  var pct = Math.round((score / total) * 100);
+  var stars = pct === 100 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : '⭐';
+  var trophy = pct === 100 ? '🏆' : pct >= 70 ? '🌟' : '💪';
+
+  document.getElementById('endTrophy').textContent = trophy;
+  document.getElementById('endTitle').textContent = pct === 100 ? 'Perfect!' : pct >= 70 ? 'Well done!' : 'Good try!';
+  document.getElementById('endStars').textContent = stars;
+  document.getElementById('endCorrect').textContent = score;
+  document.getElementById('endTotal').textContent = total;
+  document.getElementById('endPct').textContent = pct + '%';
+
+  var msgs = {
+    perfect: 'Mükemmel! Tüm kelimelerdeki "a" ve "b" seslerini doğru ayırdın. Kulakların çok keskin! 🌟',
+    good: 'Aferin! Seslerin çoğunu doğru duydun. Biraz daha pratikle mükemmel olacak!',
+    ok: 'İyi deneme! Bazı sesler zor oldu. Kelimeleri tekrar söyleyerek pratik yap! 💪'
+  };
+  document.getElementById('endMsg').textContent = pct === 100 ? msgs.perfect : pct >= 70 ? msgs.good : msgs.ok;
+
+  // Summary
+  var aWords = words.filter(function(w){ return w.cat === 'a' || w.cat === 'both'; });
+  var bWords = words.filter(function(w){ return w.cat === 'b' || w.cat === 'both'; });
+  document.getElementById('summaryA').innerHTML = aWords.map(function(w){
+    var idx = w.cat === 'both' ? w.indices_a : w.indices;
+    return '<div class="sound-word">' + w.emoji + ' ' + highlightWord(w.word, idx) + '</div>';
+  }).join('');
+  document.getElementById('summaryB').innerHTML = bWords.map(function(w){
+    var idx = w.cat === 'both' ? w.indices_b : w.indices;
+    return '<div class="sound-word">' + w.emoji + ' ' + highlightWord(w.word, idx) + '</div>';
+  }).join('');
+
+  showScreen('scr-end');
+  if (pct >= 70) confetti();
+}
+
+function restartGame() { showScreen('scr-start'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+function confetti() {
+  var box = document.getElementById('confBox');
+  var colors = ['#FF6B35','#FFC857','#2EC4B6','#3B82F6','#8B5CF6','#22C55E','#EF4444'];
+  for (var i = 0; i < 80; i++) {
+    var el = document.createElement('div'); el.className = 'conf';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (6 + Math.random() * 8) + 'px';
+    el.style.height = (6 + Math.random() * 8) + 'px';
+    el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    el.style.animationDelay = Math.random() * .8 + 's';
+    box.appendChild(el);
+  }
+  setTimeout(function() { box.innerHTML = ''; }, 4000);
+}
+
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+});
+</script>
+</body>
+</html>
