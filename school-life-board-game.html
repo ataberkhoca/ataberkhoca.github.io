@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Life Board Game | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2845;
+  --navy-light: #274472;
+  --orange: #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow: #FFC857;
+  --teal: #2EC4B6;
+  --cream: #FFF9F0;
+  --green-dark: #1a3a1a;
+  --green-mid: #2d5a27;
+  --white: #ffffff;
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 50%, #3d7a35 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 60px; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(27,40,69,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nav-brand {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem; font-weight: 800;
+  color: white; text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-brand span { color: var(--orange); }
+.nav-back {
+  color: rgba(255,255,255,0.7); text-decoration: none;
+  font-size: 0.85rem; font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--orange); }
+
+/* ── MAIN LAYOUT ── */
+.game-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 80px 16px 32px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: 76px;
+}
+
+.game-title-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+.game-title-card h1 {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.game-title-card .subtitle {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+}
+.activity-badge {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* ── SCOREBOARD ── */
+.scoreboard {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 14px;
+}
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.team-panel { text-align: center; }
+.team-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2px;
+}
+.team-score {
+  font-family: 'Baloo 2', cursive;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+.team-a .team-score { color: var(--orange); }
+.team-b .team-score { color: #5DBBFF; }
+.vs-badge {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+  font-weight: 700;
+}
+.token-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.token-indicator {
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  opacity: 0.5;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.token-indicator.active {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.token-indicator.team-a-ind { background: rgba(255,107,53,0.3); border: 1px solid rgba(255,107,53,0.5); }
+.token-indicator.team-b-ind { background: rgba(93,187,255,0.2); border: 1px solid rgba(93,187,255,0.4); }
+.token-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800;
+  border: 2px solid rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+.team-a-ind .token-dot { background: var(--orange); }
+.team-b-ind .token-dot { background: #3388cc; }
+
+/* ── TURN BAR ── */
+.turn-bar {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: center;
+  color: rgba(255,255,255,0.8);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.turn-bar b { color: var(--yellow); }
+
+/* ── DICE ── */
+.dice-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+}
+.dice-card p {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.dice {
+  width: 70px; height: 70px;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+  line-height: 1;
+  margin: 0 auto 10px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  user-select: none;
+}
+.dice:hover { transform: scale(1.05); }
+.dice.rolling { animation: diceRoll 0.5s ease; }
+@keyframes diceRoll {
+  0%   { transform: rotate(0deg) scale(1); }
+  20%  { transform: rotate(-20deg) scale(1.15); }
+  40%  { transform: rotate(20deg) scale(0.9); }
+  60%  { transform: rotate(-15deg) scale(1.1); }
+  80%  { transform: rotate(10deg) scale(0.95); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+.dice-result {
+  font-family: 'Baloo 2', cursive;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--yellow);
+  min-height: 24px;
+  margin-bottom: 10px;
+}
+.btn-roll {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--orange);
+  color: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+}
+.btn-roll:hover:not(:disabled) {
+  background: var(--orange-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,107,53,0.5);
+}
+.btn-roll:disabled {
+  background: #666;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-reset {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reset:hover {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+/* ── LEGEND ── */
+.legend {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.legend-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.leg-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── BOARD AREA ── */
+.board-area { position: relative; }
+
+.board-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+  border: 3px solid rgba(255,255,255,0.1);
+}
+.board-img {
+  width: 100%;
+  display: block;
+}
+
+/* Token on board */
+.board-token {
+  position: absolute;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Baloo 2', cursive;
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  border: 3px solid white;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+  transition: all 0.7s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 10;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.board-token.tok-a { background: var(--orange); }
+.board-token.tok-b { background: #1B2845; border-color: #5DBBFF; }
+
+/* Cell highlight ring */
+.cell-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid var(--yellow);
+  animation: pulseRing 1s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.cell-ring.show { opacity: 1; }
+@keyframes pulseRing {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); }
+  50% { transform: translate(-50%,-50%) scale(1.15); }
+}
+
+/* ── QUESTION MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+}
+@keyframes popIn {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.modal-badge {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.modal-emoji {
+  font-size: 72px;
+  line-height: 1;
+  margin: 8px 0 12px;
+  animation: bounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes bounceIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.modal-hint {
+  font-size: 14px;
+  color: #888;
+  font-style: italic;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.modal-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.mopt {
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 2px solid #eee;
+  background: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--navy);
+  transition: all 0.15s;
+  line-height: 1.3;
+}
+.mopt:hover:not(:disabled) {
+  border-color: var(--orange);
+  background: #fff5f0;
+  transform: translateY(-2px);
+}
+.mopt:disabled { cursor: default; }
+.mopt.correct {
+  background: #E1F5EE;
+  border-color: #1D9E75;
+  color: #085041;
+}
+.mopt.wrong {
+  background: #FCEBEB;
+  border-color: #E24B4A;
+  color: #791F1F;
+}
+.modal-feedback {
+  font-family: 'Baloo 2', cursive;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 26px;
+  margin-top: 4px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  color: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 24px;
+  font-weight: 800;
+  padding: 18px 36px;
+  border-radius: 20px;
+  z-index: 400;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center;
+  pointer-events: none;
+}
+.toast.show { transform: translate(-50%, -50%) scale(1); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .game-container {
+    grid-template-columns: 1fr;
+    padding-top: 70px;
+  }
+  .sidebar { position: static; }
+  .score-row { }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--orange),var(--yellow));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">📚</div>
+    ataberk<span>hoca</span>ingilizce
+  </a>
+  <a href="school-life.html" class="nav-back">← School Life</a>
+</nav>
+
+<div class="game-container">
+
+  <!-- BOARD -->
+  <div class="board-area">
+    <div class="board-wrap" id="boardwrap">
+      <img class="board-img" id="bimg" src="board-bg.png" alt="School Life Board Game">
+      <div class="board-token tok-a" id="tok-a">A</div>
+      <div class="board-token tok-b" id="tok-b">B</div>
+      <div class="cell-ring" id="ring-a" style="width:36px;height:36px;border-color:#FF6B35;"></div>
+      <div class="cell-ring" id="ring-b" style="width:36px;height:36px;border-color:#5DBBFF;"></div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Title -->
+    <div class="game-title-card">
+      <div class="activity-badge">Activity 21 · Theme 1</div>
+      <h1>🏫 School Life<br>Board Game</h1>
+      <p class="subtitle">What is this? · Who is this?</p>
+    </div>
+
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+      <div class="score-row">
+        <div class="team-panel team-a">
+          <div class="team-label">Team A</div>
+          <div class="team-score" id="sa">0</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team-panel team-b">
+          <div class="team-label">Team B</div>
+          <div class="team-score" id="sb">0</div>
+        </div>
+      </div>
+      <div class="token-row">
+        <div class="token-indicator team-a-ind" id="ind-a">
+          <div class="token-dot">A</div>
+          <span>Cell <span id="pos-a">0</span></span>
+        </div>
+        <div class="token-indicator team-b-ind" id="ind-b">
+          <div class="token-dot">B</div>
+          <span>Cell <span id="pos-b">0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Turn -->
+    <div class="turn-bar" id="tbar">
+      Turn: <b>Team A</b><br>Roll the dice to start!
+    </div>
+
+    <!-- Dice -->
+    <div class="dice-card">
+      <p>🎲 Tap the dice or button</p>
+      <div class="dice" id="dice" onclick="roll()">⚀</div>
+      <div class="dice-result" id="dice-result"></div>
+      <button class="btn-roll" id="rollbtn" onclick="roll()">🎲 Roll Dice</button>
+      <br><br>
+      <button class="btn-reset" onclick="resetGame()">↺ New Game</button>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-title">Map Key</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#FF6B35"></span>Places at school</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#274472"></span>People at school</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#EF9F27"></span>⭐ Well Done! (+1)</div>
+      <div class="legend-item"><span class="leg-dot" style="background:#534AB7"></span>🏆 Great Job! (+2)</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUESTION MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-badge" id="mbadge">What is this?</div>
+    <div class="modal-emoji" id="memoji">🏫</div>
+    <div class="modal-hint" id="mhint"></div>
+    <div class="modal-opts" id="mopts"></div>
+    <div class="modal-feedback" id="mfb"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CELL DATA ──
+// positions as percentage of board image width/height
+const CELLS = [
+  { id:0,  name:'START',        emoji:'🚀', type:'start',    pct:[34, 20] },
+  { id:1,  name:'Classroom',    emoji:'🏫', type:'place',    pct:[55, 22], q:'what' },
+  { id:2,  name:'Garden',       emoji:'🌳', type:'place',    pct:[70, 18], q:'what' },
+  { id:3,  name:'Headmaster',   emoji:'👴', type:'person',   pct:[82, 33], q:'who'  },
+  { id:4,  name:'Sports Hall',  emoji:'🏛️', type:'place',    pct:[74, 50], q:'what' },
+  { id:5,  name:'Playground',   emoji:'🌿', type:'place',    pct:[57, 56], q:'what' },
+  { id:6,  name:'Library',      emoji:'📚', type:'place',    pct:[43, 50], q:'what' },
+  { id:7,  name:'Keep Going',   emoji:'⭐', type:'special',  pct:[62, 37] },
+  { id:8,  name:'Classroom',    emoji:'🪑', type:'place',    pct:[30, 40], q:'what' },
+  { id:9,  name:'Well Done',    emoji:'🎉', type:'special2', pct:[18, 50] },
+  { id:10, name:"Teacher",      emoji:'👩‍🏫', type:'person',  pct:[28, 62], q:'who'  },
+  { id:11, name:'Pupil',        emoji:'👧', type:'person',   pct:[43, 72], q:'who'  },
+  { id:12, name:'FINISH',       emoji:'🏁', type:'finish',   pct:[60, 76] },
+];
+
+const QS = {
+  what: [
+    { emoji:'🏫', answer:'School',      opts:['School','Library','Canteen','Garden'],         hint:'We study here every day.' },
+    { emoji:'🌳', answer:'Garden',      opts:['Garden','Playground','Park','Canteen'],        hint:'Plants and trees grow here.' },
+    { emoji:'📚', answer:'Library',     opts:['Canteen','Library','Gym','Classroom'],         hint:'We read and borrow books here.' },
+    { emoji:'🪑', answer:'Classroom',   opts:['Library','Classroom','Canteen','Garden'],      hint:'Our teacher teaches us here.' },
+    { emoji:'🌿', answer:'Playground',  opts:['Garden','Library','Playground','School'],      hint:'We play here at break time.' },
+    { emoji:'🍽️', answer:'Lunch Hall',  opts:['Canteen','Library','Lunch Hall','Classroom'],  hint:'We eat our lunch here.' },
+    { emoji:'🏛️', answer:'Sports Hall', opts:['Library','Sports Hall','Canteen','Garden'],    hint:'We do PE and sports here.' },
+    { emoji:'🎒', answer:'Canteen',     opts:['School','Canteen','Library','Garden'],         hint:'We buy food and drinks here.' },
+  ],
+  who: [
+    { emoji:'👩‍🏫', answer:'Teacher',      opts:['Pupil','Headmaster','Teacher','Friend'],    hint:'This person teaches the class.' },
+    { emoji:'👴',   answer:'Headmaster',   opts:['Teacher','Headmaster','Pupil','Friend'],    hint:'This person is the head of school.' },
+    { emoji:'👧',   answer:'Pupil',        opts:['Teacher','Friend','Headmaster','Pupil'],    hint:'This person studies at school.' },
+    { emoji:'👩',   answer:'Headmistress', opts:['Teacher','Headmistress','Pupil','Friend'],  hint:'She runs the school.' },
+    { emoji:'🧒',   answer:'Friend',       opts:['Pupil','Headmaster','Teacher','Friend'],    hint:'This person is my classmate.' },
+  ]
+};
+
+const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+let pos = [0, 0];
+let turn = 0;
+let scores = [0, 0];
+let busy = false;
+
+// ── TOKEN POSITIONING ──
+function getCoords(cellId, tokenIndex) {
+  const wrap = document.getElementById('boardwrap');
+  const W = wrap.offsetWidth;
+  const H = wrap.offsetHeight;
+  const cell = CELLS[cellId];
+  const offsets = [[-10, -8], [10, 8]];
+  return {
+    x: cell.pct[0] / 100 * W + offsets[tokenIndex][0],
+    y: cell.pct[1] / 100 * H + offsets[tokenIndex][1],
+  };
+}
+
+function positionTokens() {
+  [0, 1].forEach(ti => {
+    const tok = document.getElementById('tok-' + ['a','b'][ti]);
+    const ring = document.getElementById('ring-' + ['a','b'][ti]);
+    const { x, y } = getCoords(pos[ti], ti);
+    tok.style.left = x + 'px';
+    tok.style.top  = y + 'px';
+    ring.style.left = x + 'px';
+    ring.style.top  = y + 'px';
+    document.getElementById('pos-' + ['a','b'][ti]).textContent = pos[ti];
+  });
+}
+
+// ── ROLL ──
+function roll() {
+  if (busy) return;
+  busy = true;
+  document.getElementById('rollbtn').disabled = true;
+
+  const dice = document.getElementById('dice');
+  dice.classList.add('rolling');
+
+  let flips = 0;
+  const iv = setInterval(() => {
+    dice.textContent = DICE_FACES[Math.floor(Math.random() * 6)];
+    flips++;
+    if (flips >= 10) {
+      clearInterval(iv);
+      dice.classList.remove('rolling');
+      const rolled = Math.floor(Math.random() * 6) + 1;
+      dice.textContent = DICE_FACES[rolled - 1];
+      document.getElementById('dice-result').textContent = `Rolled a ${rolled}!`;
+      setTimeout(() => movePlayer(rolled), 500);
+    }
+  }, 70);
+}
+
+// ── MOVE ──
+function movePlayer(n) {
+  const newPos = Math.min(pos[turn] + n, 12);
+  pos[turn] = newPos;
+  positionTokens();
+
+  // Show ring on active cell
+  const ring = document.getElementById('ring-' + ['a','b'][turn]);
+  ring.classList.add('show');
+  setTimeout(() => ring.classList.remove('show'), 1500);
+
+  updateTurnBar(`Moved to cell ${newPos}: <b>${CELLS[newPos].name}</b>`);
+
+  setTimeout(() => {
+    const cell = CELLS[newPos];
+    if (cell.type === 'special') {
+      scores[turn] += 1;
+      updateScores();
+      showToast('⭐ Well Done!\n+1 point!');
+      setTimeout(() => { hideToast(); nextTurn(); }, 2000);
+    } else if (cell.type === 'special2') {
+      scores[turn] += 2;
+      updateScores();
+      showToast('🏆 Great Job!\n+2 points!');
+      setTimeout(() => { hideToast(); nextTurn(); }, 2000);
+    } else if (cell.type === 'finish') {
+      endGame();
+    } else if (cell.q) {
+      showQuestion(cell.q);
+    } else {
+      nextTurn();
+    }
+  }, 800);
+}
+
+// ── QUESTION ──
+function showQuestion(type) {
+  const pool = QS[type];
+  const q = pool[Math.floor(Math.random() * pool.length)];
+
+  document.getElementById('mbadge').textContent = type === 'what' ? '❓ What is this?' : '❓ Who is this?';
+  document.getElementById('memoji').textContent = q.emoji;
+  document.getElementById('mhint').textContent = q.hint;
+  document.getElementById('mfb').textContent = '';
+
+  const opts = document.getElementById('mopts');
+  opts.innerHTML = '';
+  [...q.opts].sort(() => Math.random() - .5).forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'mopt';
+    b.innerHTML = type === 'what'
+      ? `It is a<br><b>${o}</b>`
+      : `He / She is a<br><b>${o}</b>`;
+    b.onclick = () => checkAnswer(b, o, q.answer, opts);
+    opts.appendChild(b);
+  });
+
+  document.getElementById('modal').classList.add('show');
+}
+
+function checkAnswer(btn, chosen, answer, opts) {
+  opts.querySelectorAll('.mopt').forEach(b => {
+    b.disabled = true;
+    if (b.innerHTML.includes(`<b>${answer}</b>`)) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById('mfb');
+  if (chosen === answer) {
+    btn.classList.add('correct');
+    scores[turn]++;
+    updateScores();
+    fb.style.color = '#1D9E75';
+    fb.textContent = '✅ Correct! +1 point';
+    setTimeout(() => { closeModal(); nextTurn(); }, 1600);
+  } else {
+    btn.classList.add('wrong');
+    fb.style.color = '#E24B4A';
+    fb.textContent = '❌ Wrong! Go back 1 space.';
+    pos[turn] = Math.max(0, pos[turn] - 1);
+    setTimeout(() => { positionTokens(); closeModal(); nextTurn(); }, 2000);
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// ── END ──
+function endGame() {
+  const tA = scores[0], tB = scores[1];
+  const winner = tA > tB ? '🔴 Team A Wins!' : tB > tA ? '🔵 Team B Wins!' : "🤝 It's a Tie!";
+  document.getElementById('mbadge').textContent = '🎉 Game Over!';
+  document.getElementById('memoji').textContent = winner;
+  document.getElementById('mhint').textContent = `Team A: ${tA} pts — Team B: ${tB} pts`;
+  document.getElementById('mopts').innerHTML = `
+    <button class="mopt correct" onclick="resetGame()" style="grid-column:span 2;font-size:15px;padding:14px">
+      🔄 Play Again
+    </button>`;
+  document.getElementById('mfb').textContent = '';
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('rollbtn').disabled = true;
+}
+
+// ── HELPERS ──
+function nextTurn() {
+  turn = turn === 0 ? 1 : 0;
+  busy = false;
+  document.getElementById('rollbtn').disabled = false;
+  updateTurnIndicators();
+  updateTurnBar(`Turn: <b>${turn === 0 ? 'Team A 🔴' : 'Team B 🔵'}</b><br>Roll the dice!`);
+}
+
+function updateTurnIndicators() {
+  document.getElementById('ind-a').classList.toggle('active', turn === 0);
+  document.getElementById('ind-b').classList.toggle('active', turn === 1);
+}
+
+function updateScores() {
+  document.getElementById('sa').textContent = scores[0];
+  document.getElementById('sb').textContent = scores[1];
+}
+
+function updateTurnBar(html) {
+  document.getElementById('tbar').innerHTML = html;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+}
+
+function hideToast() {
+  document.getElementById('toast').classList.remove('show');
+}
+
+function resetGame() {
+  pos = [0, 0]; turn = 0; scores = [0, 0]; busy = false;
+  updateScores();
+  closeModal();
+  hideToast();
+  document.getElementById('rollbtn').disabled = false;
+  document.getElementById('dice').textContent = '⚀';
+  document.getElementById('dice-result').textContent = '';
+  updateTurnBar('Turn: <b>Team A 🔴</b><br>Roll the dice to start!');
+  updateTurnIndicators();
+  positionTokens();
+}
+
+// ── INIT ──
+document.getElementById('ind-a').classList.add('active');
+
+const img = document.getElementById('bimg');
+if (img.complete) positionTokens();
+else img.onload = positionTokens;
+window.addEventListener('resize', positionTokens);
+setTimeout(positionTokens, 300);
+</script>
+</body>
+</html>
