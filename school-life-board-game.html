@@ -701,7 +701,13 @@ function roll() {
 // ── MOVE ──
 function movePlayer(n) {
   const maxCell = CELLS.length - 1;
-  const newPos = Math.min(pos[turn] + n, maxCell);
+  let newPos = Math.min(pos[turn] + n, maxCell);
+
+  // Skip over Keep Going automatically (don't land on it)
+  if (CELLS[newPos] && CELLS[newPos].type === 'keepgoing') {
+    newPos = Math.min(newPos + 1, maxCell);
+  }
+
   pos[turn] = newPos;
   positionTokens();
 
@@ -709,19 +715,14 @@ function movePlayer(n) {
   ring.classList.add('show');
   setTimeout(() => ring.classList.remove('show'), 1500);
 
-  updateTurnBar(`Moved to cell ${newPos}: <b>${CELLS[newPos].name}</b>`);
+  updateTurnBar(`Moved to: <b>${CELLS[newPos].name}</b>`);
 
   setTimeout(() => {
     const cell = CELLS[newPos];
 
     if (cell.type === 'keepgoing') {
-      showToast('⭐ Keep Going!\n+1 space!');
-      setTimeout(() => {
-        hideToast();
-        pos[turn] = Math.min(pos[turn] + 1, maxCell);
-        positionTokens();
-        setTimeout(() => nextTurn(), 400);
-      }, 1500);
+      // shouldn't happen but just in case
+      nextTurn();
     } else if (cell.type === 'welldone') {
       scores[turn] += 1;
       updateScores();
@@ -734,7 +735,9 @@ function movePlayer(n) {
       setTimeout(() => { hideToast(); nextTurn(); }, 2000);
     } else if (cell.type === 'finish') {
       endGame();
-    } else if (cell.q && cell.qKey) {
+    } else if (cell.type === 'start') {
+      nextTurn();
+    } else if (cell.qKey) {
       showQuestion(cell.qKey);
     } else {
       nextTurn();
@@ -786,7 +789,11 @@ function checkAnswer(btn, chosen, answer, opts) {
     btn.classList.add('wrong');
     fb.style.color = '#E24B4A';
     fb.textContent = '❌ Wrong! Go back 1 space.';
-    pos[turn] = Math.max(0, pos[turn] - 1);
+    // Go back 1, skip joker cells
+    let back = Math.max(0, pos[turn] - 1);
+    const jokers = ['keepgoing','welldone','greatjob','start'];
+    while (back > 0 && jokers.includes(CELLS[back].type)) back--;
+    pos[turn] = back;
     setTimeout(() => { positionTokens(); closeModal(); nextTurn(); }, 2000);
   }
 }
