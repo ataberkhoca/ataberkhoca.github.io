@@ -394,84 +394,6 @@
     .word-token { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
     .built-slot { font-size: 0.95rem; }
   }
-
-/* ========== DARK MODE ========== */
-[data-theme="dark"] {
-  --cream: #0e1117;
-  --white: #1a1f2e;
-  --gray-100: #252a3a;
-  --gray-200: #2a3045;
-  --gray-500: #7a85a0;
-  --gray-700: #b0b8d0;
-  --navy: #eef0f7;
-  --shadow-soft: 0 4px 20px rgba(0,0,0,0.35);
-  --shadow-md: 0 8px 30px rgba(0,0,0,0.45);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,0.55);
-}
-[data-theme="dark"] .navbar {
-  background: rgba(14,17,23,0.92) !important;
-  border-bottom-color: rgba(255,255,255,0.06) !important;
-}
-
-/* ========== DARK MODE TOGGLE ========== */
-#theme-toggle, #theme-toggle-mobile {
-  all: unset;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  width: 64px;
-  height: 32px;
-  background: #e2e2e2;
-  border-radius: 999px;
-  position: relative;
-  display: flex !important;
-  align-items: center;
-  padding: 3px;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.15);
-  transition: background 0.35s ease;
-  flex-shrink: 0;
-  z-index: 9999;
-}
-[data-theme="dark"] #theme-toggle,
-[data-theme="dark"] #theme-toggle-mobile { background: #2a2a3a; }
-
-#theme-toggle::after, #theme-toggle-mobile::after {
-  content: '';
-  position: absolute;
-  left: 3px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1;
-  pointer-events: none;
-}
-[data-theme="dark"] #theme-toggle::after,
-[data-theme="dark"] #theme-toggle-mobile::after {
-  transform: translateX(32px);
-  background: #3a3a4a;
-}
-
-.toggle-icon {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  font-size: 13px;
-  line-height: 1;
-}
-.toggle-sun  { left: 6px; }
-.toggle-moon { right: 6px; }
-
-@media (max-width: 600px) {
-  #theme-toggle { display: none !important; }
-  #theme-toggle-mobile { display: flex !important; }
-}
 </style>
 </head>
 <body>
@@ -482,14 +404,6 @@
     <span style="font-size:1.5rem;margin-right:0.4rem">📚</span>
     ataberk<span>hoca</span>ingilizce
   </a>
-  <button id="theme-toggle" onclick="toggleTheme()" aria-label="Gece/Gündüz modu" style="position:absolute;right:60px;top:50%;transform:translateY(-50%);">
-    <span class="toggle-icon toggle-sun">☀️</span>
-    <span class="toggle-icon toggle-moon">🌙</span>
-  </button>
-  <button id="theme-toggle-mobile" onclick="toggleTheme()" aria-label="Gece/Gündüz modu" style="position:absolute;right:60px;top:50%;transform:translateY(-50%);display:none;">
-    <span class="toggle-icon toggle-sun">☀️</span>
-    <span class="toggle-icon toggle-moon">🌙</span>
-  </button>
 </nav>
 
 <!-- GAME HEADER -->
@@ -614,17 +528,6 @@
 </div>
 
 <script>
-// ===== DARK MODE =====
-(function(){
-  var t = localStorage.getItem("ataberkhoca-theme") || "light";
-  document.documentElement.setAttribute("data-theme", t);
-})();
-function toggleTheme() {
-  var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-  document.documentElement.setAttribute("data-theme", next);
-  localStorage.setItem("ataberkhoca-theme", next);
-}
-
 // ══════════════ DATA ══════════════
 // Each question: puppet emoji, context description, correct sentence (array of words), distractors[], hint
 // Levels: supporting (3 words), standard (4-5 words), expansion (5-6 words + distractors)
