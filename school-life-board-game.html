@@ -607,39 +607,38 @@ body {
 // ── CELL DATA ──
 // positions as percentage of board image width/height
 const CELLS = [
-  { id:0,  name:'START',        emoji:'🚀', type:'start',    pct:[34, 20] },
-  { id:1,  name:'Classroom',    emoji:'🏫', type:'place',    pct:[55, 22], q:'what' },
-  { id:2,  name:'Garden',       emoji:'🌳', type:'place',    pct:[70, 18], q:'what' },
-  { id:3,  name:'Headmaster',   emoji:'👴', type:'person',   pct:[82, 33], q:'who'  },
-  { id:4,  name:'Sports Hall',  emoji:'🏛️', type:'place',    pct:[74, 50], q:'what' },
-  { id:5,  name:'Playground',   emoji:'🌿', type:'place',    pct:[57, 56], q:'what' },
-  { id:6,  name:'Library',      emoji:'📚', type:'place',    pct:[43, 50], q:'what' },
-  { id:7,  name:'Keep Going',   emoji:'⭐', type:'special',  pct:[62, 37] },
-  { id:8,  name:'Classroom',    emoji:'🪑', type:'place',    pct:[30, 40], q:'what' },
-  { id:9,  name:'Well Done',    emoji:'🎉', type:'special2', pct:[18, 50] },
-  { id:10, name:"Teacher",      emoji:'👩‍🏫', type:'person',  pct:[28, 62], q:'who'  },
-  { id:11, name:'Pupil',        emoji:'👧', type:'person',   pct:[43, 72], q:'who'  },
-  { id:12, name:'FINISH',       emoji:'🏁', type:'finish',   pct:[60, 76] },
+  // id, name, emoji, type, pct:[left%, top%], q (question type)
+  { id:0,  name:'START',       emoji:'🚀', type:'start',   pct:[31.3, 29.7] },
+  { id:1,  name:'Classroom',   emoji:'🏫', type:'place',   pct:[45.0, 32.4], q:'what', qKey:'classroom' },
+  { id:2,  name:'Garden',      emoji:'🌳', type:'place',   pct:[62.8, 38.4], q:'what', qKey:'garden'    },
+  { id:3,  name:'Keep Going',  emoji:'⭐', type:'keepgoing',pct:[73.3, 46.7] },
+  { id:4,  name:'Headmaster',  emoji:'👴', type:'person',  pct:[76.5, 57.7], q:'who',  qKey:'headmaster' },
+  { id:5,  name:'Classroom',   emoji:'🪑', type:'place',   pct:[67.6, 68.3], q:'what', qKey:'classroom2' },
+  { id:6,  name:'Sports Hall', emoji:'🏋️', type:'place',   pct:[51.8, 69.4], q:'what', qKey:'sportshall' },
+  { id:7,  name:'Library',     emoji:'📚', type:'place',   pct:[46.5, 58.7], q:'what', qKey:'library'   },
+  { id:8,  name:'Classroom',   emoji:'🏛️', type:'place',   pct:[47.4, 46.9], q:'what', qKey:'classroom3' },
+  { id:9,  name:'Canteen',     emoji:'🍽️', type:'place',   pct:[31.5, 44.3], q:'what', qKey:'canteen'   },
+  { id:10, name:'Well Done',   emoji:'🎉', type:'welldone',pct:[17.6, 49.4] },
+  { id:11, name:'Teacher',     emoji:'👩‍🏫',type:'person',  pct:[20.2, 62.2], q:'who',  qKey:'teacher'   },
+  { id:12, name:'Great Job',   emoji:'🏆', type:'greatjob',pct:[22.0, 74.6] },
+  { id:13, name:'Pupil',       emoji:'👧', type:'person',  pct:[18.3, 88.3], q:'who',  qKey:'pupil'     },
+  { id:14, name:'School',      emoji:'🏫', type:'place',   pct:[37.9, 91.7], q:'what', qKey:'school'    },
+  { id:15, name:'FINISH',      emoji:'🏁', type:'finish',  pct:[51.2, 86.7] },
 ];
 
+// Per-cell questions keyed to qKey in CELLS
 const QS = {
-  what: [
-    { emoji:'🏫', answer:'School',      opts:['School','Library','Canteen','Garden'],         hint:'We study here every day.' },
-    { emoji:'🌳', answer:'Garden',      opts:['Garden','Playground','Park','Canteen'],        hint:'Plants and trees grow here.' },
-    { emoji:'📚', answer:'Library',     opts:['Canteen','Library','Gym','Classroom'],         hint:'We read and borrow books here.' },
-    { emoji:'🪑', answer:'Classroom',   opts:['Library','Classroom','Canteen','Garden'],      hint:'Our teacher teaches us here.' },
-    { emoji:'🌿', answer:'Playground',  opts:['Garden','Library','Playground','School'],      hint:'We play here at break time.' },
-    { emoji:'🍽️', answer:'Lunch Hall',  opts:['Canteen','Library','Lunch Hall','Classroom'],  hint:'We eat our lunch here.' },
-    { emoji:'🏛️', answer:'Sports Hall', opts:['Library','Sports Hall','Canteen','Garden'],    hint:'We do PE and sports here.' },
-    { emoji:'🎒', answer:'Canteen',     opts:['School','Canteen','Library','Garden'],         hint:'We buy food and drinks here.' },
-  ],
-  who: [
-    { emoji:'👩‍🏫', answer:'Teacher',      opts:['Pupil','Headmaster','Teacher','Friend'],    hint:'This person teaches the class.' },
-    { emoji:'👴',   answer:'Headmaster',   opts:['Teacher','Headmaster','Pupil','Friend'],    hint:'This person is the head of school.' },
-    { emoji:'👧',   answer:'Pupil',        opts:['Teacher','Friend','Headmaster','Pupil'],    hint:'This person studies at school.' },
-    { emoji:'👩',   answer:'Headmistress', opts:['Teacher','Headmistress','Pupil','Friend'],  hint:'She runs the school.' },
-    { emoji:'🧒',   answer:'Friend',       opts:['Pupil','Headmaster','Teacher','Friend'],    hint:'This person is my classmate.' },
-  ]
+  canteen:    { type:'what', emoji:'🍽️', answer:'Canteen',     opts:['Canteen','Library','Garden','Classroom'],      hint:'Burası okuldaki yemek ve içecek yeri.' },
+  garden:     { type:'what', emoji:'🌳', answer:'Garden',      opts:['Garden','Playground','Canteen','Library'],     hint:'Burası okulun bahçesi.' },
+  headmaster: { type:'who',  emoji:'👴', answer:'Headmaster',  opts:['Headmaster','Teacher','Pupil','Friend'],       hint:'Bu kişi okulun müdürü.' },
+  classroom:  { type:'what', emoji:'🏫', answer:'Classroom',   opts:['Classroom','Library','Canteen','Sports Hall'], hint:'Burası öğrencilerin ders yaptığı yer.' },
+  classroom2: { type:'what', emoji:'🪑', answer:'Classroom',   opts:['Classroom','Canteen','Library','Garden'],      hint:'Sıralar ve tahta burada.' },
+  classroom3: { type:'what', emoji:'🏛️', answer:'Classroom',   opts:['Classroom','Sports Hall','Library','Canteen'], hint:'Öğretmen burada ders anlatır.' },
+  sportshall: { type:'what', emoji:'🏋️', answer:'Sports Hall', opts:['Sports Hall','Canteen','Library','Garden'],    hint:'Beden eğitimi dersini burada yaparız.' },
+  library:    { type:'what', emoji:'📚', answer:'Library',     opts:['Library','Classroom','Canteen','Garden'],      hint:'Burası kitaplık.' },
+  teacher:    { type:'who',  emoji:'👩‍🏫', answer:'Teacher',    opts:['Teacher','Headmaster','Pupil','Friend'],       hint:'Bu kişi bize ders öğretir.' },
+  pupil:      { type:'who',  emoji:'👧', answer:'Pupil',       opts:['Pupil','Teacher','Headmaster','Friend'],       hint:'Bu kişi okulda okuyan öğrenci.' },
+  school:     { type:'what', emoji:'🏫', answer:'School',      opts:['School','Library','Canteen','Sports Hall'],    hint:'Bu bina bütün okul.' },
 };
 
 const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
@@ -701,11 +700,11 @@ function roll() {
 
 // ── MOVE ──
 function movePlayer(n) {
-  const newPos = Math.min(pos[turn] + n, 12);
+  const maxCell = CELLS.length - 1;
+  const newPos = Math.min(pos[turn] + n, maxCell);
   pos[turn] = newPos;
   positionTokens();
 
-  // Show ring on active cell
   const ring = document.getElementById('ring-' + ['a','b'][turn]);
   ring.classList.add('show');
   setTimeout(() => ring.classList.remove('show'), 1500);
@@ -714,20 +713,29 @@ function movePlayer(n) {
 
   setTimeout(() => {
     const cell = CELLS[newPos];
-    if (cell.type === 'special') {
+
+    if (cell.type === 'keepgoing') {
+      showToast('⭐ Keep Going!\n+1 space!');
+      setTimeout(() => {
+        hideToast();
+        pos[turn] = Math.min(pos[turn] + 1, maxCell);
+        positionTokens();
+        setTimeout(() => nextTurn(), 400);
+      }, 1500);
+    } else if (cell.type === 'welldone') {
       scores[turn] += 1;
       updateScores();
-      showToast('⭐ Well Done!\n+1 point!');
+      showToast('🎉 Well Done!\n+1 point!');
       setTimeout(() => { hideToast(); nextTurn(); }, 2000);
-    } else if (cell.type === 'special2') {
+    } else if (cell.type === 'greatjob') {
       scores[turn] += 2;
       updateScores();
       showToast('🏆 Great Job!\n+2 points!');
       setTimeout(() => { hideToast(); nextTurn(); }, 2000);
     } else if (cell.type === 'finish') {
       endGame();
-    } else if (cell.q) {
-      showQuestion(cell.q);
+    } else if (cell.q && cell.qKey) {
+      showQuestion(cell.qKey);
     } else {
       nextTurn();
     }
@@ -735,11 +743,12 @@ function movePlayer(n) {
 }
 
 // ── QUESTION ──
-function showQuestion(type) {
-  const pool = QS[type];
-  const q = pool[Math.floor(Math.random() * pool.length)];
+function showQuestion(qKey) {
+  const q = QS[qKey];
+  if (!q) { nextTurn(); return; }
 
-  document.getElementById('mbadge').textContent = type === 'what' ? '❓ What is this?' : '❓ Who is this?';
+  const label = q.type === 'what' ? '❓ What is this?' : '❓ Who is this?';
+  document.getElementById('mbadge').textContent = label;
   document.getElementById('memoji').textContent = q.emoji;
   document.getElementById('mhint').textContent = q.hint;
   document.getElementById('mfb').textContent = '';
@@ -749,7 +758,7 @@ function showQuestion(type) {
   [...q.opts].sort(() => Math.random() - .5).forEach(o => {
     const b = document.createElement('button');
     b.className = 'mopt';
-    b.innerHTML = type === 'what'
+    b.innerHTML = q.type === 'what'
       ? `It is a<br><b>${o}</b>`
       : `He / She is a<br><b>${o}</b>`;
     b.onclick = () => checkAnswer(b, o, q.answer, opts);
