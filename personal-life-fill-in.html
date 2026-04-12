@@ -150,9 +150,34 @@
     overflow: hidden;
     margin-bottom: 1.5rem;
     border: 3px solid var(--mirror-frame);
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.4s;
+    position: relative;
   }
-  .mirror-card.correct { border-color: var(--green); }
+  /* Mirror shimmer glint — sweeps left to right every 4s */
+  .mirror-card::before {
+    content: '';
+    position: absolute; top: 0; left: -70%;
+    width: 50%; height: 100%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.38) 50%, transparent 60%);
+    animation: mirrorGlint 4s ease-in-out infinite;
+    pointer-events: none; z-index: 2;
+    border-radius: 24px;
+  }
+  @keyframes mirrorGlint {
+    0%,70% { left: -70%; opacity: 0; }
+    72%     { opacity: 1; }
+    90%     { left: 120%; opacity: 0; }
+    100%    { left: 120%; opacity: 0; }
+  }
+  .mirror-card.correct {
+    border-color: var(--green);
+    animation: cardCorrectGlow 0.6s ease;
+  }
+  @keyframes cardCorrectGlow {
+    0%   { box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+    40%  { box-shadow: 0 0 0 12px rgba(34,197,94,0.25), 0 8px 40px rgba(34,197,94,0.2); }
+    100% { box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+  }
   .mirror-card.wrong   { border-color: var(--red); animation: cardShake 0.4s ease; }
 
   @keyframes cardShake {
@@ -167,11 +192,36 @@
     text-align: center;
     min-height: 130px;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem;
+    position: relative; z-index: 1;
   }
-  .scene-emoji-row { display: flex; justify-content: center; align-items: center; gap: 0.5rem; font-size: 3rem; flex-wrap: wrap; }
-  .scene-context { font-size: 0.85rem; color: #777; font-style: italic; }
+  .scene-emoji-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 0.5rem; font-size: 3rem; flex-wrap: wrap;
+  }
+  /* Per-emoji flip reveal */
+  .scene-emoji-item {
+    display: inline-block;
+    animation: emojiFlip 0.5s ease both;
+    transform-style: preserve-3d;
+  }
+  @keyframes emojiFlip {
+    0%   { opacity: 0; transform: rotateY(90deg) scale(0.7); }
+    60%  { opacity: 1; transform: rotateY(-10deg) scale(1.1); }
+    100% { opacity: 1; transform: rotateY(0deg) scale(1); }
+  }
+  /* Happy bounce on correct answer */
+  .scene-emoji-item.happy-jump {
+    animation: happyJump 0.55s cubic-bezier(.22,1.4,.36,1);
+  }
+  @keyframes happyJump {
+    0%   { transform: translateY(0) scale(1); }
+    40%  { transform: translateY(-14px) scale(1.2); }
+    70%  { transform: translateY(-6px) scale(1.05); }
+    100% { transform: translateY(0) scale(1); }
+  }
+  .scene-context { font-size: 0.85rem; color: #777; font-style: italic; position: relative; z-index: 1; }
 
-  .sentence-area { padding: 1.5rem 2rem; border-top: 1px solid #F0F0F0; }
+  .sentence-area { padding: 1.5rem 2rem; border-top: 1px solid #F0F0F0; position: relative; z-index: 1; }
   .sentence {
     font-family: 'Baloo 2', cursive;
     font-size: 1.45rem; font-weight: 700;
@@ -183,9 +233,25 @@
     min-width: 110px; border-bottom: 3px solid var(--orange);
     padding: 0 0.4rem; text-align: center;
     color: var(--orange); font-style: italic; transition: all 0.3s;
+    animation: blankPulse 1.6s ease-in-out infinite;
   }
-  .blank.filled-correct { border-color: var(--green); color: var(--green); font-style: normal; }
-  .blank.filled-wrong   { border-color: var(--red);   color: var(--red);   font-style: normal; }
+  .blank.filled-correct {
+    border-color: var(--green); color: var(--green); font-style: normal;
+    animation: blankLand 0.4s cubic-bezier(.22,1.4,.36,1);
+  }
+  .blank.filled-wrong {
+    border-color: var(--red); color: var(--red); font-style: normal;
+    animation: none;
+  }
+  @keyframes blankPulse {
+    0%,100% { box-shadow: 0 2px 0 0 rgba(255,107,53,0.3); }
+    50%      { box-shadow: 0 3px 0 0 rgba(255,107,53,0.7); border-bottom-width: 4px; }
+  }
+  @keyframes blankLand {
+    0%   { transform: translateY(-8px) scale(1.08); opacity: 0.6; }
+    60%  { transform: translateY(3px) scale(0.97); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
 
   .hint-box {
     margin: 0 2rem 1rem;
@@ -585,7 +651,20 @@ function renderQuestion() {
   var card = document.getElementById('mirrorCard');
   card.classList.remove('correct','wrong');
 
-  document.getElementById('sceneEmojis').textContent = q.scene.emojis;
+  // Staggered emoji flip
+  var emojiRow = document.getElementById('sceneEmojis');
+  emojiRow.innerHTML = '';
+  var emojis = Array.from(q.scene.emojis);
+  // Group by grapheme (crude: split on spaces or treat each char/surrogate as one emoji)
+  var emojiList = q.scene.emojis.match(/\p{Emoji_Presentation}|\p{Emoji}\uFE0F|[^\s]/gu) || Array.from(q.scene.emojis);
+  emojiList.forEach(function(e, i) {
+    var span = document.createElement('span');
+    span.className = 'scene-emoji-item';
+    span.textContent = e;
+    span.style.animationDelay = (i * 100) + 'ms';
+    emojiRow.appendChild(span);
+  });
+
   document.getElementById('sceneContext').textContent = q.scene.context;
 
   var hintBox = document.getElementById('hintBox');
@@ -660,6 +739,13 @@ function onAnswer(opt, q, btn) {
     card.classList.add('correct');
     fb.className = 'feedback-bar show ok';
     fb.textContent = q.feedback;
+    // Happy jump on all scene emojis
+    document.querySelectorAll('.scene-emoji-item').forEach(function(el, i) {
+      el.classList.remove('happy-jump');
+      void el.offsetWidth;
+      el.style.animationDelay = (i * 80) + 'ms';
+      el.classList.add('happy-jump');
+    });
   } else {
     score = Math.max(0, score - 2);
     card.classList.add('wrong');

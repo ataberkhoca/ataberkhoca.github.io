@@ -206,6 +206,24 @@
     margin-bottom: 1.5rem;
     transition: all 0.4s ease;
   }
+  .scene-card.scene-enter {
+    animation: sceneFadeIn 0.4s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes sceneFadeIn {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .scene-emoji.scene-bounce {
+    animation: none;
+  }
+  .scene-emoji.scene-bounce-go {
+    animation: emojiEntrance 0.5s cubic-bezier(.22,1.4,.36,1) 0.15s both;
+  }
+  @keyframes emojiEntrance {
+    0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+    60%  { transform: scale(1.2) rotate(5deg);  opacity: 1; }
+    100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+  }
 
   .scene-bg {
     padding: 2rem 2rem 1.5rem;
@@ -243,6 +261,18 @@
   .bubble-wrap.robix { flex-direction: row; }
   .bubble-wrap.yigit { flex-direction: row-reverse; }
 
+  /* Slide-in animations */
+  .bubble-wrap.robix { animation: slideFromLeft 0.35s cubic-bezier(.22,1,.36,1) both; }
+  .bubble-wrap.yigit { animation: slideFromRight 0.35s cubic-bezier(.22,1,.36,1) 0.3s both; }
+  @keyframes slideFromLeft {
+    0%   { opacity: 0; transform: translateX(-22px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideFromRight {
+    0%   { opacity: 0; transform: translateX(22px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
   .bubble-avatar { font-size: 1.8rem; flex-shrink: 0; }
 
   .bubble {
@@ -261,6 +291,26 @@
   .bubble-speaker {
     font-size: 0.7rem; font-weight: 700; opacity: 0.6;
     margin-bottom: 0.2rem;
+  }
+
+  /* Typing indicator */
+  .typing-bubble {
+    display: flex; align-items: center; gap: 4px;
+    padding: 0.75rem 1.1rem;
+    background: #F0F4FF; border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    max-width: 72px;
+  }
+  .typing-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--navy); opacity: 0.5;
+    animation: dotBounce 1s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes dotBounce {
+    0%,60%,100% { transform: translateY(0);   opacity: 0.4; }
+    30%          { transform: translateY(-6px); opacity: 1; }
   }
 
   /* Hint */
@@ -287,7 +337,8 @@
     color: var(--navy); cursor: pointer; transition: all 0.2s;
     text-align: left; display: flex; align-items: center; gap: 0.5rem;
   }
-  .option-btn::before { content: '💬'; font-size: 1rem; }
+  .option-btn::before { content: '💬'; font-size: 1rem; transition: content 0.1s; }
+  .option-btn:hover:not(:disabled)::before { content: '👉'; }
   .option-btn:hover:not(:disabled) {
     border-color: var(--orange); background: #FFF3EE;
     transform: translateX(4px);
@@ -906,56 +957,79 @@ function renderStop() {
   document.getElementById('stopLabel').textContent = stop.location;
   document.getElementById('scoreDisplay').textContent = score;
 
-  // scene bg & emoji
+  // ── Scene fade-in + emoji bounce ──
+  var sceneCard = document.querySelector('.scene-card');
+  sceneCard.classList.remove('scene-enter');
+  void sceneCard.offsetWidth;
+  sceneCard.classList.add('scene-enter');
+
   document.getElementById('sceneBg').className = 'scene-bg ' + stop.bg;
   document.getElementById('sceneLocation').textContent = stop.location;
-  document.getElementById('sceneEmoji').textContent = stop.emoji;
 
-  // chat bubbles
+  var emojiEl = document.getElementById('sceneEmoji');
+  emojiEl.classList.remove('scene-bounce-go');
+  emojiEl.textContent = stop.emoji;
+  void emojiEl.offsetWidth;
+  emojiEl.classList.add('scene-bounce-go');
+
+  // ── Typing indicator first, then Robix bubble ──
   var chat = document.getElementById('chatArea');
   chat.innerHTML =
-    '<div class="bubble-wrap robix">' +
+    '<div class="bubble-wrap robix" id="typingWrap">' +
       '<div class="bubble-avatar">🤖</div>' +
-      '<div>' +
-        '<div class="bubble-speaker">Robix</div>' +
-        '<div class="bubble">' + escHtml(variation.robix) + '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="bubble-wrap yigit">' +
-      '<div class="bubble-avatar">🧒</div>' +
-      '<div>' +
-        '<div class="bubble-speaker" style="text-align:right">Yiğit</div>' +
-        '<div class="bubble">???</div>' +
+      '<div class="typing-bubble">' +
+        '<div class="typing-dot"></div>' +
+        '<div class="typing-dot"></div>' +
+        '<div class="typing-dot"></div>' +
       '</div>' +
     '</div>';
 
-  // hint
-  if (cfg.showHint) {
-    document.getElementById('hintBox').classList.add('visible');
-    document.getElementById('hintText').textContent = variation.hint;
-  } else {
-    document.getElementById('hintBox').classList.remove('visible');
-  }
-
-  // Build options: answer + enough distractors, then SHUFFLE so correct isn't always first
-  var distractors = variation.distractors.slice(0, cfg.optCount - 1);
-  var opts = shuffle([variation.answer].concat(distractors));
-
+  // hint & options hidden during typing
+  document.getElementById('hintBox').classList.remove('visible');
   var grid = document.getElementById('optionsGrid');
   grid.innerHTML = '';
-  opts.forEach(function(opt) {
-    var btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = opt;
-    btn.setAttribute('data-opt', opt);
-    btn.addEventListener('click', function(){ onAnswer(opt, btn, variation.answer); });
-    grid.appendChild(btn);
-  });
+  grid.style.opacity = '0';
+  document.getElementById('nextBtn').className = 'next-btn';
 
-  // next btn hidden
-  var nb = document.getElementById('nextBtn');
-  nb.className = 'next-btn';
-  nb.textContent = '';
+  setTimeout(function() {
+    // Replace typing with actual Robix bubble + Yiğit ??? bubble
+    chat.innerHTML =
+      '<div class="bubble-wrap robix">' +
+        '<div class="bubble-avatar">🤖</div>' +
+        '<div>' +
+          '<div class="bubble-speaker">Robix</div>' +
+          '<div class="bubble">' + escHtml(variation.robix) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="bubble-wrap yigit">' +
+        '<div class="bubble-avatar">🧒</div>' +
+        '<div>' +
+          '<div class="bubble-speaker" style="text-align:right">Yiğit</div>' +
+          '<div class="bubble">???</div>' +
+        '</div>' +
+      '</div>';
+
+    // hint
+    if (cfg.showHint) {
+      document.getElementById('hintBox').classList.add('visible');
+      document.getElementById('hintText').textContent = variation.hint;
+    }
+
+    // options fade-in
+    var distractors = variation.distractors.slice(0, cfg.optCount - 1);
+    var opts = shuffle([variation.answer].concat(distractors));
+    grid.innerHTML = '';
+    opts.forEach(function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.setAttribute('data-opt', opt);
+      btn.addEventListener('click', function(){ onAnswer(opt, btn, variation.answer); });
+      grid.appendChild(btn);
+    });
+    grid.style.transition = 'opacity 0.3s';
+    grid.style.opacity = '1';
+  }, 1000);
 }
 
 // ── ANSWER ──

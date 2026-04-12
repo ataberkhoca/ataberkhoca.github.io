@@ -181,12 +181,32 @@
   .puppet-visual {
     font-size: 4rem;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-    animation: puppet-swing 2s ease-in-out infinite;
     flex-shrink: 0;
+    display: inline-block;
+    animation: puppet-swing 2s ease-in-out infinite;
+    transform-origin: top center;
   }
   @keyframes puppet-swing {
     0%,100% { transform: rotate(-5deg); }
     50%      { transform: rotate(5deg); }
+  }
+  .puppet-visual.puppet-joy {
+    animation: puppetJoy 0.6s cubic-bezier(.22,1.4,.36,1);
+  }
+  @keyframes puppetJoy {
+    0%   { transform: rotate(-5deg) scale(1); }
+    25%  { transform: rotate(12deg) scale(1.25); }
+    55%  { transform: rotate(-10deg) scale(1.15); }
+    80%  { transform: rotate(6deg) scale(1.08); }
+    100% { transform: rotate(-5deg) scale(1); }
+  }
+  .puppet-visual.puppet-sad {
+    animation: puppetSad 0.5s ease;
+  }
+  @keyframes puppetSad {
+    0%   { transform: rotate(-5deg) scale(1); }
+    40%  { transform: rotate(0deg) translateY(8px) scale(0.85); }
+    100% { transform: rotate(-5deg) scale(1); }
   }
   .puppet-desc {
     color: rgba(255,255,255,0.95);
@@ -209,6 +229,13 @@
     display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 48px;
     align-items: center;
   }
+  /* Slot placeholder — dotted box before word placed */
+  .slot-placeholder {
+    width: 56px; height: 38px; border-radius: 10px;
+    border: 2px dashed #D1D5DB;
+    background: #F9FAFB;
+    transition: all 0.2s; flex-shrink: 0;
+  }
   .built-slot {
     background: var(--navy);
     color: var(--white);
@@ -216,19 +243,56 @@
     font-size: 1.1rem; font-weight: 700;
     padding: 0.5rem 1rem; border-radius: 10px;
     cursor: pointer;
-    animation: popIn 0.25s ease;
+    animation: snapIn 0.3s cubic-bezier(.22,1.4,.36,1);
     transition: transform 0.15s;
   }
   .built-slot:hover { transform: scale(1.05); background: var(--red); }
   .built-slot.correct-pos { background: var(--green); cursor: default; }
   .built-slot.correct-pos:hover { background: var(--green); transform: none; }
-  @keyframes popIn {
+  /* Wave correct on check */
+  .built-slot.wave-correct { animation: slotWave 0.4s ease both; }
+  @keyframes snapIn {
     0%   { transform: scale(0.6); opacity: 0; }
-    70%  { transform: scale(1.1); }
-    100% { transform: scale(1);   opacity: 1; }
+    65%  { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes slotWave {
+    0%   { background: var(--navy); transform: scale(1); }
+    40%  { background: #86EFAC; transform: scale(1.12); }
+    100% { background: var(--green); transform: scale(1); }
   }
   .empty-hint {
     color: #ccc; font-size: 0.9rem; font-style: italic;
+  }
+
+  /* Token fly clone */
+  .token-fly {
+    position: fixed; pointer-events: none; z-index: 500;
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1rem;
+    padding: 0.4rem 0.9rem; border-radius: 10px;
+    background: var(--purple); color: var(--white);
+    box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+    white-space: nowrap;
+    transition: left 0.35s cubic-bezier(.4,0,.2,1),
+                top  0.35s cubic-bezier(.4,0,.2,1),
+                opacity 0.35s ease,
+                transform 0.35s ease;
+  }
+
+  /* Distractor tooltip */
+  .distractor-tip {
+    position: fixed; z-index: 600;
+    background: var(--navy); color: var(--white);
+    font-family: 'Baloo 2', cursive; font-size: 0.8rem; font-weight: 700;
+    padding: 5px 12px; border-radius: 8px;
+    pointer-events: none; white-space: nowrap;
+    animation: tipFade 1.6s ease forwards;
+  }
+  @keyframes tipFade {
+    0%   { opacity: 0; transform: translateY(0); }
+    15%  { opacity: 1; transform: translateY(-4px); }
+    70%  { opacity: 1; transform: translateY(-8px); }
+    100% { opacity: 0; transform: translateY(-14px); }
   }
 
   /* Result sentence (after check) */
@@ -754,8 +818,16 @@ function renderQuestion() {
     document.getElementById('hintBox').classList.remove('visible');
   }
 
-  // build zone reset
-  document.getElementById('builtWords').innerHTML = '<span class="empty-hint">Aşağıdan kelimelere tıkla!</span>';
+  // build zone: show placeholder slots for each word in sentence
+  var bwInit = document.getElementById('builtWords');
+  bwInit.innerHTML = '';
+  var q0 = questionQueue[currentQIndex];
+  for (var pi = 0; pi < q0.sentence.length; pi++) {
+    var ph = document.createElement('div');
+    ph.className = 'slot-placeholder';
+    ph.setAttribute('data-ph', pi);
+    bwInit.appendChild(ph);
+  }
   var rs = document.getElementById('resultSentence');
   rs.className = 'result-sentence';
   rs.textContent = '';
@@ -799,35 +871,68 @@ function onTokenClick(btn, word, idx) {
   if (checked) return;
   if (tokenUsed[idx]) return;
 
+  // ── Distractor tooltip ──
+  var isDistractor = btn.classList.contains('distractor');
+  if (isDistractor) {
+    var br = btn.getBoundingClientRect();
+    var tip = document.createElement('div');
+    tip.className = 'distractor-tip';
+    tip.textContent = '⚠️ Bu kelime bu cümlede yok!';
+    tip.style.left = (br.left + br.width / 2 - 80) + 'px';
+    tip.style.top  = (br.top - 12) + 'px';
+    document.body.appendChild(tip);
+    setTimeout(function() { tip.remove(); }, 1700);
+    return; // distractors are blocked
+  }
+
   tokenUsed[idx] = true;
   btn.classList.add('used');
   builtSentence.push({ word: word, idx: idx });
 
-  // remove empty hint
   var bw = document.getElementById('builtWords');
-  var hint = bw.querySelector('.empty-hint');
-  if (hint) hint.remove();
 
-  // add slot
-  var slot = document.createElement('div');
-  slot.className = 'built-slot';
-  slot.textContent = word;
-  slot.setAttribute('data-idx', idx);
+  // ── Replace first placeholder with slot (via fly animation) ──
+  var firstPh = bw.querySelector('.slot-placeholder');
+  var phRect = firstPh ? firstPh.getBoundingClientRect() : null;
+  var btnRect = btn.getBoundingClientRect();
 
-  // ── Instant green: position = number of slots already in build zone ──
-  var q = questionQueue[currentQIndex];
-  var bw = document.getElementById('builtWords');
-  var existingSlots = bw.querySelectorAll('.built-slot').length; // slots already placed
-  var positionInSentence = existingSlots; // 0-indexed: this is the next position
+  // Create flying clone
+  var fly = document.createElement('div');
+  fly.className = 'token-fly';
+  fly.textContent = word;
+  fly.style.left = (btnRect.left + btnRect.width / 2 - 30) + 'px';
+  fly.style.top  = (btnRect.top  + btnRect.height / 2 - 16) + 'px';
+  document.body.appendChild(fly);
 
-  if (positionInSentence < q.sentence.length && word === q.sentence[positionInSentence]) {
-    slot.classList.add('correct-pos');
-    // correct-pos slots are locked — cannot be removed
-  } else {
-    slot.addEventListener('click', function() { removeSlot(slot, idx); });
+  if (phRect) {
+    fly.getBoundingClientRect();
+    fly.style.left    = (phRect.left + phRect.width / 2 - 30) + 'px';
+    fly.style.top     = (phRect.top  + phRect.height / 2 - 16) + 'px';
+    fly.style.opacity = '0';
+    fly.style.transform = 'scale(0.6)';
+  }
+  setTimeout(function() { fly.remove(); }, 380);
+
+  // Remove first placeholder and insert slot at its position
+  if (firstPh) {
+    var slot = document.createElement('div');
+    slot.className = 'built-slot';
+    slot.textContent = word;
+    slot.setAttribute('data-idx', idx);
+
+    var q = questionQueue[currentQIndex];
+    var existingSlots = bw.querySelectorAll('.built-slot').length;
+    var positionInSentence = existingSlots;
+
+    if (positionInSentence < q.sentence.length && word === q.sentence[positionInSentence]) {
+      slot.classList.add('correct-pos');
+    } else {
+      slot.addEventListener('click', function() { removeSlot(slot, idx); });
+    }
+
+    bw.replaceChild(slot, firstPh);
   }
 
-  bw.appendChild(slot);
   document.getElementById('checkBtn').disabled = (builtSentence.length === 0);
 }
 
@@ -835,21 +940,17 @@ function onTokenClick(btn, word, idx) {
 function removeSlot(slot, idx) {
   if (checked) return;
 
-  // remove from built array
   builtSentence = builtSentence.filter(function(item){ return item.idx !== idx; });
   tokenUsed[idx] = false;
 
-  // restore token in bank
   var bankBtn = document.querySelector('.word-token[data-idx="' + idx + '"]');
   if (bankBtn) bankBtn.classList.remove('used');
 
-  slot.remove();
-
-  // if empty, restore hint
+  // Replace slot with placeholder at same position
+  var ph = document.createElement('div');
+  ph.className = 'slot-placeholder';
   var bw = document.getElementById('builtWords');
-  if (builtSentence.length === 0) {
-    bw.innerHTML = '<span class="empty-hint">Aşağıdan kelimelere tıkla!</span>';
-  }
+  bw.replaceChild(ph, slot);
 
   document.getElementById('checkBtn').disabled = (builtSentence.length === 0);
 }
@@ -860,7 +961,16 @@ function clearBuilt() {
   builtSentence = [];
   tokenUsed = {};
   document.querySelectorAll('.word-token').forEach(function(t){ t.classList.remove('used'); });
-  document.getElementById('builtWords').innerHTML = '<span class="empty-hint">Aşağıdan kelimelere tıkla!</span>';
+  // Restore all placeholders
+  var bw = document.getElementById('builtWords');
+  bw.innerHTML = '';
+  var q = questionQueue[currentQIndex];
+  for (var pi = 0; pi < q.sentence.length; pi++) {
+    var ph = document.createElement('div');
+    ph.className = 'slot-placeholder';
+    ph.setAttribute('data-ph', pi);
+    bw.appendChild(ph);
+  }
   document.getElementById('checkBtn').disabled = true;
 }
 
@@ -879,18 +989,43 @@ function checkAnswer() {
   var rs = document.getElementById('resultSentence');
   var fb = document.getElementById('feedbackBar');
 
+  var puppetEl = document.getElementById('puppetEmoji');
   if (isCorrect) {
     score += 10; correctCount++;
+    // Staggered wave green on built slots
+    var builtSlots = document.querySelectorAll('.built-slot');
+    builtSlots.forEach(function(s, i) {
+      setTimeout(function() {
+        s.classList.remove('correct-pos');
+        s.classList.add('wave-correct');
+      }, i * 80);
+    });
     rs.textContent = '✅ ' + correct.join(' ');
     rs.className = 'result-sentence correct';
     fb.textContent = 'Harika! Doğru cümle! 🎉';
     fb.className = 'feedback-bar visible ok';
+    // Puppet joy
+    puppetEl.classList.remove('puppet-joy', 'puppet-sad');
+    void puppetEl.offsetWidth;
+    puppetEl.classList.add('puppet-joy');
+    setTimeout(function() {
+      puppetEl.classList.remove('puppet-joy');
+      puppetEl.style.animation = '';
+    }, 700);
   } else {
     score = Math.max(0, score - 2);
     rs.textContent = '❌ Doğru: ' + correct.join(' ');
     rs.className = 'result-sentence wrong';
     fb.textContent = 'Yanlış sıra! Doğru cümle yukarıda. 👆';
     fb.className = 'feedback-bar visible err';
+    // Puppet sad
+    puppetEl.classList.remove('puppet-joy', 'puppet-sad');
+    void puppetEl.offsetWidth;
+    puppetEl.classList.add('puppet-sad');
+    setTimeout(function() {
+      puppetEl.classList.remove('puppet-sad');
+      puppetEl.style.animation = '';
+    }, 600);
   }
 
   document.getElementById('scoreDisplay').textContent = score;

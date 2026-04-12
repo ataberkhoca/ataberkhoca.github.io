@@ -213,12 +213,69 @@
     border: 3px dashed;
     min-height: 160px; transition: all 0.2s;
     cursor: pointer;
+    position: relative; overflow: hidden;
   }
   .drop-zone.hot   { border-color: var(--hot-color);   background: var(--hot-light); }
   .drop-zone.cold  { border-color: var(--cold-color);  background: var(--cold-light); }
   .drop-zone.rainy { border-color: var(--rainy-color); background: var(--rainy-light); }
+
+  /* ── Weather atmosphere animations ── */
+  /* Hot: shimmering heat gradient */
+  .drop-zone.hot::before {
+    content: '';
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,180,80,0) 60%, rgba(255,140,66,0.12) 100%);
+    animation: heatWave 3s ease-in-out infinite;
+  }
+  @keyframes heatWave {
+    0%,100% { opacity: 0.4; transform: translateY(0); }
+    50%      { opacity: 1;   transform: translateY(-6px); }
+  }
+  /* Cold: falling snow dots */
+  .drop-zone.cold::before {
+    content: '❄ ❅ ❄ ❅ ❄ ❅ ❄ ❅';
+    position: absolute; top: -24px; left: 0; right: 0;
+    font-size: 0.85rem; color: rgba(79,195,247,0.5);
+    letter-spacing: 12px; pointer-events: none;
+    animation: snowFall 4s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes snowFall {
+    0%   { transform: translateY(-20px); opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform: translateY(180px); opacity: 0; }
+  }
+  /* Rainy: falling drops */
+  .drop-zone.rainy::before {
+    content: '| | | | | | | | |';
+    position: absolute; top: -20px; left: 0; right: 0;
+    font-size: 0.6rem; color: rgba(126,87,194,0.35);
+    letter-spacing: 10px; pointer-events: none;
+    animation: rainFall 1.4s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes rainFall {
+    0%   { transform: translateY(-18px) skewX(-12deg); opacity: 0; }
+    25%  { opacity: 1; }
+    100% { transform: translateY(180px) skewX(-12deg); opacity: 0; }
+  }
+
   .drop-zone.highlight { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-style: solid; }
   .drop-zone.wrong-flash { animation: zoneShake 0.4s ease; }
+  /* Zone complete */
+  .drop-zone.zone-done { border-style: solid; border-color: var(--green) !important; }
+  .drop-zone.zone-done::after {
+    content: '';
+    position: absolute; inset: 0; pointer-events: none;
+    border-radius: 17px;
+    box-shadow: inset 0 0 0 2px rgba(34,197,94,0.25);
+    animation: zoneDoneGlow 0.5s ease;
+  }
+  @keyframes zoneDoneGlow {
+    0%   { box-shadow: inset 0 0 0 0 rgba(34,197,94,0.5); }
+    50%  { box-shadow: inset 0 0 0 8px rgba(34,197,94,0.2); }
+    100% { box-shadow: inset 0 0 0 2px rgba(34,197,94,0.25); }
+  }
 
   @keyframes zoneShake {
     0%,100% { transform: translateX(0); }
@@ -228,7 +285,7 @@
 
   .zone-header {
     display: flex; align-items: center; gap: 0.6rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem; position: relative; z-index: 1;
   }
   .zone-icon { font-size: 1.8rem; }
   .zone-title { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800; }
@@ -237,8 +294,37 @@
   .drop-zone.rainy .zone-title { color: var(--rainy-color); }
   .zone-subtitle { font-size: 0.75rem; color: #999; }
 
+  /* Progress pill in zone header */
+  .zone-prog-pill {
+    margin-left: auto;
+    font-family: 'Baloo 2', cursive; font-size: 0.72rem; font-weight: 800;
+    padding: 2px 9px; border-radius: 99px;
+    background: rgba(0,0,0,0.07); color: #777;
+    transition: background 0.3s, color 0.3s;
+    flex-shrink: 0;
+  }
+  .drop-zone.zone-done .zone-prog-pill {
+    background: var(--green); color: var(--white);
+  }
+
+  /* Outfit preview strip — appears when zone is complete */
+  .outfit-preview {
+    display: none; align-items: center; justify-content: center; gap: 2px;
+    font-size: 1.3rem; padding: 4px 8px;
+    border-radius: 10px; background: rgba(255,255,255,0.7);
+    margin-bottom: 6px;
+    animation: previewFadeIn 0.4s ease;
+    position: relative; z-index: 1;
+  }
+  .outfit-preview.show { display: flex; }
+  @keyframes previewFadeIn {
+    0% { opacity: 0; transform: translateY(-8px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
   .zone-items {
     display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 50px;
+    position: relative; z-index: 1;
   }
   .zone-item {
     background: rgba(255,255,255,0.8); border-radius: 10px;
@@ -474,6 +560,8 @@ var correctCount = 0;
 var wrongCount = 0;
 var startTime = null;
 var totalItems = 0;
+var zoneTotals = {};   // expected items per zone
+var zoneCounts = {};   // placed items per zone
 
 // ── DIFFICULTY ──
 function selectDiff(level, el) {
@@ -504,6 +592,10 @@ function startGame() {
   startTime = Date.now();
 
   showScreen('gameScreen');
+  // Compute zone totals
+  zoneTotals = {}; zoneCounts = {};
+  cfg.zones.forEach(function(z){ zoneTotals[z] = 0; zoneCounts[z] = 0; });
+  currentItems.forEach(function(it){ if (zoneTotals[it.cat] !== undefined) zoneTotals[it.cat]++; });
   renderZones(cfg);
   renderItems();
   updateUI(cfg.showHint);
@@ -525,12 +617,15 @@ function renderZones(cfg) {
     var div = document.createElement('div');
     div.className = 'drop-zone ' + z.color;
     div.setAttribute('data-zone', zkey);
+    var total = zoneTotals[zkey] || 0;
     div.innerHTML =
       '<div class="zone-header">' +
-        '<div class="zone-icon">' + z.icon + '</div>' +
+        '<div class="zone-icon" id="zone-icon-' + zkey + '">' + z.icon + '</div>' +
         '<div><div class="zone-title">' + z.title + '</div>' +
         '<div class="zone-subtitle">' + z.subtitle + '</div></div>' +
+        '<div class="zone-prog-pill" id="zone-pill-' + zkey + '">0 / ' + total + '</div>' +
       '</div>' +
+      '<div class="outfit-preview" id="outfit-' + zkey + '"></div>' +
       '<div class="zone-items" id="zone-' + zkey + '"></div>';
 
     // Click-to-place
@@ -713,6 +808,28 @@ function resolvePlace(item, originEl, zkey, zoneEl) {
     if (originEl) originEl.classList.add('sorted');
 
     score += 10; correctCount++;
+
+    // Update zone pill
+    zoneCounts[zkey] = (zoneCounts[zkey] || 0) + 1;
+    var pill = document.getElementById('zone-pill-' + zkey);
+    if (pill) pill.textContent = zoneCounts[zkey] + ' / ' + (zoneTotals[zkey] || 0);
+
+    // Zone complete?
+    if (zoneCounts[zkey] >= (zoneTotals[zkey] || 999)) {
+      var zoneEl2 = document.querySelector('.drop-zone[data-zone="' + zkey + '"]');
+      if (zoneEl2) zoneEl2.classList.add('zone-done');
+      // Outfit preview
+      var outfitEmojis = { hot: '☀️👕👟🕶️', cold: '❄️🧥🧤🧣', rainy: '🌧️☂️👔' };
+      var outfitEl = document.getElementById('outfit-' + zkey);
+      if (outfitEl) {
+        outfitEl.textContent = outfitEmojis[zkey] || '';
+        outfitEl.classList.add('show');
+      }
+      // Bag icon update
+      var iconEl = document.getElementById('zone-icon-' + zkey);
+      if (iconEl) iconEl.textContent = '✅🧳';
+    }
+
     var cfg = configs[selectedDiff];
     if (cfg.showHint) document.getElementById('hintText').textContent = 'Harika! 🎉 Doğru çantaya koydun!';
     updateUI(cfg.showHint);

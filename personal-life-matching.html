@@ -240,6 +240,11 @@
     border-color: var(--orange);
     background: #FFF3EE;
     transform: translateX(6px);
+    animation: selectedPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes selectedPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4), 0 4px 16px rgba(255,107,53,0.15); }
+    50%      { box-shadow: 0 0 0 6px rgba(255,107,53,0),  0 4px 16px rgba(255,107,53,0.25); }
   }
   .img-card.matched {
     border-color: var(--green);
@@ -311,12 +316,54 @@
     z-index: 50;
     display: flex; align-items: center; gap: 0.8rem;
   }
-  .robix-avatar { font-size: 2.2rem; flex-shrink: 0; }
+  .robix-avatar {
+    font-size: 2.2rem; flex-shrink: 0;
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  /* Robix joy jump on correct match */
+  .robix-avatar.joy {
+    animation: robixJoy 0.55s cubic-bezier(.22,1.4,.36,1);
+  }
+  @keyframes robixJoy {
+    0%   { transform: translateY(0) rotate(0deg); }
+    35%  { transform: translateY(-10px) rotate(-8deg); }
+    65%  { transform: translateY(-6px) rotate(6deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+  /* Robix sad shake on wrong */
+  .robix-avatar.sad {
+    animation: robixSad 0.45s ease;
+  }
+  @keyframes robixSad {
+    0%,100% { transform: translateX(0) rotate(0deg); }
+    25%     { transform: translateX(-5px) rotate(-5deg); }
+    75%     { transform: translateX(5px) rotate(5deg); }
+  }
   .robix-speech {
     font-size: 0.8rem; color: rgba(255,255,255,0.9);
     line-height: 1.4;
+    transition: opacity 0.2s;
   }
+  .robix-speech.fading { opacity: 0; }
   .robix-speech strong { color: var(--yellow); }
+
+  /* Match line SVG overlay */
+  #matchLinesSvg {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 40;
+    overflow: visible;
+  }
+  .match-line {
+    stroke: var(--green); stroke-width: 2.5;
+    fill: none; opacity: 0.55;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawLine 0.4s ease forwards;
+  }
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
 
   /* ── END SCREEN ── */
   .end-screen {
@@ -481,12 +528,15 @@
 
   <!-- Robix floating panel -->
   <div class="robix-panel" id="robixPanel">
-    <div class="robix-avatar">🤖</div>
+    <div class="robix-avatar" id="robixAvatar">🤖</div>
     <div class="robix-speech" id="robixSpeech">
       <strong>Robix:</strong> Find my body parts! 🔍
     </div>
   </div>
 </div>
+
+<!-- Match lines SVG layer -->
+<svg id="matchLinesSvg" xmlns="http://www.w3.org/2000/svg"></svg>
 
 <!-- ══════════════ END SCREEN ══════════════ -->
 <div id="endScreen" class="screen">
@@ -602,6 +652,8 @@ function renderCards(config) {
   var wordCol = document.getElementById('wordColumn');
   imgCol.innerHTML = '';
   wordCol.innerHTML = '';
+  // Clear previous match lines
+  document.getElementById('matchLinesSvg').innerHTML = '';
 
   var shuffledImgs = shuffle(currentPairs);
   var shuffledWords = shuffle(currentPairs);
@@ -673,6 +725,8 @@ function checkMatch() {
     updateScore();
     updateProgress();
     updatePairsCount();
+    drawMatchLine(imgEl, wordEl);
+    animateRobix('joy');
     setRobixSpeech('Correct! ✅ +10 puan!');
 
     if (matchedCount === currentPairs.length) {
@@ -687,6 +741,7 @@ function checkMatch() {
     wordEl.classList.remove('selected');
     imgEl.classList.add('wrong-flash');
     wordEl.classList.add('wrong-flash');
+    animateRobix('sad');
     setRobixSpeech('Try again! ❌');
     setTimeout(function() {
       imgEl.classList.remove('wrong-flash');
@@ -710,7 +765,35 @@ function updatePairsCount() {
   document.getElementById('pairsCount').textContent = matchedCount + ' / ' + currentPairs.length + ' eşleşme';
 }
 function setRobixSpeech(text) {
-  document.getElementById('robixSpeech').innerHTML = '<strong>Robix:</strong> ' + text;
+  var el = document.getElementById('robixSpeech');
+  el.classList.add('fading');
+  setTimeout(function() {
+    el.innerHTML = '<strong>Robix:</strong> ' + text;
+    el.classList.remove('fading');
+  }, 200);
+}
+
+function animateRobix(type) {
+  var av = document.getElementById('robixAvatar');
+  av.classList.remove('joy', 'sad');
+  void av.offsetWidth;
+  av.classList.add(type);
+  setTimeout(function() { av.classList.remove(type); }, 600);
+}
+
+function drawMatchLine(imgEl, wordEl) {
+  var svg = document.getElementById('matchLinesSvg');
+  var ir = imgEl.getBoundingClientRect();
+  var wr = wordEl.getBoundingClientRect();
+  var x1 = ir.right;
+  var y1 = ir.top + ir.height / 2;
+  var x2 = wr.left;
+  var y2 = wr.top + wr.height / 2;
+  var mx = (x1 + x2) / 2;
+  var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  line.setAttribute('class', 'match-line');
+  line.setAttribute('d', 'M ' + x1 + ' ' + y1 + ' C ' + mx + ' ' + y1 + ', ' + mx + ' ' + y2 + ', ' + x2 + ' ' + y2);
+  svg.appendChild(line);
 }
 
 // ── END SCREEN ──
