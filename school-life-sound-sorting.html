@@ -151,6 +151,26 @@ h1,h2,h3,h4,.brand-name{font-family:'Baloo 2',cursive}
 @keyframes popIn{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
+/* Ripple on correct button press */
+.snd-btn{position:relative;overflow:hidden;}
+.snd-btn.rippling::after{
+  content:'';position:absolute;inset:-6px;border-radius:inherit;
+  border:3px solid var(--green);opacity:0;
+  animation:btnRipple .6s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes btnRipple{
+  0%  {transform:scale(1);   opacity:.9;}
+  100%{transform:scale(1.18);opacity:0;}
+}
+
+/* Reveal word letter-by-letter fade-in */
+.rv-letter{display:inline-block;opacity:0;animation:rvLetterIn .25s ease forwards;}
+@keyframes rvLetterIn{
+  0%  {opacity:0;transform:translateY(-6px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+
 /* Reveal box */
 .reveal-box{background:var(--cream);border-radius:var(--radius-lg);border:2px solid var(--gray-200);padding:18px 24px;margin-bottom:16px;text-align:center;opacity:0;transform:translateY(8px);transition:all .4s ease}
 .reveal-box.show{opacity:1;transform:translateY(0)}
@@ -498,6 +518,8 @@ function answer(chosen) {
     if (bothFound[chosen]) return; // already found this one
     bothFound[chosen] = true;
     chosenBtn.classList.add('correct');
+    chosenBtn.classList.add('rippling');
+    setTimeout(function(){ chosenBtn.classList.remove('rippling'); }, 650);
     chosenBtn.disabled = true;
     score++;
     document.getElementById('progScore').textContent = '✓ ' + score;
@@ -533,6 +555,8 @@ function answer(chosen) {
     if (isCorrect) {
       var correctBtn = chosen === 'a' ? btnA : btnB;
       correctBtn.classList.add('correct');
+      correctBtn.classList.add('rippling');
+      setTimeout(function(){ correctBtn.classList.remove('rippling'); }, 650);
       btnA.disabled = true;
       btnB.disabled = true;
       score++;
@@ -567,12 +591,13 @@ function answer(chosen) {
 function highlightBoth(word, indicesA, indicesB) {
   var html = '';
   for (var i = 0; i < word.length; i++) {
+    var delay = (i * 55) + 'ms';
     if (indicesA.indexOf(i) >= 0) {
-      html += '<span class="rv-hl" style="color:var(--snd-a)">' + word[i] + '</span>';
+      html += '<span class="rv-letter rv-hl" style="color:var(--snd-a);animation-delay:' + delay + '">' + word[i] + '</span>';
     } else if (indicesB.indexOf(i) >= 0) {
-      html += '<span class="rv-hl" style="color:var(--snd-b)">' + word[i] + '</span>';
+      html += '<span class="rv-letter rv-hl" style="color:var(--snd-b);animation-delay:' + delay + '">' + word[i] + '</span>';
     } else {
-      html += word[i];
+      html += '<span class="rv-letter" style="animation-delay:' + delay + '">' + word[i] + '</span>';
     }
   }
   return html;
@@ -581,10 +606,11 @@ function highlightBoth(word, indicesA, indicesB) {
 function highlightWord(word, indices) {
   var html = '';
   for (var i = 0; i < word.length; i++) {
+    var delay = (i * 55) + 'ms';
     if (indices.indexOf(i) >= 0) {
-      html += '<span class="rv-hl">' + word[i] + '</span>';
+      html += '<span class="rv-letter rv-hl" style="animation-delay:' + delay + '">' + word[i] + '</span>';
     } else {
-      html += word[i];
+      html += '<span class="rv-letter" style="animation-delay:' + delay + '">' + word[i] + '</span>';
     }
   }
   return html;

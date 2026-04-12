@@ -148,6 +148,22 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .drop-zone.people .zone-count { background:#BFDBFE;color:var(--blue); }
 .drop-zone.places .zone-count { background:#DDD6FE;color:var(--purple); }
 
+/* Zone progress bar */
+.zone-progress-wrap { margin-top:10px;margin-bottom:6px; }
+.zone-progress-track { height:7px;border-radius:10px;background:rgba(0,0,0,.08);overflow:hidden; }
+.zone-progress-fill { height:100%;border-radius:10px;width:0%;transition:width .4s ease; }
+.drop-zone.people .zone-progress-fill { background:linear-gradient(90deg,var(--blue),#60A5FA); }
+.drop-zone.places .zone-progress-fill { background:linear-gradient(90deg,var(--purple),#A78BFA); }
+.zone-progress-label { font-size:.65rem;font-weight:700;color:var(--gray-500);text-align:right;margin-top:2px; }
+
+/* Zone complete state */
+.drop-zone.zone-complete { border-style:solid; }
+.drop-zone.people.zone-complete { border-color:var(--green);background:rgba(34,197,94,.06); }
+.drop-zone.places.zone-complete { border-color:var(--green);background:rgba(34,197,94,.06); }
+.zone-complete-badge { display:none;align-items:center;gap:5px;font-family:'Baloo 2',cursive;font-size:.75rem;font-weight:800;color:var(--green);margin-top:4px;animation:badgePop .4s cubic-bezier(.22,1.4,.36,1); }
+.zone-complete-badge.show { display:flex; }
+@keyframes badgePop { 0%{transform:scale(0);opacity:0} 70%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+
 .zone-cards { display:flex;flex-wrap:wrap;gap:8px;min-height:80px; }
 
 /* Placed card in zone */
@@ -155,13 +171,23 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   display:flex;align-items:center;gap:8px;
   padding:8px 14px;border-radius:var(--radius-md);
   font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:800;
-  border:2px solid;animation:popIn .35s ease;
+  border:2px solid;animation:dropBounce .4s cubic-bezier(.22,1.4,.36,1) both;
 }
 .placed-card.people-card { background:var(--blue-light);border-color:#93C5FD;color:var(--blue); }
 .placed-card.places-card { background:var(--purple-light);border-color:#C4B5FD;color:var(--purple); }
 .placed-card.wrong-card { background:var(--red-light);border-color:var(--red);color:var(--red);animation:shake .4s ease; }
-@keyframes popIn { 0%{transform:scale(.85);opacity:0} 100%{transform:scale(1);opacity:1} }
+@keyframes dropBounce {
+  0%   { transform:translateY(-22px) scale(.88); opacity:0; }
+  55%  { transform:translateY(4px)   scale(1.05); opacity:1; }
+  80%  { transform:translateY(-3px)  scale(.98); }
+  100% { transform:translateY(0)     scale(1);   opacity:1; }
+}
 @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes rejectFling {
+  0%   { transform:translateX(0)    scale(1);    opacity:1; }
+  30%  { transform:translateX(14px) scale(1.08); opacity:1; }
+  100% { transform:translateX(-80px) scale(.75); opacity:0; }
+}
 
 /* Word bank */
 .bank-wrap { background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow-soft);border:2px solid var(--gray-200);padding:20px 24px;margin-bottom:16px; }
@@ -189,9 +215,22 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   padding:11px 18px;border-radius:var(--radius-md);
   background:var(--orange);color:var(--white);
   border:2px solid var(--orange-glow);
-  box-shadow:var(--shadow-glow-orange);
-  transform:translate(-50%,-50%) rotate(2deg);
+  box-shadow:0 8px 32px rgba(255,107,53,.45), 0 2px 8px rgba(0,0,0,.18);
+  transform:translate(-50%,-50%) rotate(3deg) scale(1.06);
+  transition:box-shadow .15s;
 }
+
+/* Zone pulse when ghost is over it */
+@keyframes zonePulse {
+  0%,100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 0 6px rgba(59,130,246,.18); }
+}
+@keyframes zonePulsePlaces {
+  0%,100% { box-shadow: none; }
+  50%      { box-shadow: 0 0 0 6px rgba(139,92,246,.18); }
+}
+.drop-zone.drag-over-people { border-color:var(--blue);background:rgba(59,130,246,.12);transform:scale(1.01);animation:zonePulse .8s ease-in-out infinite; }
+.drop-zone.drag-over-places { border-color:var(--purple);background:rgba(139,92,246,.12);transform:scale(1.01);animation:zonePulsePlaces .8s ease-in-out infinite; }
 
 /* Feedback */
 .feedback { padding:11px 18px;border-radius:var(--radius-md);font-weight:700;font-size:.9rem;opacity:0;transform:translateY(5px);transition:all .3s;text-align:center; }
@@ -356,6 +395,11 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
           </div>
           <span class="zone-count" id="count-people">0</span>
         </div>
+        <div class="zone-progress-wrap">
+          <div class="zone-progress-track"><div class="zone-progress-fill" id="prog-people"></div></div>
+          <div class="zone-progress-label" id="prog-people-lbl">0 / 0</div>
+        </div>
+        <div class="zone-complete-badge" id="badge-people">✅ People — Tamamlandı!</div>
         <div class="zone-cards" id="cards-people"></div>
       </div>
 
@@ -372,6 +416,11 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
           </div>
           <span class="zone-count" id="count-places">0</span>
         </div>
+        <div class="zone-progress-wrap">
+          <div class="zone-progress-track"><div class="zone-progress-fill" id="prog-places"></div></div>
+          <div class="zone-progress-label" id="prog-places-lbl">0 / 0</div>
+        </div>
+        <div class="zone-complete-badge" id="badge-places">✅ Places — Tamamlandı!</div>
         <div class="zone-cards" id="cards-places"></div>
       </div>
     </div>
@@ -472,6 +521,15 @@ function startGame() {
   document.getElementById('cards-places').innerHTML = '';
   document.getElementById('count-people').textContent = '0';
   document.getElementById('count-places').textContent = '0';
+  // Reset progress bars and badges
+  var cats = ['people','places'];
+  cats.forEach(function(cat){
+    var catTotal = cards.filter(function(c){ return c.cat === cat; }).length;
+    document.getElementById('prog-' + cat).style.width = '0%';
+    document.getElementById('prog-' + cat + '-lbl').textContent = '0 / ' + catTotal;
+    document.getElementById('badge-' + cat).className = 'zone-complete-badge';
+    document.getElementById('zone-' + cat).classList.remove('zone-complete');
+  });
 
   // Hint
   var hintBox = document.getElementById('hintBox');
@@ -633,7 +691,20 @@ function trySort(word, droppedCat) {
     // Update count
     correct++;
     var countEl = document.getElementById('count-' + droppedCat);
-    countEl.textContent = parseInt(countEl.textContent) + 1;
+    var newCount = parseInt(countEl.textContent) + 1;
+    countEl.textContent = newCount;
+
+    // Update zone progress bar
+    var catTotal = cards.filter(function(c){ return c.cat === droppedCat; }).length;
+    var pct = Math.round((newCount / catTotal) * 100);
+    document.getElementById('prog-' + droppedCat).style.width = pct + '%';
+    document.getElementById('prog-' + droppedCat + '-lbl').textContent = newCount + ' / ' + catTotal;
+
+    // Zone complete celebration
+    if (newCount === catTotal) {
+      document.getElementById('zone-' + droppedCat).classList.add('zone-complete');
+      document.getElementById('badge-' + droppedCat).className = 'zone-complete-badge show';
+    }
 
     updateProgress();
     fb.className = 'feedback good show';
@@ -642,12 +713,16 @@ function trySort(word, droppedCat) {
 
     if (correct === total) setTimeout(showEnd, 700);
   } else {
-    // Wrong zone — shake card
+    // Wrong zone — shake card then fling it back
     if (cardEl) {
       cardEl.style.animation = 'none';
       setTimeout(function(){
-        cardEl.style.animation = 'shake .4s ease';
-        setTimeout(function(){ cardEl.style.animation = ''; }, 500);
+        cardEl.style.animation = 'rejectFling .45s ease forwards';
+        setTimeout(function(){
+          cardEl.style.animation = '';
+          cardEl.style.opacity = '';
+          cardEl.style.transform = '';
+        }, 480);
       }, 10);
     }
     fb.className = 'feedback bad show';

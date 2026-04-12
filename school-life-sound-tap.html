@@ -18,6 +18,25 @@
 .tap-card{background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow-md);border:2px solid var(--gray-200);padding:32px 28px;margin-bottom:20px;text-align:center;overflow:hidden;position:relative}.tap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px}.tap-card.target-a::before{background:linear-gradient(90deg,var(--snd-a),#60A5FA)}.tap-card.target-b::before{background:linear-gradient(90deg,var(--snd-b),#A78BFA)}.tap-card.target-both::before{background:linear-gradient(90deg,var(--snd-a),var(--snd-b))}
 .tap-emoji{font-size:2.2rem;margin-bottom:8px;display:block}.tap-instruction{font-size:.88rem;font-weight:700;color:var(--gray-500);margin-bottom:6px}.tap-target{display:inline-block;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;padding:6px 18px;border-radius:14px;margin-bottom:18px}.tap-target.tgt-a{background:var(--snd-a-light);color:var(--snd-a);border:2px solid var(--snd-a-border)}.tap-target.tgt-b{background:var(--snd-b-light);color:var(--snd-b);border:2px solid var(--snd-b-border)}
 .tap-word{font-family:'Baloo 2',cursive;font-size:3rem;font-weight:800;color:var(--navy);letter-spacing:3px;margin-bottom:8px;line-height:1.3}.tap-word .tap-letter{display:inline-block;cursor:pointer;padding:4px 6px;border-radius:10px;transition:all .2s;position:relative}.tap-word .tap-letter:hover{background:rgba(255,107,53,.08);transform:scale(1.12)}.tap-word .tap-letter.found-a{background:var(--snd-a-light);color:var(--snd-a);transform:scale(1.1);cursor:default}.tap-word .tap-letter.found-b{background:rgba(255,107,53,.15);color:var(--orange);transform:scale(1.1);cursor:default}.tap-word .tap-letter.wrong-tap{background:var(--red-light);color:var(--red);animation:shake .4s ease}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Ripple on correct letter tap */
+.tap-letter.rippling::after{
+  content:'';position:absolute;inset:-4px;border-radius:14px;
+  border:3px solid currentColor;opacity:0;
+  animation:letterRipple .55s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes letterRipple{
+  0%  {transform:scale(1);   opacity:.8;}
+  100%{transform:scale(2.2); opacity:0;}
+}
+
+/* Tongue twister word-by-word fade-in */
+.tw-word{display:inline-block;opacity:0;animation:twWordIn .3s ease forwards;}
+@keyframes twWordIn{
+  0%  {opacity:0;transform:translateY(5px);}
+  100%{opacity:1;transform:translateY(0);}
+}
 .tap-tr{font-size:.82rem;font-weight:600;color:var(--gray-500);margin-bottom:12px}
 .allit-box{margin-top:20px;padding:22px 28px;border-radius:var(--radius-lg);border:2.5px solid var(--gray-200);background:var(--cream);opacity:0;transform:translateY(12px);transition:all .5s ease;cursor:pointer}.allit-box.show{opacity:1;transform:translateY(0)}.allit-box:hover{box-shadow:var(--shadow-soft)}.allit-header{font-size:.7rem;font-weight:800;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}.allit-emoji{font-size:2rem;margin-bottom:6px;display:block}.allit-text{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;color:var(--navy);line-height:1.6}.allit-text .al-hl{color:var(--orange);font-weight:800;font-size:1.15rem}.allit-expand{font-size:.7rem;font-weight:700;color:var(--orange);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px}
 .tw-overlay{display:none;position:fixed;inset:0;background:rgba(27,40,69,.85);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center}.tw-overlay.show{display:flex;animation:fadeIn .3s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.tw-popup{background:var(--white);border-radius:var(--radius-xl);padding:48px 40px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3);max-width:520px;width:90%;animation:twBounce .5s cubic-bezier(.16,1,.3,1)}@keyframes twBounce{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}.tw-popup-emoji{font-size:4rem;margin-bottom:12px;display:block}.tw-popup-label{font-size:.8rem;font-weight:800;color:var(--gray-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}.tw-popup-text{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--navy);line-height:1.5;margin-bottom:20px}.tw-popup-text .al-hl{color:var(--orange);font-size:1.8rem}.tw-popup-hint{font-size:.82rem;font-weight:600;color:var(--gray-500);margin-bottom:24px}.tw-close-btn{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;padding:12px 32px;border-radius:var(--radius-md);border:none;background:var(--navy);color:var(--white);cursor:pointer;transition:all .2s}.tw-close-btn:hover{background:var(--orange);transform:translateY(-2px)}
@@ -112,7 +131,7 @@ var fb=document.getElementById('feedback');fb.className='feedback';fb.textConten
 
 function handleTap(letterIdx){
 if(answered)return;var step=steps[stepIdx],snd=step.soundStep,fb=document.getElementById('feedback'),allLetters=document.querySelectorAll('.tap-letter');
-if(snd.indices.indexOf(letterIdx)>=0){answered=true;allLetters.forEach(function(el){if(snd.indices.indexOf(parseInt(el.dataset.idx))>=0)el.classList.add('found-'+snd.target)});score++;document.getElementById('progScore').textContent='✓ '+score;
+if(snd.indices.indexOf(letterIdx)>=0){answered=true;allLetters.forEach(function(el){if(snd.indices.indexOf(parseInt(el.dataset.idx))>=0){el.classList.add('found-'+snd.target);el.classList.add('rippling');setTimeout(function(){el.classList.remove('rippling')},600)}});score++;document.getElementById('progScore').textContent='✓ '+score;
 var soundLabel=snd.target==='a'?'"a"':'"b"';fb.className='feedback good show';fb.textContent='✅ Well done! You found the '+soundLabel+' sound!';
 currentAllit={emoji:snd.allitEmoji,text:snd.allit,target:snd.target};
 setTimeout(function(){var ab=document.getElementById('allitBox');document.getElementById('allitEmoji').textContent=snd.allitEmoji;document.getElementById('allitText').innerHTML=buildAllitHtml(snd.allit,snd.target);ab.className='allit-box show'},500);
@@ -125,7 +144,19 @@ function goNext(){stepIdx++;if(stepIdx>=steps.length)showEnd();else renderTap()}
 function openTwPopup(){if(!currentAllit)return;document.getElementById('twPopEmoji').textContent=currentAllit.emoji;document.getElementById('twPopText').innerHTML=buildAllitHtml(currentAllit.text,currentAllit.target);document.getElementById('twOverlay').className='tw-overlay show'}
 function closeTwPopup(e){if(e&&e.target&&e.target!==document.getElementById('twOverlay'))return;document.getElementById('twOverlay').className='tw-overlay'}
 
-function buildAllitHtml(sentence,target){var html='';for(var i=0;i<sentence.length;i++){if(sentence[i].toLowerCase()===target.toLowerCase())html+='<span class="al-hl">'+sentence[i]+'</span>';else html+=sentence[i]}return html}
+function buildAllitHtml(sentence,target){
+  var words=sentence.split(' ');
+  var html='';
+  words.forEach(function(word,wi){
+    var wrappedWord='';
+    for(var i=0;i<word.length;i++){
+      if(word[i].toLowerCase()===target.toLowerCase())wrappedWord+='<span class="al-hl">'+word[i]+'</span>';
+      else wrappedWord+=word[i];
+    }
+    html+='<span class="tw-word" style="animation-delay:'+(wi*80)+'ms">'+(wi>0?' ':'')+wrappedWord+'</span>';
+  });
+  return html;
+}
 
 function showEnd(){
 var total=steps.length,pct=Math.round((score/total)*100);

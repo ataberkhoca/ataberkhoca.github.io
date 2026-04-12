@@ -128,7 +128,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .q-context-dot { width:8px;height:8px;border-radius:50%;background:var(--orange); }
 
 /* Sentence with blank */
-.sentence-wrap { margin-bottom:22px; }
+.sentence-wrap { margin-bottom:22px;position:relative; }
 .sentence {
   font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:700;
   color:var(--navy);line-height:1.7;text-align:center;
@@ -136,17 +136,55 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .blank {
   display:inline-block;
   min-width:120px;padding:4px 14px;
-  border-bottom:3px solid var(--orange);
-  border-radius:4px;
-  background:rgba(255,107,53,.06);
+  border-radius:8px;
+  background:rgba(255,107,53,.12);
+  border:2.5px solid var(--orange);
   color:var(--orange);
   font-weight:800;
   vertical-align:middle;
   text-align:center;
-  transition:all .3s;
+  transition:all .35s;
+  animation:blankPulse 1.4s ease-in-out infinite;
 }
-.blank.filled-correct { border-color:var(--green);background:var(--green-light);color:#15803D; }
-.blank.filled-wrong   { border-color:var(--red);background:var(--red-light);color:var(--red); }
+.blank.filled-correct {
+  border-color:var(--green);background:var(--green-light);color:#15803D;
+  animation:blankLand .4s cubic-bezier(.22,1.4,.36,1) both;
+}
+.blank.filled-wrong {
+  border-color:var(--red);background:var(--red-light);color:var(--red);
+  animation:none;
+}
+@keyframes blankPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(255,107,53,.35); border-color:var(--orange); }
+  50%      { box-shadow:0 0 0 7px rgba(255,107,53,0); border-color:var(--orange-glow); }
+}
+@keyframes blankLand {
+  0%   { transform:scale(1.18); }
+  60%  { transform:scale(.95); }
+  100% { transform:scale(1); }
+}
+
+/* Flying word clone */
+.word-fly {
+  position:fixed;pointer-events:none;z-index:500;
+  font-family:'Baloo 2',cursive;font-weight:800;font-size:1rem;
+  background:var(--orange);color:#fff;
+  padding:5px 14px;border-radius:8px;
+  box-shadow:0 4px 18px rgba(255,107,53,.4);
+  transition:none;
+  white-space:nowrap;
+}
+
+/* Scene celebration burst */
+.scene-burst {
+  position:absolute;pointer-events:none;z-index:10;
+  font-size:1.6rem;animation:burstPop .7s cubic-bezier(.22,1.4,.36,1) both;
+}
+@keyframes burstPop {
+  0%   { transform:scale(0) translateY(0); opacity:1; }
+  70%  { transform:scale(1.2) translateY(-18px); opacity:1; }
+  100% { transform:scale(1) translateY(-28px); opacity:0; }
+}
 
 /* Hint */
 .hint-box { display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;padding:10px 14px;background:var(--yellow-light);border-radius:var(--radius-md);border-left:4px solid var(--yellow); }
@@ -525,31 +563,73 @@ function answer(btn, chosen, correct) {
   var blank = document.getElementById('theBlank');
   var fb = document.getElementById('feedback');
 
-  if (chosen === correct) {
-    btn.classList.add('correct');
-    blank.textContent = correct;
-    blank.classList.add('filled-correct');
-    score++;
-    document.getElementById('progScore').textContent = '✓ ' + score;
-    fb.className = 'feedback good show';
-    fb.textContent = '✅ Correct! "' + correct + '" — well done!';
-  } else {
-    btn.classList.add('wrong');
-    blank.textContent = chosen;
-    blank.classList.add('filled-wrong');
-    // Show correct
-    allBtns.forEach(function(b){
-      if (b.getAttribute('data-opt') === correct) b.classList.add('correct');
-    });
-    fb.className = 'feedback bad show';
-    fb.innerHTML = '❌ Not quite! The right word is: <strong>' + correct + '</strong>';
-  }
+  // ── Fly-to-blank animation ──
+  var btnRect = btn.getBoundingClientRect();
+  var blankRect = blank.getBoundingClientRect();
+
+  var fly = document.createElement('div');
+  fly.className = 'word-fly';
+  fly.textContent = chosen;
+  fly.style.left = btnRect.left + btnRect.width/2 + 'px';
+  fly.style.top  = btnRect.top  + btnRect.height/2 + 'px';
+  fly.style.transform = 'translate(-50%,-50%)';
+  document.body.appendChild(fly);
+
+  // Force layout then animate
+  fly.getBoundingClientRect();
+  var tx = (blankRect.left + blankRect.width/2) - (btnRect.left + btnRect.width/2);
+  var ty = (blankRect.top  + blankRect.height/2) - (btnRect.top  + btnRect.height/2);
+  fly.style.transition = 'transform .38s cubic-bezier(.4,0,.2,1), opacity .38s';
+  fly.style.transform = 'translate(calc(-50% + ' + tx + 'px), calc(-50% + ' + ty + 'px)) scale(1.15)';
+  fly.style.opacity = '0';
+
+  setTimeout(function(){ fly.remove(); }, 420);
+
+  // ── Fill blank & feedback ──
+  setTimeout(function(){
+    if (chosen === correct) {
+      btn.classList.add('correct');
+      blank.textContent = correct;
+      blank.classList.add('filled-correct');
+      score++;
+      document.getElementById('progScore').textContent = '✓ ' + score;
+      fb.className = 'feedback good show';
+      fb.textContent = '✅ Correct! "' + correct + '" — well done!';
+
+      // Scene burst: pop extra emojis from the visual
+      var sceneVisual = document.getElementById('sceneVisual');
+      var burstEmojis = ['⭐','✨','🎉','💫','🌟'];
+      for (var b2 = 0; b2 < 4; b2++) {
+        (function(idx){
+          setTimeout(function(){
+            var burst = document.createElement('span');
+            burst.className = 'scene-burst';
+            burst.textContent = burstEmojis[Math.floor(Math.random()*burstEmojis.length)];
+            burst.style.left = (15 + Math.random()*70) + '%';
+            burst.style.bottom = (20 + Math.random()*50) + '%';
+            burst.style.animationDelay = '0s';
+            sceneVisual.appendChild(burst);
+            setTimeout(function(){ burst.remove(); }, 750);
+          }, idx * 110);
+        })(b2);
+      }
+    } else {
+      btn.classList.add('wrong');
+      blank.textContent = chosen;
+      blank.classList.add('filled-wrong');
+      allBtns.forEach(function(b){
+        if (b.getAttribute('data-opt') === correct) b.classList.add('correct');
+      });
+      fb.className = 'feedback bad show';
+      fb.innerHTML = '❌ Not quite! The right word is: <strong>' + correct + '</strong>';
+    }
+  }, 380);
 
   setTimeout(function() {
     qIdx++;
     if (qIdx >= QUESTIONS.length) showEnd();
     else renderQuestion();
-  }, 1900);
+  }, 2280);
 }
 
 function showEnd() {

@@ -132,10 +132,51 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   gap:5px;transition:all .2s;position:relative;
 }
 .drop-slot.drag-over { border-color:var(--orange);background:rgba(255,107,53,.06);transform:scale(1.03); }
-.drop-slot.correct { border-style:solid;border-color:var(--green);background:var(--green-light);animation:popIn .4s ease; }
-.drop-slot.wrong-flash { border-color:var(--red);background:var(--red-light);animation:shake .4s ease; }
-@keyframes popIn { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.drop-slot.correct {
+  border-style:solid;border-color:var(--green);background:var(--green-light);
+  animation:slotGlow .55s ease;
+}
+.drop-slot.wrong-flash {
+  border-color:var(--red)!important;background:var(--red-light)!important;
+  animation:slotRedFlash .45s ease;
+}
+@keyframes slotGlow {
+  0%   { box-shadow:0 0 0 0 rgba(34,197,94,0);    transform:scale(1); }
+  35%  { box-shadow:0 0 0 10px rgba(34,197,94,.35); transform:scale(1.06); }
+  65%  { box-shadow:0 0 0 6px rgba(34,197,94,.18);  transform:scale(1.03); }
+  100% { box-shadow:0 0 0 0 rgba(34,197,94,0);    transform:scale(1); }
+}
+@keyframes slotRedFlash {
+  0%,100% { background:var(--red-light);  transform:translateX(0); }
+  20%     { background:#FCA5A5;           transform:translateX(-7px); }
+  50%     { background:var(--red-light);  transform:translateX(7px); }
+  80%     { background:#FCA5A5;           transform:translateX(-4px); }
+}
+
+/* All-correct sentence glow on calendar-wrap */
+.calendar-wrap.complete {
+  animation:sentenceGlow .7s ease forwards;
+}
+@keyframes sentenceGlow {
+  0%   { box-shadow:0 0 0 0 rgba(34,197,94,0); }
+  40%  { box-shadow:0 0 0 18px rgba(34,197,94,.3); }
+  70%  { box-shadow:0 0 0 10px rgba(34,197,94,.15); }
+  100% { box-shadow:0 0 0 0 rgba(34,197,94,0); }
+}
+
+/* Translation reveal strip */
+.translation-reveal {
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 18px;margin-top:10px;
+  background:var(--green-light);border-radius:var(--radius-md);
+  border:1.5px solid rgba(34,197,94,.3);
+  font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:#15803D;
+  opacity:0;animation:trFadeIn .5s ease .55s forwards;
+}
+@keyframes trFadeIn {
+  0%   { opacity:0; transform:translateY(6px); }
+  100% { opacity:1; transform:translateY(0); }
+}
 
 .slot-num {
   position:absolute;top:6px;left:8px;
@@ -604,7 +645,17 @@ function tryPlace(dayEn, slotIndex) {
     updateHint();
     showFeedback(true, 'Well done! — ' + expected.en + ' · ' + expected.tr);
     if (correct === days.length) {
-      setTimeout(finishGame, 700);
+      // All-correct: glow the whole calendar, then show translation strip
+      setTimeout(function(){
+        var calWrap = document.querySelector('.calendar-wrap');
+        calWrap.classList.add('complete');
+        // Build the full week as English → Turkish strip
+        var trLine = document.createElement('div');
+        trLine.className = 'translation-reveal';
+        trLine.innerHTML = '🌍 ' + days.map(function(d){ return d.en + ' = ' + d.tr; }).join(' · ');
+        calWrap.parentNode.insertBefore(trLine, calWrap.nextSibling);
+      }, 100);
+      setTimeout(finishGame, 1600);
     }
   } else {
     // Wrong

@@ -121,8 +121,48 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 .scene-ground { position:absolute;bottom:0;left:0;right:0;height:48px; background:rgba(255,255,255,.22);backdrop-filter:blur(4px); }
 .scene-chars { position:absolute;bottom:0;left:0;right:0; display:flex;align-items:flex-end;justify-content:space-evenly; padding:0 32px; }
 .s-char { display:flex;flex-direction:column;align-items:center; }
-.s-char-emoji { font-size:3rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.15)); }
+.s-char-emoji { font-size:3rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.15)); animation:charIdle 3s ease-in-out infinite; }
+.s-char.talking .s-char-emoji { animation:charTalk .5s ease-in-out infinite; }
+.s-char.happy .s-char-emoji { animation:charHappy .6s cubic-bezier(.22,1.4,.36,1) 3; }
+@keyframes charIdle {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  30%     { transform: translateY(-4px) rotate(-1deg); }
+  60%     { transform: translateY(-2px) rotate(1deg); }
+}
+@keyframes charTalk {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%     { transform: translateY(-6px) scale(1.06); }
+}
+@keyframes charHappy {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); }
+  25%  { transform: translateY(-12px) rotate(-8deg) scale(1.12); }
+  50%  { transform: translateY(-8px) rotate(8deg) scale(1.1); }
+  75%  { transform: translateY(-14px) rotate(-5deg) scale(1.15); }
+  100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
 .s-char-label { font-size:.62rem;font-weight:800; background:var(--navy);color:var(--white); padding:2px 7px;border-radius:20px;margin-top:2px;white-space:nowrap; }
+
+/* Scene slide transition */
+.scene-card { background:var(--white);border-radius:var(--radius-xl); overflow:hidden;box-shadow:var(--shadow-md); margin-bottom:16px;border:2px solid var(--gray-200); }
+.scene-card.slide-in-right { animation:slideInRight .4s cubic-bezier(.22,1,.36,1) both; }
+.scene-card.slide-out-left { animation:slideOutLeft .3s ease-in forwards; }
+@keyframes slideInRight {
+  0%   { transform:translateX(60px); opacity:0; }
+  100% { transform:translateX(0);    opacity:1; }
+}
+@keyframes slideOutLeft {
+  0%   { transform:translateX(0);    opacity:1; }
+  100% { transform:translateX(-60px); opacity:0; }
+}
+
+/* Options fade-in after typewriter finishes */
+.opts-list { display:flex;flex-direction:column;gap:10px; }
+.opts-list.hidden { visibility:hidden; opacity:0; }
+.opts-list.fade-in { animation:optsFade .35s ease both; }
+@keyframes optsFade {
+  0%   { opacity:0; transform:translateY(8px); }
+  100% { opacity:1; transform:translateY(0); }
+}
 
 .bubble-wrap { padding:20px 24px 0; }
 .bubble { background:var(--navy);color:var(--white); border-radius:var(--radius-lg);border-bottom-left-radius:4px; padding:15px 20px;display:inline-block;max-width:100%;position:relative; }
@@ -502,7 +542,7 @@ function updateStrip() {
 function renderStop() {
   var stop = STOPS[stopIdx];
   var data = picked[stopIdx];
-  locked = false;
+  locked = true; // locked until typewriter finishes
 
   var pct = Math.round((stopIdx / STOPS.length) * 100);
   document.getElementById('progFill').style.width = pct + '%';
@@ -510,14 +550,21 @@ function renderStop() {
   document.getElementById('progScore').textContent = '✓ ' + score;
   updateStrip();
 
+  // Scene slide transition
+  var sceneCard = document.querySelector('.scene-card');
+  sceneCard.classList.remove('slide-in-right','slide-out-left');
+  void sceneCard.offsetWidth; // force reflow
+  sceneCard.classList.add('slide-in-right');
+
+  // Background
   document.getElementById('sceneBg').className = 'scene-bg ' + stop.bg;
-  document.getElementById('sceneChars').innerHTML = stop.chars.map(function(c) {
-    return '<div class="s-char"><span class="s-char-emoji">' + c.emoji + '</span><span class="s-char-label">' + c.label + '</span></div>';
+
+  // Characters — first one gets "talking" class, rest idle
+  document.getElementById('sceneChars').innerHTML = stop.chars.map(function(c, idx) {
+    return '<div class="s-char' + (idx === 0 ? ' talking' : '') + '"><span class="s-char-emoji">' + c.emoji + '</span><span class="s-char-label">' + c.label + '</span></div>';
   }).join('');
 
-  document.getElementById('bubbleWho').textContent = data.who;
-  document.getElementById('bubbleSays').textContent = data.says;
-
+  // Hint
   var hintBox = document.getElementById('hintBox');
   if (diff === 'hard' || !data.hint) {
     hintBox.style.display = 'none';
@@ -526,20 +573,45 @@ function renderStop() {
     document.getElementById('hintText').textContent = data.hint;
   }
 
-  var opts = shuffle(data.opts.slice());
-  var letters = ['A','B','C','D'];
-  document.getElementById('optsList').innerHTML = opts.map(function(opt, i) {
-    return '<button class="opt-btn" data-opt="' + encodeURIComponent(opt) + '" data-correct="' + encodeURIComponent(data.correct) + '">' +
-      '<span class="opt-letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
-  }).join('');
-  document.getElementById('optsList').querySelectorAll('.opt-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      answer(this, decodeURIComponent(this.dataset.opt), decodeURIComponent(this.dataset.correct));
-    });
-  });
+  // Hide options until typewriter finishes
+  var optsList = document.getElementById('optsList');
+  optsList.innerHTML = '';
+  optsList.className = 'opts-list hidden';
 
+  // Feedback reset
   var fb = document.getElementById('feedback');
   fb.className = 'feedback'; fb.textContent = '';
+
+  // Typewriter effect on bubble
+  document.getElementById('bubbleWho').textContent = data.who;
+  var bubbleEl = document.getElementById('bubbleSays');
+  bubbleEl.textContent = '';
+  var fullText = data.says;
+  var charIdx = 0;
+  var tw = setInterval(function() {
+    bubbleEl.textContent += fullText[charIdx];
+    charIdx++;
+    if (charIdx >= fullText.length) {
+      clearInterval(tw);
+      // Stop talking animation, show options
+      var talkingChar = document.querySelector('.s-char.talking');
+      if (talkingChar) talkingChar.classList.remove('talking');
+      // Build and reveal options
+      var opts = shuffle(data.opts.slice());
+      var letters = ['A','B','C','D'];
+      optsList.innerHTML = opts.map(function(opt, i) {
+        return '<button class="opt-btn" data-opt="' + encodeURIComponent(opt) + '" data-correct="' + encodeURIComponent(data.correct) + '">' +
+          '<span class="opt-letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
+      }).join('');
+      optsList.querySelectorAll('.opt-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          answer(this, decodeURIComponent(this.dataset.opt), decodeURIComponent(this.dataset.correct));
+        });
+      });
+      optsList.className = 'opts-list fade-in';
+      locked = false;
+    }
+  }, 30);
 }
 
 function answer(btn, chosen, correct) {
@@ -553,6 +625,11 @@ function answer(btn, chosen, correct) {
     document.getElementById('progScore').textContent = '✓ ' + score;
     fb.className = 'feedback good show';
     fb.textContent = '✅ Well done! That\'s the right thing to say!';
+    // All characters jump with joy
+    document.querySelectorAll('.s-char').forEach(function(ch) {
+      ch.classList.remove('talking','idle');
+      ch.classList.add('happy');
+    });
   } else {
     btn.classList.add('wrong');
     all.forEach(function(b) { if (b.querySelector('span:last-child').textContent === correct) b.classList.add('correct'); });
