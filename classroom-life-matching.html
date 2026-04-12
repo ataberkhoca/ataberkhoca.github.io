@@ -86,6 +86,25 @@ nav {
   background: var(--white); border-radius: 24px;
   padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,0.1);
   text-align: center;
+  position: relative; overflow: hidden;
+}
+/* Colour ripple wave — fills from centre outward on correct answer */
+.object-display::after {
+  content: '';
+  position: absolute;
+  inset: 50% 50%;
+  border-radius: 50%;
+  background: var(--ripple-colour, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.object-display.ripple-go::after {
+  animation: colourRipple 0.5s ease-out forwards;
+}
+@keyframes colourRipple {
+  0%   { inset: 50% 50%; opacity: 0.55; }
+  100% { inset: -60% -60%; opacity: 0; }
 }
 .object-colour-box {
   width: 130px; height: 130px; border-radius: 20px;
@@ -94,13 +113,51 @@ nav {
   border: 3px solid rgba(0,0,0,0.1);
   margin: 0 auto 16px;
   transition: background 0.3s;
+  position: relative; z-index: 1;
+  animation: boxReveal 0.4s cubic-bezier(.22,1.4,.36,1) both;
 }
+.object-colour-box .box-emoji {
+  display: inline-block;
+  animation: emojiBounce 0.45s cubic-bezier(.22,1.4,.36,1) 0.1s both;
+}
+@keyframes boxReveal {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes emojiBounce {
+  0%   { transform: translateY(-18px) scale(0.7); opacity: 0; }
+  60%  { transform: translateY(4px)   scale(1.1); opacity: 1; }
+  100% { transform: translateY(0)     scale(1);   opacity: 1; }
+}
+/* Inline feedback flash on the card border */
+.object-display.flash-correct { animation: cardFlashGreen 0.5s ease; }
+.object-display.flash-wrong   { animation: cardFlashRed   0.5s ease; }
+@keyframes cardFlashGreen {
+  0%,100% { box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
+  40%     { box-shadow: 0 0 0 6px rgba(34,197,94,.5), 0 8px 40px rgba(0,0,0,0.1); }
+}
+@keyframes cardFlashRed {
+  0%,100% { box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
+  40%     { box-shadow: 0 0 0 6px rgba(239,68,68,.5), 0 8px 40px rgba(0,0,0,0.1); }
+}
+/* Inline feedback message inside the card */
+.inline-feedback {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 800;
+  padding: 5px 18px; border-radius: 20px; white-space: nowrap;
+  opacity: 0; pointer-events: none; z-index: 2;
+  transition: opacity 0.2s;
+}
+.inline-feedback.show { opacity: 1; }
+.inline-feedback.correct { background: #DCFCE7; color: #15803D; }
+.inline-feedback.wrong   { background: #FEE2E2; color: #B91C1C; }
+
 .object-name-label {
   font-family: 'Baloo 2', cursive; font-size: 1.4rem; font-weight: 800; color: var(--navy);
-  margin-bottom: 8px;
+  margin-bottom: 8px; position: relative; z-index: 1;
 }
 .question-sentence {
-  font-size: 1rem; color: #555; font-weight: 600;
+  font-size: 1rem; color: #555; font-weight: 600; position: relative; z-index: 1;
 }
 .blank {
   font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800;
@@ -125,19 +182,28 @@ nav {
 .colour-btn.selected-correct { border-color: var(--green) !important; background: #F0FDF4; animation: pop 0.4s ease; }
 .colour-btn.selected-wrong   { border-color: var(--red)   !important; background: #FEF2F2; animation: shake 0.4s ease; }
 .colour-btn.show-correct     { border-color: var(--green) !important; background: #F0FDF4; }
-.colour-swatch { width: 46px; height: 46px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); }
+/* Staggered swatch entrance */
+.colour-swatch {
+  width: 46px; height: 46px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12);
+  opacity: 0; transform: scale(0.5);
+  animation: swatchIn 0.3s cubic-bezier(.22,1.4,.36,1) forwards;
+}
+@keyframes swatchIn {
+  0%   { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
 .colour-word { font-family: 'Baloo 2', cursive; font-size: 0.85rem; font-weight: 700; color: var(--navy); }
 
-/* Feedback */
-.feedback-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
-.feedback-overlay.show { opacity: 1; }
-.feedback-popup { background: var(--white); border-radius: 20px; padding: 24px 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25); transform: scale(0.8); transition: transform 0.2s; }
-.feedback-overlay.show .feedback-popup { transform: scale(1); }
-.feedback-popup.correct { border-top: 6px solid var(--green); }
-.feedback-popup.wrong   { border-top: 6px solid var(--red); }
-.feedback-icon { font-size: 2.8rem; }
-.feedback-msg { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-top: 8px; }
-.feedback-sub { font-size: 0.9rem; color: #666; margin-top: 4px; }
+/* Score pop */
+@keyframes scorePop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.score-pop { animation: scorePop 0.3s ease; }
+
+/* Feedback overlay — kept in DOM but hidden, replaced by inline feedback */
+.feedback-overlay { display: none; }
 
 /* End */
 .end-screen { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; text-align: center; }
@@ -238,15 +304,16 @@ nav {
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
 
-    <div class="object-display">
+    <div class="object-display" id="objectDisplay">
       <!-- The coloured box IS the visual — background colour matches the correct answer -->
       <div class="object-colour-box" id="objectBox">
-        <span id="objectEmoji"></span>
+        <span class="box-emoji" id="objectEmoji"></span>
       </div>
       <div class="object-name-label" id="objectName"></div>
       <div class="question-sentence">
         What colour is the <strong id="qObjectWord"></strong>? It is <span class="blank" id="qBlank">___</span>.
       </div>
+      <div class="inline-feedback" id="inlineFeedback"></div>
     </div>
 
     <div class="hint-box" id="hintBox">
@@ -488,6 +555,25 @@ function showQuestion() {
   var cfg = LEVEL_CONFIG[currentLevel];
   var total = questions.length;
 
+  // Re-trigger box entrance animation
+  var box = document.getElementById('objectBox');
+  box.style.animation = 'none';
+  void box.offsetWidth;
+  box.style.animation = '';
+  var emojiEl = document.getElementById('objectEmoji');
+  emojiEl.style.animation = 'none';
+  void emojiEl.offsetWidth;
+  emojiEl.style.animation = '';
+
+  // Clear inline feedback
+  var fb = document.getElementById('inlineFeedback');
+  fb.className = 'inline-feedback';
+  fb.textContent = '';
+
+  // Remove any ripple class
+  var disp = document.getElementById('objectDisplay');
+  disp.classList.remove('ripple-go','flash-correct','flash-wrong');
+
   // Set the coloured background box
   document.getElementById('objectBox').style.background = q.bgHex;
   document.getElementById('objectEmoji').textContent = q.emoji;
@@ -531,12 +617,12 @@ function buildColourOptions(q, optionCount) {
   grid.style.gridTemplateColumns = cols;
   grid.innerHTML = '';
 
-  pool.forEach(function(name) {
+  pool.forEach(function(name, si) {
     var col = COLOURS[name];
     var btn = document.createElement('div');
     btn.className = 'colour-btn';
     btn.setAttribute('data-colour', name);
-    var swStyle = 'background:' + col.hex + ';' + (col.border ? 'border:2px solid #ccc;' : '');
+    var swStyle = 'background:' + col.hex + ';' + (col.border ? 'border:2px solid #ccc;' : '') + 'animation-delay:' + (si * 50) + 'ms;';
     btn.innerHTML = '<div class="colour-swatch" style="' + swStyle + '"></div><span class="colour-word">' + name + '</span>';
     btn.addEventListener('click', function() { pickColour(name, q); });
     grid.appendChild(btn);
@@ -551,45 +637,49 @@ function pickColour(chosen, q) {
   var chosenBtn = document.querySelector('[data-colour="' + chosen + '"]');
   var correctBtn = document.querySelector('[data-colour="' + correct + '"]');
   var correctHex = COLOURS[correct].hex;
+  var disp = document.getElementById('objectDisplay');
+  var fb = document.getElementById('inlineFeedback');
+
+  var blank = document.getElementById('qBlank');
+  blank.textContent = correct;
+  blank.style.color = correctHex;
+  blank.style.borderBottomColor = correctHex;
 
   if (chosen === correct) {
     score += 10; correctCount++;
     chosenBtn.classList.add('selected-correct');
-    var blank = document.getElementById('qBlank');
-    blank.textContent = correct;
-    blank.style.color = correctHex;
-    blank.style.borderBottomColor = correctHex;
-    showFeedback(true, getCorrectMsg(), '');
+    // Colour ripple wave
+    disp.style.setProperty('--ripple-colour', correctHex + '55');
+    disp.classList.remove('ripple-go');
+    void disp.offsetWidth;
+    disp.classList.add('ripple-go', 'flash-correct');
+    // Inline feedback
+    fb.textContent = '✓ ' + correct + '!';
+    fb.className = 'inline-feedback correct show';
   } else {
     wrongCount++;
     chosenBtn.classList.add('selected-wrong');
     if (correctBtn) correctBtn.classList.add('show-correct');
-    var blank2 = document.getElementById('qBlank');
-    blank2.textContent = correct;
-    blank2.style.color = correctHex;
-    blank2.style.borderBottomColor = correctHex;
-    showFeedback(false, 'Not quite!', 'It is ' + correct + '!');
+    disp.classList.add('flash-wrong');
+    // Inline feedback
+    fb.textContent = '✗ It\'s ' + correct + '!';
+    fb.className = 'inline-feedback wrong show';
   }
 
   updateScore();
-  setTimeout(function() { hideFeedback(); currentIndex++; showQuestion(); }, 1600);
+  setTimeout(function() { currentIndex++; showQuestion(); }, 1600);
 }
 
-function updateScore() { document.getElementById('scoreDisplay').textContent = score; }
-
-var correctMsgs = ['Great!', 'Perfect!', 'Excellent!', 'Well done!', 'Amazing!', 'Brilliant!'];
-function getCorrectMsg() { return correctMsgs[Math.floor(Math.random() * correctMsgs.length)]; }
-
-function showFeedback(correct, msg, sub) {
-  var overlay = document.getElementById('feedbackOverlay');
-  var popup = document.getElementById('feedbackPopup');
-  document.getElementById('feedbackIcon').textContent = correct ? '✅' : '❌';
-  document.getElementById('feedbackMsg').textContent = msg;
-  document.getElementById('feedbackSub').textContent = sub;
-  popup.className = 'feedback-popup ' + (correct ? 'correct' : 'wrong');
-  overlay.classList.add('show');
+function updateScore() {
+  var el = document.getElementById('scoreDisplay');
+  el.textContent = score;
+  el.classList.remove('score-pop');
+  void el.offsetWidth;
+  el.classList.add('score-pop');
 }
-function hideFeedback() { document.getElementById('feedbackOverlay').classList.remove('show'); }
+
+function showFeedback() {} // replaced by inline feedback
+function hideFeedback()  {}
 
 function endGame() {
   var total = questions.length;

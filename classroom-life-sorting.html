@@ -218,14 +218,34 @@ nav {
   min-width: 220px;
   transition: all 0.3s;
   border: 3px solid transparent;
+  animation: cardSlideIn 0.35s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardSlideIn {
+  0%   { opacity: 0; transform: translateX(60px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 .sort-item-card.correct { border-color: var(--green); animation: correct-pop 0.5s ease; }
-.sort-item-card.wrong { border-color: var(--red); animation: wrong-shake 0.4s ease; }
+.sort-item-card.wrong   { border-color: var(--red);   animation: wrong-shake 0.4s ease; }
 .sort-item-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
 .sort-item-word {
   font-family: 'Baloo 2', cursive;
   font-size: 1.8rem; font-weight: 800;
   color: var(--navy);
+}
+
+/* Flying card clone */
+.fly-clone {
+  position: fixed; pointer-events: none; z-index: 500;
+  background: var(--white); border-radius: 16px;
+  padding: 12px 20px; border: 3px solid var(--green);
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 800;
+  color: var(--navy); box-shadow: 0 6px 24px rgba(34,197,94,0.3);
+  display: flex; align-items: center; gap: 8px;
+  transform-origin: center center;
+  transition: transform 0.42s cubic-bezier(.4,0,.2,1),
+              opacity   0.42s ease,
+              left 0.42s cubic-bezier(.4,0,.2,1),
+              top  0.42s cubic-bezier(.4,0,.2,1);
 }
 
 /* Hint */
@@ -293,32 +313,33 @@ nav {
   font-weight: 600;
   animation: tag-pop 0.3s ease;
 }
+/* Bucket progress bar */
+.bucket-progress-wrap {
+  width: 100%; margin-top: 10px;
+  background: #E5E7EB; border-radius: 6px; height: 5px; overflow: hidden;
+}
+.bucket-progress-fill {
+  height: 5px; border-radius: 6px;
+  background: linear-gradient(90deg, var(--teal), var(--green));
+  width: 0%; transition: width 0.4s ease;
+}
+/* Bucket complete */
+.category-bucket.bucket-complete {
+  border-color: var(--green) !important;
+  background: #F0FDF4;
+}
+/* Correct-bucket pulse after wrong pick */
+@keyframes bucket-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  50%     { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+}
+.category-bucket.hint-pulse {
+  animation: bucket-pulse 0.5s ease 2;
+  border-color: var(--green) !important;
+}
 
-/* Feedback overlay */
-.feedback-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-  opacity: 0; transition: opacity 0.2s;
-}
-.feedback-overlay.show { opacity: 1; }
-.feedback-popup {
-  background: var(--white);
-  border-radius: 20px; padding: 24px 40px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  transform: scale(0.8);
-  transition: transform 0.2s;
-}
-.feedback-overlay.show .feedback-popup { transform: scale(1); }
-.feedback-popup.correct { border-top: 6px solid var(--green); }
-.feedback-popup.wrong { border-top: 6px solid var(--red); }
-.feedback-icon { font-size: 2.8rem; }
-.feedback-msg {
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.2rem; font-weight: 700;
-  color: var(--navy); margin-top: 8px;
-}
+/* Feedback overlay — hidden, replaced by bucket visual feedback */
+.feedback-overlay { display: none; }
 
 /* ── END SCREEN ── */
 .end-screen {
@@ -522,16 +543,19 @@ nav {
         <div class="bucket-icon">🪑</div>
         <div class="bucket-title">Furniture</div>
         <div class="bucket-items" id="items-furniture"></div>
+        <div class="bucket-progress-wrap"><div class="bucket-progress-fill" id="prog-furniture"></div></div>
       </div>
       <div class="category-bucket" id="bucket-objects" onclick="pickCategory('objects')">
         <div class="bucket-icon">✏️</div>
         <div class="bucket-title">Objects</div>
         <div class="bucket-items" id="items-objects"></div>
+        <div class="bucket-progress-wrap"><div class="bucket-progress-fill" id="prog-objects"></div></div>
       </div>
       <div class="category-bucket" id="bucket-devices" onclick="pickCategory('devices')">
         <div class="bucket-icon">💻</div>
         <div class="bucket-title">Devices</div>
         <div class="bucket-items" id="items-devices"></div>
+        <div class="bucket-progress-wrap"><div class="bucket-progress-fill" id="prog-devices"></div></div>
       </div>
     </div>
   </div>
@@ -638,6 +662,8 @@ var score = 0;
 var correctCount = 0;
 var wrongCount = 0;
 var isLocked = false;
+var bucketTotals = {}; // total items per category for this game
+var bucketCounts = {}; // placed items per category
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 function shuffle(arr) {
@@ -688,10 +714,15 @@ function startGame() {
   wrongCount = 0;
 
   // Clear buckets
+  bucketTotals = {}; bucketCounts = {};
+  var cfg2 = LEVEL_CONFIG[currentLevel];
   ['furniture','objects','devices'].forEach(function(cat) {
+    bucketTotals[cat] = cfg2[cat].length;
+    bucketCounts[cat] = 0;
     document.getElementById('items-' + cat).innerHTML = '';
+    document.getElementById('prog-' + cat).style.width = '0%';
     var b = document.getElementById('bucket-' + cat);
-    b.classList.remove('correct-pick','wrong-pick');
+    b.classList.remove('correct-pick','wrong-pick','bucket-complete','hint-pulse');
   });
 
   showScreen('gameScreen');
@@ -706,7 +737,13 @@ function showItem() {
   var cfg = LEVEL_CONFIG[currentLevel];
   var total = queue.length;
 
-  document.getElementById('sortCard').classList.remove('correct','wrong');
+  // Re-trigger card slide-in animation
+  var card = document.getElementById('sortCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = '';
+  card.classList.remove('correct','wrong');
+
   document.getElementById('sortEmoji').textContent = item.emoji;
   document.getElementById('sortWord').textContent = item.word;
   document.getElementById('itemNum').textContent = currentIndex + 1;
@@ -742,28 +779,61 @@ function pickCategory(cat) {
     score += 10;
     correctCount++;
     bucket.classList.add('correct-pick');
-    card.classList.add('correct');
+
+    // ── Fly-to-bucket animation ──
+    var cardRect = card.getBoundingClientRect();
+    var bucketRect = bucket.getBoundingClientRect();
+    var clone = document.createElement('div');
+    clone.className = 'fly-clone';
+    clone.innerHTML = item.emoji + ' ' + item.word;
+    clone.style.left = (cardRect.left + cardRect.width / 2 - 60) + 'px';
+    clone.style.top  = (cardRect.top  + cardRect.height / 2 - 24) + 'px';
+    document.body.appendChild(clone);
+    // Force layout then animate to bucket centre
+    clone.getBoundingClientRect();
+    clone.style.left    = (bucketRect.left + bucketRect.width / 2 - 60) + 'px';
+    clone.style.top     = (bucketRect.top  + bucketRect.height / 2 - 24) + 'px';
+    clone.style.opacity = '0';
+    clone.style.transform = 'scale(0.45)';
+    setTimeout(function() { clone.remove(); }, 460);
+
     // Add tag to bucket
     var tag = document.createElement('span');
     tag.className = 'bucket-item-tag';
     tag.textContent = item.word;
     document.getElementById('items-' + cat).appendChild(tag);
-    showFeedback(true, getCorrectMsg());
+
+    // Update bucket progress bar
+    bucketCounts[cat]++;
+    var pct = Math.round((bucketCounts[cat] / bucketTotals[cat]) * 100);
+    document.getElementById('prog-' + cat).style.width = pct + '%';
+    if (bucketCounts[cat] >= bucketTotals[cat]) {
+      setTimeout(function() { bucket.classList.add('bucket-complete'); }, 420);
+    }
+
+    card.classList.add('correct');
   } else {
     wrongCount++;
     bucket.classList.add('wrong-pick');
     card.classList.add('wrong');
-    showFeedback(false, 'It\'s ' + item.category + '! 📦');
+
+    // Pulse the CORRECT bucket so child sees where it should go
+    var correctBucket = document.getElementById('bucket-' + item.category);
+    setTimeout(function() {
+      correctBucket.classList.remove('hint-pulse');
+      void correctBucket.offsetWidth;
+      correctBucket.classList.add('hint-pulse');
+      setTimeout(function() { correctBucket.classList.remove('hint-pulse'); }, 1100);
+    }, 420);
   }
 
   updateScoreDisplay();
 
   setTimeout(function() {
     bucket.classList.remove('correct-pick','wrong-pick');
-    hideFeedback();
     currentIndex++;
     showItem();
-  }, 1400);
+  }, correct ? 500 : 1400);
 }
 
 var correctMsgs = ['Great!', 'Perfect!', 'Well done!', 'Excellent!', 'Amazing!'];
@@ -771,18 +841,8 @@ function getCorrectMsg() {
   return correctMsgs[Math.floor(Math.random() * correctMsgs.length)];
 }
 
-// ── FEEDBACK ──────────────────────────────────────────────────────────────
-function showFeedback(correct, msg) {
-  var overlay = document.getElementById('feedbackOverlay');
-  var popup = document.getElementById('feedbackPopup');
-  document.getElementById('feedbackIcon').textContent = correct ? '✅' : '❌';
-  document.getElementById('feedbackMsg').textContent = msg;
-  popup.className = 'feedback-popup ' + (correct ? 'correct' : 'wrong');
-  overlay.classList.add('show');
-}
-function hideFeedback() {
-  document.getElementById('feedbackOverlay').classList.remove('show');
-}
+function showFeedback() {}
+function hideFeedback() {}
 
 // ── END GAME ──────────────────────────────────────────────────────────────
 function endGame() {

@@ -132,10 +132,42 @@ nav {
   width: 48px; height: 48px; border-radius: 12px;
   border: 2px solid rgba(0,0,0,0.1);
   display: none;
+  position: relative; overflow: hidden;
 }
+/* Colour wipe fill from left */
+.colour-patch.animate-in::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.55);
+  animation: patchWipe 0.5s ease forwards;
+}
+@keyframes patchWipe {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(110%); }
+}
+/* Glow pulse on colour patch */
+.colour-patch.animate-in {
+  animation: patchGlow 0.7s ease;
+}
+@keyframes patchGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+  40%     { box-shadow: 0 0 0 8px rgba(255,255,255,0.35); }
+}
+
 /* number dots shown for "How many?" questions */
 .number-dots { display: flex; flex-wrap: wrap; gap: 6px; display: none; }
-.number-dot { font-size: 1.4rem; }
+.number-dot {
+  font-size: 1.4rem;
+  display: inline-block;
+  opacity: 0; transform: scale(0);
+  animation: dotBounce 0.35s cubic-bezier(.22,1.4,.36,1) forwards;
+}
+@keyframes dotBounce {
+  0%   { opacity: 0; transform: scale(0); }
+  70%  { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 /* permission scene shown for "Can I?" questions */
 .permission-scene { display: none; align-items: center; gap: 10px; font-size: 0.95rem; color: #555; font-weight: 600; }
 .permission-icon { font-size: 2rem; }
@@ -162,6 +194,13 @@ nav {
 .option-btn.correct { border-color: var(--green) !important; background: #F0FDF4; animation: pop 0.4s ease; }
 .option-btn.wrong   { border-color: var(--red)   !important; background: #FEF2F2; animation: shake 0.4s ease; }
 .option-btn.reveal  { border-color: var(--green) !important; background: #F0FDF4; }
+/* Eliminated wrong option — fades and becomes untappable */
+.option-btn.eliminated {
+  opacity: 0.35; pointer-events: none;
+  border-color: #E5E7EB !important; background: var(--white);
+  transform: none !important;
+  transition: opacity 0.35s ease;
+}
 .option-letter {
   width: 32px; height: 32px; border-radius: 8px;
   background: #F3F4F6; display: flex; align-items: center; justify-content: center;
@@ -171,6 +210,13 @@ nav {
 .option-btn.correct .option-letter { background: var(--green); color: var(--white); }
 .option-btn.wrong   .option-letter { background: var(--red);   color: var(--white); }
 .option-btn.reveal  .option-letter { background: var(--green); color: var(--white); }
+
+/* Blank land-in animation when correct word is placed */
+@keyframes blankLandIn {
+  0%   { opacity: 0; transform: translateY(10px); }
+  60%  { opacity: 1; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
 
 /* FEEDBACK */
 .feedback-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
@@ -672,14 +718,19 @@ function showQuestion() {
     var patch = document.getElementById('colourPatch');
     patch.style.display = 'block';
     patch.style.background = q.colourHex;
+    // Re-trigger glow + wipe animation
+    patch.classList.remove('animate-in');
+    void patch.offsetWidth;
+    patch.classList.add('animate-in');
   } else if (q.type === 'howmany') {
     var dotsEl = document.getElementById('numberDots');
     dotsEl.style.display = 'flex';
     dotsEl.innerHTML = '';
-    q.dots.forEach(function(d) {
+    q.dots.forEach(function(d, di) {
       var span = document.createElement('span');
       span.className = 'number-dot';
       span.textContent = d;
+      span.style.animationDelay = (di * 100) + 'ms';
       dotsEl.appendChild(span);
     });
   } else if (q.type === 'canI') {
@@ -734,29 +785,48 @@ function buildOptions(q) {
 
 function pickOption(chosen, q) {
   if (isLocked) return;
-  isLocked = true;
 
   var correct = q.correct;
   var chosenBtn = document.querySelector('[data-opt="' + chosen + '"]');
   var correctBtn = document.querySelector('[data-opt="' + correct + '"]');
 
   if (chosen === correct) {
+    isLocked = true;
     score += 10; correctCount++;
     chosenBtn.classList.add('correct');
+    // Blank land-in animation
     var blank = document.getElementById('qBlank');
-    if (blank) { blank.textContent = correct; blank.style.color = 'var(--green)'; blank.style.borderBottomColor = 'var(--green)'; }
+    if (blank) {
+      blank.textContent = correct;
+      blank.style.color = 'var(--green)';
+      blank.style.borderBottomColor = 'var(--green)';
+      blank.style.animation = 'none';
+      void blank.offsetWidth;
+      blank.style.animation = 'blankLandIn 0.4s cubic-bezier(.22,1,.36,1) both';
+    }
     showFeedback(true, getCorrectMsg(), '');
+    updateScore();
+    setTimeout(function() { hideFeedback(); currentIndex++; showQuestion(); }, 1600);
   } else {
     wrongCount++;
+    // Eliminate this wrong option — fade it out, leave others active
     chosenBtn.classList.add('wrong');
-    if (correctBtn) correctBtn.classList.add('reveal');
-    var blank2 = document.getElementById('qBlank');
-    if (blank2) { blank2.textContent = correct; blank2.style.color = 'var(--green)'; blank2.style.borderBottomColor = 'var(--green)'; }
-    showFeedback(false, 'Not quite!', 'The answer is: ' + correct);
+    setTimeout(function() {
+      chosenBtn.classList.remove('wrong');
+      chosenBtn.classList.add('eliminated');
+    }, 450);
+    // Show brief shake feedback without locking for next attempt
+    var fb = document.getElementById('feedbackOverlay');
+    var popup = document.getElementById('feedbackPopup');
+    document.getElementById('feedbackIcon').textContent = '❌';
+    document.getElementById('feedbackMsg').textContent = 'Not quite — try again!';
+    document.getElementById('feedbackSub').textContent = '';
+    popup.className = 'feedback-popup wrong';
+    fb.classList.add('show');
+    setTimeout(function() { fb.classList.remove('show'); }, 900);
+    // isLocked stays false — player can try remaining options
+    updateScore();
   }
-
-  updateScore();
-  setTimeout(function() { hideFeedback(); currentIndex++; showQuestion(); }, 1600);
 }
 
 function updateScore() { document.getElementById('scoreDisplay').textContent = score; }

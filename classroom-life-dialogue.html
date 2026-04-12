@@ -121,6 +121,14 @@ nav {
   overflow: hidden; margin-bottom: 16px;
   transition: all 0.3s;
 }
+/* Scene slide-in from right */
+.scene-card.slide-in {
+  animation: sceneSlideIn 0.38s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes sceneSlideIn {
+  0%   { opacity: 0; transform: translateX(56px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
 .scene-bg {
   padding: 28px 24px 20px;
   position: relative;
@@ -137,8 +145,15 @@ nav {
 .scene-characters {
   display: flex; align-items: flex-end; gap: 12px;
 }
-.scene-teacher { font-size: 3rem; }
-.scene-student { font-size: 2.4rem; }
+/* Character speaking bounce */
+.scene-teacher { font-size: 3rem; display: inline-block; }
+.scene-student { font-size: 2.4rem; display: inline-block; }
+.scene-teacher.speaking { animation: charSpeak 0.55s ease-in-out infinite; }
+.scene-student.speaking { animation: charSpeak 0.55s ease-in-out infinite; }
+@keyframes charSpeak {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-6px); }
+}
 
 /* Speech bubble */
 .speech-bubble {
@@ -180,8 +195,21 @@ nav {
   color: var(--navy);
   display: flex; align-items: center; gap: 12px;
   text-align: left;
+  position: relative; overflow: hidden;
 }
-.option-btn:hover { border-color: var(--teal); background: #F0FFFE; transform: translateX(4px); }
+/* Orange left-bar on hover */
+.option-btn::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0; background: var(--orange);
+  border-radius: 0 3px 3px 0;
+  transition: width 0.18s ease;
+}
+.option-btn:hover::before { width: 4px; }
+.option-btn:hover {
+  border-color: var(--teal); background: #F0FFFE;
+  transform: translateX(4px);
+}
 .option-btn.correct { border-color: var(--green) !important; background: #F0FDF4; }
 .option-btn.wrong   { border-color: var(--red)   !important; background: #FEF2F2; animation: shake 0.4s ease; }
 .option-btn.reveal  { border-color: var(--green) !important; background: #F0FDF4; }
@@ -194,6 +222,15 @@ nav {
 .option-btn.correct .option-letter { background: var(--green); color: var(--white); }
 .option-btn.wrong   .option-letter { background: var(--red);   color: var(--white); }
 .option-btn.reveal  .option-letter { background: var(--green); color: var(--white); }
+
+/* Journey icon done-bounce */
+@keyframes iconDoneBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.3); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.journey-icon.bounce-done { animation: iconDoneBounce 0.4s cubic-bezier(.22,1.4,.36,1); }
 
 /* FEEDBACK */
 .feedback-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
@@ -229,6 +266,7 @@ nav {
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
 @keyframes trophy-bounce { 0%,100%{transform:scale(1) rotate(0deg)} 25%{transform:scale(1.15) rotate(-5deg)} 75%{transform:scale(1.15) rotate(5deg)} }
+@keyframes blankFlash { 0%{background:rgba(255,107,53,.3)} 100%{background:transparent} }
 
 @media (max-width: 600px) {
   .nav-links { display: none; }
@@ -752,10 +790,14 @@ function buildJourneyBar() {
   STOPS.forEach(function(stop, i) {
     var js = document.createElement('div');
     js.className = 'journey-stop';
-    var stateClass = i < currentStop ? 'done' : i === currentStop ? 'active' : 'upcoming';
+    var isDone = i < currentStop;
+    var isActive = i === currentStop;
+    var stateClass = isDone ? 'done' : isActive ? 'active' : 'upcoming';
+    // Add bounce-done only to the stop that just became done (i === currentStop - 1)
+    var bounceClass = (i === currentStop - 1) ? ' bounce-done' : '';
     js.innerHTML =
-      '<div class="journey-icon ' + stateClass + '" id="jicon-' + i + '">' + (i < currentStop ? '✓' : stop.icon) + '</div>' +
-      '<div class="journey-label' + (i === currentStop ? ' active-label' : '') + '">' + stop.label + '</div>';
+      '<div class="journey-icon ' + stateClass + bounceClass + '" id="jicon-' + i + '">' + (isDone ? '✓' : stop.icon) + '</div>' +
+      '<div class="journey-label' + (isActive ? ' active-label' : '') + '">' + stop.label + '</div>';
     bar.appendChild(js);
     if (i < STOPS.length - 1) {
       var arr = document.createElement('div');
@@ -779,6 +821,8 @@ function startGame() {
 }
 
 // ── RENDER STOP ────────────────────────────────────────────────────────────
+var twTimer = null; // typewriter interval handle
+
 function renderStop() {
   if (currentStop >= STOPS.length) { endGame(); return; }
 
@@ -786,32 +830,44 @@ function renderStop() {
   var varIdx = chosenVariations[currentStop];
   var v = stop.variations[varIdx];
 
-  isLocked = false;
+  isLocked = true; // lock until typewriter finishes
 
   buildJourneyBar();
   document.getElementById('stopNum').textContent = currentStop + 1;
   document.getElementById('stopTotal').textContent = STOPS.length;
   document.getElementById('scoreDisplay').textContent = score;
 
-  // Scene visuals
+  // Scene slide-in
+  var sceneCard = document.querySelector('.scene-card');
+  sceneCard.classList.remove('slide-in');
+  void sceneCard.offsetWidth;
+  sceneCard.classList.add('slide-in');
+
+  // Background & location
   document.getElementById('sceneBg').style.background = stop.bgGradient;
   document.getElementById('locationTag').textContent = stop.locationTag;
-  document.getElementById('sceneTeacher').textContent = stop.teacher;
-  document.getElementById('sceneStudent').textContent = stop.student;
   document.getElementById('speakerLabel').textContent = stop.speakerLabel;
 
-  // Colour patch for art stop
+  // Speaking character animation
+  var teacherEl = document.getElementById('sceneTeacher');
+  var studentEl = document.getElementById('sceneStudent');
+  teacherEl.textContent = stop.teacher;
+  studentEl.textContent = stop.student;
+  teacherEl.classList.remove('speaking');
+  studentEl.classList.remove('speaking');
+  // Teacher speaks by default; if speakerLabel says "YOU", student speaks
+  if (stop.speakerLabel.indexOf('YOU') >= 0) {
+    studentEl.classList.add('speaking');
+  } else {
+    teacherEl.classList.add('speaking');
+  }
+
+  // Colour patch & visual emoji
   var colourPatch = '';
   if (v.colourHex) {
     colourPatch = ' <span style="display:inline-block;width:22px;height:22px;border-radius:6px;background:' + v.colourHex + ';border:2px solid rgba(0,0,0,0.15);vertical-align:middle;margin-left:4px;"></span>';
   }
-  // Visual emoji for board stop
   var visualEmoji = v.visual ? ' <span style="font-size:1.5rem;vertical-align:middle;">' + v.visual + '</span>' : '';
-
-  // Build speech: show the prompt, then the blank sentence
-  var promptHtml = '<span style="color:#888;font-size:0.92rem;font-weight:600;">' + v.prompt + '</span>' + colourPatch + visualEmoji;
-  var blankHtml = '<br><span style="color:#1B2845;">' + v.blank.replace('___', '<span class="blank" id="qBlank">___</span>') + '</span>';
-  document.getElementById('speechText').innerHTML = promptHtml + blankHtml;
 
   // Hint
   var hintBox = document.getElementById('hintBox');
@@ -822,7 +878,68 @@ function renderStop() {
     hintBox.classList.add('hidden');
   }
 
-  buildOptions(v);
+  // Hide options until typewriter finishes
+  var grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  grid.style.opacity = '0';
+
+  // Build full speech content for typewriting
+  var promptRaw = v.prompt + (colourPatch ? '  ' : '') + (visualEmoji ? '  ' : '');
+  var blankSentence = v.blank; // contains '___'
+
+  // typewriter target el
+  var speechEl = document.getElementById('speechText');
+  speechEl.innerHTML = '';
+
+  // Phase 1: type the prompt line (plain text only — no HTML injection mid-type)
+  var promptText = v.prompt;
+  var charIdx = 0;
+
+  if (twTimer) clearInterval(twTimer);
+
+  // Prompt span
+  var promptSpan = document.createElement('span');
+  promptSpan.style.cssText = 'color:#888;font-size:0.92rem;font-weight:600;';
+  speechEl.appendChild(promptSpan);
+  // Extras (colour patch, visual) appended as HTML after prompt done
+  var extrasHtml = colourPatch + visualEmoji;
+  var brEl = document.createElement('br');
+  var blankWrap = document.createElement('span');
+  blankWrap.style.color = '#1B2845';
+  speechEl.appendChild(brEl);
+  speechEl.appendChild(blankWrap);
+
+  // Build blank sentence spans ahead of time (hidden)
+  var blankParts = blankSentence.split('___');
+  var blankSpan = document.createElement('span');
+  blankSpan.className = 'blank';
+  blankSpan.id = 'qBlank';
+  blankSpan.textContent = '___';
+  blankWrap.style.opacity = '0';
+
+  twTimer = setInterval(function() {
+    if (charIdx < promptText.length) {
+      promptSpan.textContent += promptText[charIdx];
+      charIdx++;
+      if (charIdx === promptText.length) {
+        // append extras after prompt finishes
+        if (extrasHtml) promptSpan.insertAdjacentHTML('afterend', extrasHtml);
+      }
+    } else {
+      // Done with prompt — show blank sentence
+      clearInterval(twTimer);
+      blankWrap.style.opacity = '1';
+      blankWrap.innerHTML = blankParts[0] + '<span class="blank" id="qBlank" style="animation:blankFlash .4s ease">___</span>' + (blankParts[1] || '');
+      // Stop speaking animation when type done
+      teacherEl.classList.remove('speaking');
+      studentEl.classList.remove('speaking');
+      // Show options
+      buildOptions(v);
+      grid.style.transition = 'opacity 0.3s';
+      grid.style.opacity = '1';
+      isLocked = false;
+    }
+  }, 35);
 }
 
 function buildOptions(v) {

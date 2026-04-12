@@ -127,13 +127,37 @@ nav {
   transition: all 0.2s;
   position: relative;
 }
-.slot.drag-over { border-color: var(--teal); background: #F0FFFE; transform: scale(1.05); }
+/* Magnetic drag-over — slot grows to attract the card */
+.slot.drag-over { border-color: var(--teal); background: #F0FFFE; transform: scale(1.08); box-shadow: 0 0 0 4px rgba(46,196,182,0.2); }
 .slot.filled { border-style: solid; border-color: #E5E7EB; background: var(--white); }
+/* Snap bounce on placement */
+.slot.snap-bounce { animation: snapBounce 0.4s cubic-bezier(.22,1.4,.36,1); }
+@keyframes snapBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.08); }
+  65%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+/* Wave correct — staggered via JS delay */
 .slot.correct-slot { border-color: var(--green); background: #F0FDF4; }
+.slot.correct-slot.wave-green { animation: waveGreen 0.45s ease both; }
+@keyframes waveGreen {
+  0%   { transform: scale(1);    background: var(--white); border-color: #E5E7EB; }
+  50%  { transform: scale(1.1);  background: #BBFBD0; border-color: var(--green); }
+  100% { transform: scale(1);    background: #F0FDF4; border-color: var(--green); }
+}
 .slot.wrong-slot   { border-color: var(--red);   background: #FEF2F2; animation: shake 0.4s ease; }
 .slot-number { font-family: 'Baloo 2', cursive; font-size: 0.7rem; font-weight: 700; color: #aaa; position: absolute; top: 4px; left: 0; right: 0; text-align: center; }
 .slot-content { font-family: 'Baloo 2', cursive; font-size: 0.78rem; font-weight: 800; color: var(--navy); text-align: center; line-height: 1.2; padding: 2px; }
 .slot-digit { font-size: 1.1rem; color: var(--teal); }
+
+/* Digit pop when card placed correctly */
+@keyframes digitPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.55); color: var(--green); }
+  100% { transform: scale(1); color: var(--teal); }
+}
+.slot-digit.pop { animation: digitPop 0.45s cubic-bezier(.22,1.4,.36,1); }
 
 /* Missing word slot for expansion */
 .slot.missing-slot {
@@ -143,17 +167,9 @@ nav {
 .slot.missing-slot .slot-content { color: var(--orange); font-size: 0.7rem; }
 
 /* BANK — the scrambled cards */
-.bank-area {
-  max-width: 860px; margin: 0 auto 20px;
-}
-.bank-label {
-  font-size: 0.78rem; color: #aaa; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px;
-  margin-bottom: 12px; text-align: center;
-}
-.bank-grid {
-  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-}
+.bank-area { max-width: 860px; margin: 0 auto 20px; }
+.bank-label { font-size: 0.78rem; color: #aaa; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
+.bank-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
 /* Number cards */
 .num-card {
@@ -176,6 +192,18 @@ nav {
 
 .card-word { font-family: 'Baloo 2', cursive; font-size: 0.82rem; font-weight: 800; color: var(--navy); text-align: center; line-height: 1.2; }
 .card-digit { font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800; color: var(--teal); }
+
+/* Rebound clone — fixed position card that flies back to bank */
+.rebound-clone {
+  position: fixed; pointer-events: none; z-index: 500;
+  font-family: 'Baloo 2', cursive; font-weight: 800;
+  font-size: 0.9rem; color: var(--navy);
+  background: #FEF2F2; border: 3px solid var(--red);
+  border-radius: 14px; padding: 10px 12px;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+  display: flex; flex-direction: column; align-items: center;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1), opacity 0.4s ease, left 0.4s cubic-bezier(.4,0,.2,1), top 0.4s cubic-bezier(.4,0,.2,1);
+}
 
 /* Double-tap hint */
 .double-tap-hint {
@@ -671,8 +699,27 @@ function placeInSlot(idx, num, card) {
 
   var content = document.createElement('div');
   content.className = 'slot-content';
-  content.innerHTML = (showDigit ? '<span class="slot-digit">' + num.n + '</span><br>' : '') + num.word;
+  if (showDigit) {
+    content.innerHTML = '<span class="slot-digit" id="sd-' + idx + '">' + num.n + '</span><br>' + num.word;
+  } else {
+    content.textContent = num.word;
+  }
   slot.appendChild(content);
+
+  // Snap bounce on slot
+  slot.classList.remove('snap-bounce');
+  void slot.offsetWidth;
+  slot.classList.add('snap-bounce');
+
+  // Digit pop
+  if (showDigit) {
+    var digitEl = document.getElementById('sd-' + idx);
+    if (digitEl) {
+      digitEl.classList.remove('pop');
+      void digitEl.offsetWidth;
+      digitEl.classList.add('pop');
+    }
+  }
 
   // Hide card
   if (card) card.classList.add('placed');
@@ -689,26 +736,81 @@ function placeInSlot(idx, num, card) {
 function checkAnswer() {
   var allCorrect = true;
   var slots = document.querySelectorAll('#slotsGrid .slot');
+  var wrongSlotIndices = [];
+
   slotValues.forEach(function(val, i) {
     var expected = correctOrder[i];
-    var slot = slots[i];
     if (val && val.n === expected.n) {
-      slot.classList.add('correct-slot');
+      // correct — will wave later
     } else {
-      slot.classList.add('wrong-slot');
+      slots[i].classList.add('wrong-slot');
       allCorrect = false;
+      wrongSlotIndices.push(i);
     }
   });
 
   if (allCorrect) {
+    // Staggered wave left-to-right
+    slots.forEach(function(slot, i) {
+      setTimeout(function() {
+        slot.classList.add('correct-slot');
+        slot.classList.remove('snap-bounce');
+        slot.classList.add('wave-green');
+      }, i * 60);
+    });
     score += 30;
     roundsWon++;
     document.getElementById('scoreDisplay').textContent = score;
-    setTimeout(function() { currentRound++; loadRound(); }, 1200);
+    setTimeout(function() { currentRound++; loadRound(); }, slots.length * 60 + 700);
   } else {
-    // Reset after shake — let them try again
+    // Rebound: animate wrong cards back toward bank
+    wrongSlotIndices.forEach(function(i) {
+      var slot = slots[i];
+      var val = slotValues[i];
+      var bankGrid = document.getElementById('bankGrid');
+
+      // Coordinates
+      var slotRect = slot.getBoundingClientRect();
+      var bankRect = bankGrid.getBoundingClientRect();
+
+      // Create rebound clone at slot position
+      var clone = document.createElement('div');
+      clone.className = 'rebound-clone';
+      clone.textContent = val ? val.word : '?';
+      clone.style.left = (slotRect.left + slotRect.width / 2 - 36) + 'px';
+      clone.style.top  = (slotRect.top  + slotRect.height / 2 - 24) + 'px';
+      document.body.appendChild(clone);
+
+      // Force layout then fly to bank
+      clone.getBoundingClientRect();
+      clone.style.left    = (bankRect.left + Math.random() * Math.max(bankRect.width - 80, 0)) + 'px';
+      clone.style.top     = (bankRect.top  + bankRect.height / 2 - 24) + 'px';
+      clone.style.opacity = '0';
+      clone.style.transform = 'scale(0.6) rotate(' + (Math.random() * 20 - 10) + 'deg)';
+      setTimeout(function() { clone.remove(); }, 450);
+    });
+
+    // Reset after shake + rebound — clear wrong slots, return cards
     setTimeout(function() {
       slots.forEach(function(s) { s.classList.remove('wrong-slot'); });
+      // Re-show placed cards for wrong slots so player can retry
+      wrongSlotIndices.forEach(function(i) {
+        var val = slotValues[i];
+        if (val) {
+          var placedCard = document.querySelector('[data-n="' + val.n + '"]');
+          if (placedCard) {
+            placedCard.classList.remove('placed');
+            placedCard.classList.add('selected-card');
+            setTimeout(function() { placedCard.classList.remove('selected-card'); }, 600);
+          }
+          // Clear slot
+          slotValues[i] = null;
+          var slot = slots[i];
+          slot.classList.remove('filled');
+          slot.innerHTML = '<span class="slot-number">' + (i + 1) + '</span>';
+        }
+      });
+      document.getElementById('checkBtn').classList.remove('active');
     }, 800);
   }
 }
