@@ -65,15 +65,101 @@
   .hint-box{background:var(--yellow-light);border:2px solid var(--yellow);border-radius:14px;padding:11px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:#7A5F00;line-height:1.5;}
   .hint-box.gone{display:none;}
 
-  /* SCENE CARD */
-  .scene-card{
+  /* Drop-zone green flash when chip lands */
+  @keyframes zoneFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+    40%  { box-shadow: 0 0 0 10px rgba(34,197,94,0.25); }
+    100% { box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+  }
+  .drop-zone.chip-landed {
+    animation: zoneFlash 0.45s ease forwards;
+  }
+
+  /* Scene card — slide transition */
+  .scene-card {
     border-radius:20px;padding:20px;
     margin-bottom:16px;
     display:flex;align-items:center;gap:18px;
     box-shadow:0 4px 20px rgba(0,0,0,0.08);
     transition:background 0.4s;
     min-height:100px;
+    overflow:hidden;
   }
+  @keyframes sceneSlideIn {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes sceneSlideOut {
+    from { opacity:1; transform:translateY(0); }
+    to   { opacity:0; transform:translateY(-24px); }
+  }
+  .scene-card.slide-out { animation: sceneSlideOut 0.25s ease forwards; }
+  .scene-card.slide-in  { animation: sceneSlideIn  0.3s ease forwards; }
+
+  /* Scene emoji happy burst on correct */
+  @keyframes emojiHappy {
+    0%   { transform: scale(1) rotate(0deg); }
+    25%  { transform: scale(1.35) rotate(-10deg); }
+    50%  { transform: scale(1.25) rotate(10deg); }
+    75%  { transform: scale(1.15) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .scene-visual.happy {
+    animation: emojiHappy 0.55s ease forwards;
+    display:inline-block;
+  }
+
+  /* Chip bounce-back from zone to pool */
+  .chip-bounce {
+    position: fixed;
+    pointer-events: none;
+    z-index: 498;
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+    white-space: nowrap;
+    animation: chipBounceAnim 0.38s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes chipBounceAnim {
+    0%   { opacity:1; transform:scale(1); }
+    40%  { opacity:1; transform:scale(1.1) translateY(-8px); }
+    100% { opacity:0; transform:scale(0.7); }
+  }
+
+  /* Double-click tooltip */
+  .dblclick-tip {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    animation: tipPulse 0.9s ease-in-out infinite alternate;
+  }
+  .dblclick-tip::after {
+    content: '';
+    position: absolute; bottom:-5px; left:50%; transform:translateX(-50%);
+    border:5px solid transparent;
+    border-top-color: var(--navy);
+    border-bottom:none;
+  }
+  @keyframes tipPulse {
+    from { opacity:0.8; transform:translateX(-50%) translateY(0); }
+    to   { opacity:1;   transform:translateX(-50%) translateY(-3px); }
+  }
+
   .scene-visual{
     font-size:3.2rem;line-height:1;
     flex-shrink:0;
@@ -449,6 +535,7 @@ var zoneWords = [];
 var dragWord = null;
 var ghost = null;
 var answered = false;
+var tipDismissed = false; // double-click tooltip dismissed after first successful placement
 
 // Colour each zone card green if correct position, orange if not
 function recolourZone() {
@@ -498,12 +585,17 @@ function renderQuestion() {
   var cfg = DIFF_CONFIG[diff];
   var q = questions[qIndex];
 
-  // Scene
+  // Scene — slide in
   var sc = q.scene;
-  document.getElementById('sceneCard').style.background = sc.bg;
+  var sceneCard = document.getElementById('sceneCard');
+  sceneCard.classList.remove('slide-in','slide-out');
+  sceneCard.style.background = sc.bg;
   document.getElementById('sceneVisual').textContent = sc.visual;
+  document.getElementById('sceneVisual').classList.remove('happy');
   document.getElementById('sceneTitle').textContent = sc.title;
   document.getElementById('sceneDesc').textContent = sc.desc;
+  sceneCard.offsetWidth; // reflow
+  sceneCard.classList.add('slide-in');
 
   // Hint
   var hb = document.getElementById('hintBox');
@@ -561,6 +653,20 @@ function createWordCard(word, id, inZone) {
 
   // Double-click pool card → add to zone
   if (!inZone) {
+    // Single-click: show tooltip if not yet dismissed
+    card.addEventListener('click', function(){
+      if (tipDismissed) return;
+      // Remove any existing tip
+      var existingTip = document.querySelector('.dblclick-tip');
+      if (existingTip) existingTip.remove();
+      var tip = document.createElement('div');
+      tip.className = 'dblclick-tip';
+      tip.textContent = '👆 çift tıkla!';
+      card.style.position = 'relative';
+      card.appendChild(tip);
+      setTimeout(function(){ if (tip.parentNode) tip.remove(); }, 2000);
+    });
+
     card.addEventListener('dblclick', function(){
       if (answered || card.classList.contains('gone')) return;
       addToZone(word, id);
@@ -584,6 +690,18 @@ function addToZone(word, sourceId) {
   renderZone();
   recolourZone();
   updateCheckBtn();
+  // Dismiss tooltip after first successful placement
+  if (!tipDismissed) {
+    tipDismissed = true;
+    var tip = document.querySelector('.dblclick-tip');
+    if (tip) tip.remove();
+  }
+  // Green flash on drop-zone
+  var dz = document.getElementById('dropZone');
+  dz.classList.remove('chip-landed');
+  dz.offsetWidth;
+  dz.classList.add('chip-landed');
+  setTimeout(function(){ dz.classList.remove('chip-landed'); }, 500);
 }
 
 function removeFromZone(zoneCardId, word) {
@@ -670,15 +788,32 @@ function checkAnswer() {
   if (isCorrect) {
     correct++;
     dz.classList.add('correct');
-    // Lock all zone cards green
     dz.querySelectorAll('.word-card').forEach(function(c){ c.className='word-card locked'; });
     document.getElementById('scoreNum').textContent = correct;
+    // Happy emoji burst
+    var sv = document.getElementById('sceneVisual');
+    sv.classList.remove('happy');
+    sv.offsetWidth;
+    sv.classList.add('happy');
     toast('✅ Perfect!', 'ok');
   } else {
     wrong++;
     dz.classList.add('wrong-flash');
+    // Bounce chips back to pool staggered
+    var zoneCards = Array.from(dz.querySelectorAll('.word-card'));
+    zoneCards.forEach(function(card, i) {
+      var rect = card.getBoundingClientRect();
+      var bounce = document.createElement('div');
+      bounce.className = 'chip-bounce';
+      bounce.textContent = card.textContent;
+      bounce.style.left = rect.left + 'px';
+      bounce.style.top  = rect.top + 'px';
+      bounce.style.width = rect.width + 'px';
+      bounce.style.animationDelay = (i * 50) + 'ms';
+      document.body.appendChild(bounce);
+      setTimeout(function(){ bounce.remove(); }, 450 + i * 50);
+    });
     setTimeout(function(){ dz.classList.remove('wrong-flash'); }, 450);
-    // Show correct sentence
     var sd = document.getElementById('sentenceDisplay');
     sd.textContent = '✅ ' + q.answer.join(' ');
     sd.style.display = 'block';
@@ -692,9 +827,13 @@ function checkAnswer() {
 
 // ── NEXT ──
 function nextQuestion() {
-  qIndex++;
-  if (qIndex >= questions.length) { endGame(); return; }
-  renderQuestion();
+  var sceneCard = document.getElementById('sceneCard');
+  sceneCard.classList.add('slide-out');
+  setTimeout(function(){
+    qIndex++;
+    if (qIndex >= questions.length) { endGame(); return; }
+    renderQuestion();
+  }, 260);
 }
 
 // ── TOUCH DRAG ──

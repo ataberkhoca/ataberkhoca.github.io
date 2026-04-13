@@ -149,16 +149,7 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
   100% { transform: translateX(-50%); }
 }
 
-.vocab-word {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.8rem; font-weight: 700;
-  padding: 6px 14px; border-radius: 50px;
-  background: var(--cream); color: var(--navy);
-  border: 1px solid var(--gray-200); white-space: nowrap; transition: all 0.2s;
-}
-.vocab-word:hover { background: rgba(255,107,53,0.08); color: var(--orange); border-color: rgba(255,107,53,0.2); cursor: default; }
-.vocab-word .en  { color: var(--orange); }
-.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
+/* vocab-word styles now in flip section above */
 
 /* ========== ACTIVITIES SECTION ========== */
 .section { padding: 70px 40px; position: relative; z-index: 1; }
@@ -185,8 +176,70 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 }
 .activity-card.active { cursor: pointer; }
 .activity-card.active:hover {
-  transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent;
+  transform: translateY(-6px); border-color: transparent;
 }
+/* Per-theme glow */
+.activity-card.active:hover         { box-shadow: 0 12px 36px rgba(255,107,53,0.22), 0 4px 14px rgba(255,107,53,0.12); }
+.activity-card.teal.active:hover    { box-shadow: 0 12px 36px rgba(46,196,182,0.22),  0 4px 14px rgba(46,196,182,0.12); }
+.activity-card.purple.active:hover  { box-shadow: 0 12px 36px rgba(139,92,246,0.22),  0 4px 14px rgba(139,92,246,0.12); }
+.activity-card.pink.active:hover    { box-shadow: 0 12px 36px rgba(236,72,153,0.22),  0 4px 14px rgba(236,72,153,0.12); }
+.activity-card.green.active:hover   { box-shadow: 0 12px 36px rgba(34,197,94,0.22),   0 4px 14px rgba(34,197,94,0.12); }
+
+/* Emoji bounce on hover */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  35%       { transform: translateY(-8px) scale(1.12); }
+  65%       { transform: translateY(-3px) scale(1.06); }
+}
+.activity-card.active:hover .activity-emoji {
+  animation: emojiBounce 0.55s ease;
+  display: inline-block;
+}
+
+/* ========== VOCAB FLIP ========== */
+.vocab-word {
+  display: inline-flex;
+  perspective: 400px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vocab-word-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 6px 14px; border-radius: 50px;
+  background: var(--cream); color: var(--navy);
+  border: 1px solid var(--gray-200);
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), border-color 0.2s;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-en {
+  display: flex; align-items: center; gap: 6px;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-tr {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50px;
+  background: var(--orange); color: white;
+  font-size: 0.8rem; font-weight: 700;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  padding: 6px 14px;
+}
+.vocab-word.flipped .vocab-word-inner {
+  transform: rotateY(180deg);
+  border-color: var(--orange);
+}
+.vocab-word:not(.flipped):hover .vocab-word-inner {
+  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
+}
+.vocab-word .en  { color: var(--orange); }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
 
 .activity-card-banner { height: 8px; background: linear-gradient(90deg, var(--orange), var(--yellow)); }
 .activity-card.teal   .activity-card-banner { background: linear-gradient(90deg, var(--teal), #6EE7E7); }
@@ -344,53 +397,53 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 <div class="vocab-strip">
   <div class="vocab-scroll">
     <!-- Set 1 -->
-    <span class="vocab-word"><span class="en">balcony</span><span class="sep">•</span>balkon</span>
-    <span class="vocab-word"><span class="en">bathroom</span><span class="sep">•</span>banyo</span>
-    <span class="vocab-word"><span class="en">beak</span><span class="sep">•</span>gaga</span>
-    <span class="vocab-word"><span class="en">bed</span><span class="sep">•</span>yatak</span>
-    <span class="vocab-word"><span class="en">bedroom</span><span class="sep">•</span>yatak odası</span>
-    <span class="vocab-word"><span class="en">bird</span><span class="sep">•</span>kuş</span>
-    <span class="vocab-word"><span class="en">cat</span><span class="sep">•</span>kedi</span>
-    <span class="vocab-word"><span class="en">claw</span><span class="sep">•</span>pençe</span>
-    <span class="vocab-word"><span class="en">coffee table</span><span class="sep">•</span>sehba</span>
-    <span class="vocab-word"><span class="en">dining room</span><span class="sep">•</span>yemek odası</span>
-    <span class="vocab-word"><span class="en">dog</span><span class="sep">•</span>köpek</span>
-    <span class="vocab-word"><span class="en">garden</span><span class="sep">•</span>bahçe</span>
-    <span class="vocab-word"><span class="en">goldfish</span><span class="sep">•</span>japon balığı</span>
-    <span class="vocab-word"><span class="en">house</span><span class="sep">•</span>ev</span>
-    <span class="vocab-word"><span class="en">kitchen</span><span class="sep">•</span>mutfak</span>
-    <span class="vocab-word"><span class="en">paw</span><span class="sep">•</span>pati</span>
-    <span class="vocab-word"><span class="en">pet</span><span class="sep">•</span>evcil hayvan</span>
-    <span class="vocab-word"><span class="en">rabbit</span><span class="sep">•</span>tavşan</span>
-    <span class="vocab-word"><span class="en">room</span><span class="sep">•</span>oda</span>
-    <span class="vocab-word"><span class="en">sitting room</span><span class="sep">•</span>oturma odası</span>
-    <span class="vocab-word"><span class="en">sofa</span><span class="sep">•</span>kanepe</span>
-    <span class="vocab-word"><span class="en">tail</span><span class="sep">•</span>kuyruk</span>
-    <span class="vocab-word"><span class="en">whiskers</span><span class="sep">•</span>kedi bıyığı</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">balcony</span><span class="sep">•</span>balkon</span><span class="face-tr">balkon</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bathroom</span><span class="sep">•</span>banyo</span><span class="face-tr">banyo</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">beak</span><span class="sep">•</span>gaga</span><span class="face-tr">gaga</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bed</span><span class="sep">•</span>yatak</span><span class="face-tr">yatak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bedroom</span><span class="sep">•</span>yatak odası</span><span class="face-tr">yatak odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bird</span><span class="sep">•</span>kuş</span><span class="face-tr">kuş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cat</span><span class="sep">•</span>kedi</span><span class="face-tr">kedi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">claw</span><span class="sep">•</span>pençe</span><span class="face-tr">pençe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coffee table</span><span class="sep">•</span>sehba</span><span class="face-tr">sehba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dining room</span><span class="sep">•</span>yemek odası</span><span class="face-tr">yemek odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dog</span><span class="sep">•</span>köpek</span><span class="face-tr">köpek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">garden</span><span class="sep">•</span>bahçe</span><span class="face-tr">bahçe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">goldfish</span><span class="sep">•</span>japon balığı</span><span class="face-tr">japon balığı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">house</span><span class="sep">•</span>ev</span><span class="face-tr">ev</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">kitchen</span><span class="sep">•</span>mutfak</span><span class="face-tr">mutfak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">paw</span><span class="sep">•</span>pati</span><span class="face-tr">pati</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pet</span><span class="sep">•</span>evcil hayvan</span><span class="face-tr">evcil hayvan</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rabbit</span><span class="sep">•</span>tavşan</span><span class="face-tr">tavşan</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">room</span><span class="sep">•</span>oda</span><span class="face-tr">oda</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sitting room</span><span class="sep">•</span>oturma odası</span><span class="face-tr">oturma odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sofa</span><span class="sep">•</span>kanepe</span><span class="face-tr">kanepe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tail</span><span class="sep">•</span>kuyruk</span><span class="face-tr">kuyruk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">whiskers</span><span class="sep">•</span>kedi bıyığı</span><span class="face-tr">kedi bıyığı</span></span></span>
     <!-- Set 2 — kopya (sonsuz döngü için) -->
-    <span class="vocab-word"><span class="en">balcony</span><span class="sep">•</span>balkon</span>
-    <span class="vocab-word"><span class="en">bathroom</span><span class="sep">•</span>banyo</span>
-    <span class="vocab-word"><span class="en">beak</span><span class="sep">•</span>gaga</span>
-    <span class="vocab-word"><span class="en">bed</span><span class="sep">•</span>yatak</span>
-    <span class="vocab-word"><span class="en">bedroom</span><span class="sep">•</span>yatak odası</span>
-    <span class="vocab-word"><span class="en">bird</span><span class="sep">•</span>kuş</span>
-    <span class="vocab-word"><span class="en">cat</span><span class="sep">•</span>kedi</span>
-    <span class="vocab-word"><span class="en">claw</span><span class="sep">•</span>pençe</span>
-    <span class="vocab-word"><span class="en">coffee table</span><span class="sep">•</span>sehba</span>
-    <span class="vocab-word"><span class="en">dining room</span><span class="sep">•</span>yemek odası</span>
-    <span class="vocab-word"><span class="en">dog</span><span class="sep">•</span>köpek</span>
-    <span class="vocab-word"><span class="en">garden</span><span class="sep">•</span>bahçe</span>
-    <span class="vocab-word"><span class="en">goldfish</span><span class="sep">•</span>japon balığı</span>
-    <span class="vocab-word"><span class="en">house</span><span class="sep">•</span>ev</span>
-    <span class="vocab-word"><span class="en">kitchen</span><span class="sep">•</span>mutfak</span>
-    <span class="vocab-word"><span class="en">paw</span><span class="sep">•</span>pati</span>
-    <span class="vocab-word"><span class="en">pet</span><span class="sep">•</span>evcil hayvan</span>
-    <span class="vocab-word"><span class="en">rabbit</span><span class="sep">•</span>tavşan</span>
-    <span class="vocab-word"><span class="en">room</span><span class="sep">•</span>oda</span>
-    <span class="vocab-word"><span class="en">sitting room</span><span class="sep">•</span>oturma odası</span>
-    <span class="vocab-word"><span class="en">sofa</span><span class="sep">•</span>kanepe</span>
-    <span class="vocab-word"><span class="en">tail</span><span class="sep">•</span>kuyruk</span>
-    <span class="vocab-word"><span class="en">whiskers</span><span class="sep">•</span>kedi bıyığı</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">balcony</span><span class="sep">•</span>balkon</span><span class="face-tr">balkon</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bathroom</span><span class="sep">•</span>banyo</span><span class="face-tr">banyo</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">beak</span><span class="sep">•</span>gaga</span><span class="face-tr">gaga</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bed</span><span class="sep">•</span>yatak</span><span class="face-tr">yatak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bedroom</span><span class="sep">•</span>yatak odası</span><span class="face-tr">yatak odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bird</span><span class="sep">•</span>kuş</span><span class="face-tr">kuş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cat</span><span class="sep">•</span>kedi</span><span class="face-tr">kedi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">claw</span><span class="sep">•</span>pençe</span><span class="face-tr">pençe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coffee table</span><span class="sep">•</span>sehba</span><span class="face-tr">sehba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dining room</span><span class="sep">•</span>yemek odası</span><span class="face-tr">yemek odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dog</span><span class="sep">•</span>köpek</span><span class="face-tr">köpek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">garden</span><span class="sep">•</span>bahçe</span><span class="face-tr">bahçe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">goldfish</span><span class="sep">•</span>japon balığı</span><span class="face-tr">japon balığı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">house</span><span class="sep">•</span>ev</span><span class="face-tr">ev</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">kitchen</span><span class="sep">•</span>mutfak</span><span class="face-tr">mutfak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">paw</span><span class="sep">•</span>pati</span><span class="face-tr">pati</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pet</span><span class="sep">•</span>evcil hayvan</span><span class="face-tr">evcil hayvan</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rabbit</span><span class="sep">•</span>tavşan</span><span class="face-tr">tavşan</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">room</span><span class="sep">•</span>oda</span><span class="face-tr">oda</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sitting room</span><span class="sep">•</span>oturma odası</span><span class="face-tr">oturma odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sofa</span><span class="sep">•</span>kanepe</span><span class="face-tr">kanepe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tail</span><span class="sep">•</span>kuyruk</span><span class="face-tr">kuyruk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">whiskers</span><span class="sep">•</span>kedi bıyığı</span><span class="face-tr">kedi bıyığı</span></span></span>
   </div>
 </div>
 
@@ -594,6 +647,13 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
 });
+
+function flipWord(el) {
+  el.classList.toggle('flipped');
+  var strip = document.querySelector('.vocab-scroll');
+  var anyFlipped = document.querySelector('.vocab-word.flipped');
+  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
+}
 
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {

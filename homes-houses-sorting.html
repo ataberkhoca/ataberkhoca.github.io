@@ -112,19 +112,86 @@
     border-radius:18px;
   }
 
-  .item-card{
+  /* Item card — stagger entrance from box */
+  .item-card {
     background:var(--white);border:2.5px solid #E5E7EB;
     border-radius:14px;padding:12px 14px;
     display:flex;flex-direction:column;align-items:center;gap:5px;
     cursor:grab;transition:all 0.18s;
     user-select:none;-webkit-user-select:none;
     min-width:80px;
+    opacity: 0; transform: translateY(20px) scale(0.85);
+  }
+  .item-card.box-revealed {
+    animation: itemFromBox 0.35s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes itemFromBox {
+    from { opacity:0; transform:translateY(20px) scale(0.85); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
   }
   .item-card:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 6px 16px rgba(46,196,182,0.2);}
   .item-card.dragging{opacity:0.4;transform:scale(0.95);}
   .item-card.gone{display:none;}
   .item-emoji{font-size:1.8rem;line-height:1;}
   .item-word{font-family:'Baloo 2',cursive;font-size:0.78rem;font-weight:700;color:var(--navy);}
+
+  /* Room zone — breathe during drag */
+  .room-zone.breathing {
+    animation: roomBreathe 1.2s ease-in-out infinite;
+  }
+  @keyframes roomBreathe {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.025); }
+  }
+  /* drag-over: stronger highlight + emoji enlarge */
+  .room-zone.drag-over {
+    border-color:var(--orange);background:rgba(255,107,53,0.09);
+    transform:scale(1.05);
+    animation: none !important; /* stop breathe when dragged over */
+  }
+  .room-zone.drag-over .room-emoji { transform: scale(1.18); display:inline-block; transition: transform 0.18s; }
+  .room-emoji { transition: transform 0.18s; display:inline-block; }
+
+  /* Door open animation — first item placed in room */
+  @keyframes doorOpen {
+    0%   { transform: scaleX(0); }
+    60%  { transform: scaleX(1.15); }
+    100% { transform: scaleX(1); }
+  }
+  .room-emoji.door-open {
+    animation: doorOpen 0.45s cubic-bezier(0.22,0.61,0.36,1) forwards;
+    transform-origin: left center;
+  }
+
+  /* Room complete: green border */
+  .room-zone.room-complete { border-color: var(--green) !important; border-style: solid; }
+
+  /* Progress arc SVG container */
+  .room-arc-wrap {
+    display: flex; justify-content: center; margin-top: 4px;
+  }
+  .room-arc-wrap svg { overflow: visible; }
+  .arc-bg   { fill: none; stroke: #E5E7EB; stroke-width: 3; stroke-linecap: round; }
+  .arc-fill { fill: none; stroke: var(--teal); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+  .arc-fill.complete { stroke: var(--green); }
+
+  /* House-complete celebration overlay */
+  .house-celebrate {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(27,40,69,0.7); backdrop-filter: blur(4px);
+    animation: celebrateIn 0.4s ease forwards;
+  }
+  @keyframes celebrateIn { from {opacity:0} to {opacity:1} }
+  .house-celebrate-box {
+    background: var(--white); border-radius: 24px; padding: 36px 40px; text-align: center;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+    animation: celebrateBox 0.45s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes celebrateBox { from {transform:scale(0.7);opacity:0} to {transform:scale(1);opacity:1} }
+  .house-celebrate-emoji { font-size: 4rem; margin-bottom: 8px; }
+  .house-celebrate-title { font-family:'Baloo 2',cursive; font-size:1.6rem; font-weight:800; color:var(--navy); margin-bottom: 6px; }
+  .house-celebrate-sub   { color:#666; font-size:0.95rem; }
 
   /* touch drag ghost */
   .drag-ghost{
@@ -366,22 +433,34 @@ function renderRooms() {
   var row = document.getElementById('roomsRow');
   row.innerHTML = '';
   activeRooms.forEach(function(room) {
+    var cfg = DIFF_CONFIG[diff];
+    var maxItems = cfg.itemsPerRoom[room.id] || 2;
+    // Arc params: r=14, circumference of semicircle = π*r ≈ 44
+    var r = 14, circ = Math.PI * r;
     var zone = document.createElement('div');
     zone.className = 'room-zone';
     zone.id = 'zone-' + room.id;
     zone.setAttribute('data-room', room.id);
+    zone.setAttribute('data-max', maxItems);
     zone.innerHTML =
       '<div class="room-header">' +
-        '<div class="room-emoji">' + room.emoji + '</div>' +
+        '<div class="room-emoji" id="emoji-' + room.id + '">' + room.emoji + '</div>' +
         '<div class="room-name">' + room.name + '</div>' +
-        '<div class="room-count" id="count-' + room.id + '">0 items</div>' +
+        '<div class="room-arc-wrap">' +
+          '<svg width="36" height="20" viewBox="-18 -2 36 20">' +
+            '<path class="arc-bg"  d="M -' + r + ' 0 A ' + r + ' ' + r + ' 0 0 1 ' + r + ' 0" />' +
+            '<path class="arc-fill" id="arc-' + room.id + '" ' +
+              'stroke-dasharray="' + circ + '" stroke-dashoffset="' + circ + '" ' +
+              'd="M -' + r + ' 0 A ' + r + ' ' + r + ' 0 0 1 ' + r + ' 0" />' +
+          '</svg>' +
+        '</div>' +
+        '<div class="room-count" id="count-' + room.id + '">0 / ' + maxItems + '</div>' +
       '</div>' +
       '<div class="room-items" id="items-' + room.id + '"></div>';
 
-    // Desktop drag events
-    zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragover',  function(e){ e.preventDefault(); zone.classList.add('drag-over'); });
     zone.addEventListener('dragleave', function(){ zone.classList.remove('drag-over'); });
-    zone.addEventListener('drop', function(e){ e.preventDefault(); zone.classList.remove('drag-over'); onDrop(room.id, zone); });
+    zone.addEventListener('drop',      function(e){ e.preventDefault(); zone.classList.remove('drag-over'); onDrop(room.id, zone); });
 
     row.appendChild(zone);
   });
@@ -406,10 +485,13 @@ function renderItems() {
       dragItem = i;
       card.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
+      // Start breathing on all rooms
+      document.querySelectorAll('.room-zone').forEach(function(z){ z.classList.add('breathing'); });
     });
     card.addEventListener('dragend', function() {
       card.classList.remove('dragging');
       dragItem = null;
+      document.querySelectorAll('.room-zone').forEach(function(z){ z.classList.remove('breathing','drag-over'); });
     });
 
     // Touch drag
@@ -418,6 +500,11 @@ function renderItems() {
     card.addEventListener('touchend',   function(e){ onTouchEnd(e, item); },  { passive: false });
 
     pool.appendChild(card);
+
+    // Stagger entrance
+    setTimeout(function() {
+      card.classList.add('box-revealed');
+    }, 60 + i * 80);
   });
 }
 
@@ -439,20 +526,48 @@ function processPlacement(itemIndex, roomId, zoneEl) {
     var placed = document.createElement('div');
     placed.className = 'placed-item';
     placed.innerHTML = item.emoji + ' ' + item.word;
-    document.getElementById('items-' + roomId).appendChild(placed);
-    // Update count
-    var placed_items = document.getElementById('items-' + roomId).children.length;
-    document.getElementById('count-' + roomId).textContent = placed_items + (placed_items === 1 ? ' item' : ' items');
+    var itemsContainer = document.getElementById('items-' + roomId);
+    itemsContainer.appendChild(placed);
+
+    var placed_count = itemsContainer.children.length;
+    var maxItems = parseInt(zoneEl.getAttribute('data-max')) || 2;
+    document.getElementById('count-' + roomId).textContent = placed_count + ' / ' + maxItems;
     document.getElementById('scoreNum').textContent = correct;
     updateProg();
+
+    // Arc progress
+    var r = 14, circ = Math.PI * r;
+    var arc = document.getElementById('arc-' + roomId);
+    if (arc) {
+      var offset = circ * (1 - placed_count / maxItems);
+      arc.setAttribute('stroke-dashoffset', offset);
+      if (placed_count >= maxItems) arc.classList.add('complete');
+    }
+
+    // Door open — only on FIRST item in this room
+    var emojiEl = document.getElementById('emoji-' + roomId);
+    if (emojiEl && placed_count === 1) {
+      emojiEl.classList.remove('door-open');
+      emojiEl.offsetWidth; // reflow
+      emojiEl.classList.add('door-open');
+    }
+
+    // Room complete: all items for this room placed
+    if (placed_count >= maxItems) {
+      zoneEl.classList.add('room-complete');
+    }
+
     zoneEl.classList.add('correct-flash');
     setTimeout(function(){ zoneEl.classList.remove('correct-flash'); }, 500);
     toast('✅ ' + item.word + ' → ' + roomId.replace('sitting','sitting room').replace('dining','dining room') + '!', 'ok');
-    // Update hint
+
     if (diff !== 'expansion' && correct < total) {
       document.getElementById('hintText').textContent = 'Harika! Devam et — diğer eşyaları da yerleştir!';
     }
-    if (correct === total) setTimeout(endGame, 700);
+    if (correct === total) {
+      showHouseCelebrate();
+      setTimeout(endGame, 1400);
+    }
   } else {
     // ❌ WRONG
     wrong++;
@@ -463,11 +578,23 @@ function processPlacement(itemIndex, roomId, zoneEl) {
       card.classList.remove('dragging');
     }, 420);
     toast('❌ ' + item.word + ' doesn\'t belong here!', 'err');
-    // Show hint on wrong
     if (diff === 'supporting') {
       document.getElementById('hintText').textContent = '💡 ' + item.hint;
     }
   }
+}
+
+function showHouseCelebrate() {
+  var overlay = document.createElement('div');
+  overlay.className = 'house-celebrate';
+  overlay.innerHTML =
+    '<div class="house-celebrate-box">' +
+      '<div class="house-celebrate-emoji">🏠✅</div>' +
+      '<div class="house-celebrate-title">Ev Tamamlandı!</div>' +
+      '<div class="house-celebrate-sub">Milo\'nun tüm eşyaları doğru odalara yerleşti!</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  setTimeout(function(){ overlay.remove(); }, 1350);
 }
 
 // ── TOUCH DRAG ──
@@ -481,6 +608,7 @@ function onTouchStart(e, index, item) {
   dragItem = index;
   var t = e.touches[0];
   createGhost(item, t.clientX, t.clientY);
+  document.querySelectorAll('.room-zone').forEach(function(z){ z.classList.add('breathing'); });
 }
 
 function onTouchMove(e) {
@@ -508,7 +636,7 @@ function onTouchEnd(e) {
   var el = document.elementFromPoint(t.clientX, t.clientY);
   ghost.style.display = 'flex';
   removeGhost();
-  document.querySelectorAll('.room-zone').forEach(function(z){ z.classList.remove('drag-over'); });
+  document.querySelectorAll('.room-zone').forEach(function(z){ z.classList.remove('breathing','drag-over'); });
   if (el) {
     var zone = el.closest('.room-zone');
     if (zone) {

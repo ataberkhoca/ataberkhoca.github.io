@@ -97,7 +97,17 @@
     font-size:3.5rem;
     flex-shrink:0;
     border:2px solid rgba(0,0,0,0.08);
+    transition: filter 0.3s ease;
   }
+  /* Light-on: new question triggers brightness ramp */
+  @keyframes lightOn {
+    from { filter: brightness(0.3); }
+    to   { filter: brightness(1); }
+  }
+  .room-bg.light-on {
+    animation: lightOn 0.35s ease forwards;
+  }
+
   .subject-badge{
     position:absolute;
     bottom:-14px;left:50%;transform:translateX(-50%);
@@ -106,7 +116,6 @@
     padding:3px 12px;border-radius:20px;
     white-space:nowrap;
   }
-  /* number badge for expansion */
   .number-badge{
     position:absolute;top:-12px;right:-12px;
     background:var(--orange);color:var(--white);
@@ -124,23 +133,30 @@
     margin-bottom:8px;
     line-height:1.5;
   }
+  /* Blank — door metaphor: dashed box with door emoji */
   .blank{
-    display:inline-block;
-    border-bottom:3px solid var(--orange);
-    min-width:90px;padding:0 8px;
-    color:var(--orange);
-    transition:all 0.2s;
+    display:inline-flex;align-items:center;justify-content:center;
+    border:2px dashed var(--orange);
+    border-radius:8px;
+    min-width:90px;padding:2px 10px;
+    color:rgba(255,107,53,0.6);
+    font-size:0.95em;
+    transition:all 0.25s;
+    vertical-align:middle;
   }
   .blank.filled{
-    border-bottom-color:var(--green);
+    border:2px solid var(--green);
+    border-style:solid;
     color:var(--green);
+    animation: blankFill 0.3s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes blankFill {
+    from { clip-path: inset(0 100% 0 0); opacity:0.4; }
+    to   { clip-path: inset(0 0% 0 0);   opacity:1; }
   }
 
-  /* OPTIONS */
-  .options-grid{
-    display:grid;gap:10px;
-    margin-top:20px;
-  }
+  /* Options */
+  .options-grid{display:grid;gap:10px;margin-top:20px;}
   .options-grid.cols-2{grid-template-columns:1fr 1fr;}
   .options-grid.cols-3{grid-template-columns:1fr 1fr 1fr;}
   .options-grid.cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
@@ -153,12 +169,22 @@
     color:var(--navy);cursor:pointer;
     transition:all 0.18s;
     display:flex;align-items:center;justify-content:center;gap:6px;
+    position:relative;
   }
   .opt-btn:hover:not(:disabled){border-color:var(--teal);background:rgba(46,196,182,0.07);transform:translateY(-2px);}
   .opt-btn.correct{border-color:var(--green);background:var(--green-light);color:#166534;}
   .opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:#991B1B;}
-  .opt-btn:disabled{cursor:default;opacity:0.7;}
-  .opt-emoji{font-size:1.1rem;}
+  /* Eliminated: wrong answer fades with strikethrough */
+  .opt-btn.eliminated{
+    opacity:0.28;
+    text-decoration:line-through;
+    text-decoration-color:rgba(239,68,68,0.7);
+    pointer-events:none;
+    border-color:#E5E7EB;
+    background:var(--cream);
+    color:#999;
+  }
+  .opt-btn:disabled{cursor:default;}
 
   /* NEXT BUTTON */
   .btn-next{
@@ -421,24 +447,24 @@ function renderQuestion(){
 function renderSingle(q, cfg){
   var room = getRoomById(q.room);
 
-  // Scene
+  // Scene — with light-on effect
   var scene = document.getElementById('scene');
   scene.innerHTML =
-    '<div class="room-bg" style="background:'+room.bg+'">' +
+    '<div class="room-bg light-on" style="background:'+room.bg+'">' +
       '<span style="font-size:3.5rem">'+q.subjectEmoji+'</span>' +
       '<div class="subject-badge">'+q.subject+'</div>' +
     '</div>';
 
-  // Sentence
+  // Sentence — blank shows door emoji as placeholder
   document.getElementById('sentence').innerHTML =
-    'The '+q.subject+' is in the <span class="blank" id="theBlank">___</span>.';
+    'The '+q.subject+' is in the <span class="blank" id="theBlank">🚪</span>.';
 
   // Hint
   if(cfg.showHint){
     document.getElementById('hintText').textContent = q.hint;
   }
 
-  // Build options: correct + distractors
+  // Build options
   var opts = [q.room];
   var distractors = shuffle(q.distractors).slice(0, cfg.optCount - 1);
   distractors.forEach(function(d){ opts.push(d); });
@@ -469,15 +495,15 @@ function renderExpansion(q, cfg){
   }
   var scene = document.getElementById('scene');
   scene.innerHTML =
-    '<div class="room-bg" style="background:'+room.bg+';flex-wrap:wrap;gap:4px;padding:12px;position:relative">' +
+    '<div class="room-bg light-on" style="background:'+room.bg+';flex-wrap:wrap;gap:4px;padding:12px;position:relative">' +
       animalRow +
       '<div class="number-badge">'+q.number+'</div>' +
     '</div>';
 
-  // Sentence with TWO blanks
+  // Sentence with TWO blanks — door emoji placeholders
   document.getElementById('sentence').innerHTML =
-    'There are <span class="blank" id="blankNum">___</span> '+q.subject+
-    ' in the <span class="blank" id="blankRoom">___</span>.';
+    'There are <span class="blank" id="blankNum">🚪</span> '+q.subject+
+    ' in the <span class="blank" id="blankRoom">🚪</span>.';
 
   // Build options — mix room + number options, answer = number+room combo
   // We do two separate option rows: first number, then room
@@ -524,18 +550,27 @@ function onSingleAnswer(chosen, correct_room, btn){
   document.querySelectorAll('.opt-btn').forEach(function(b){ b.disabled=true; });
 
   if(chosen === correct_room){
-    correct++;
     btn.classList.add('correct');
     document.getElementById('theBlank').textContent = chosen;
     document.getElementById('theBlank').classList.add('filled');
     document.getElementById('questionCard').classList.add('correct-flash');
-    document.getElementById('scoreNum').textContent = correct;
+    document.getElementById('scoreNum').textContent = ++correct;
   } else {
     wrong++;
     btn.classList.add('wrong');
-    // Show correct answer
+    // Eliminate wrong btn visually
+    setTimeout(function(){
+      btn.classList.remove('wrong');
+      btn.classList.add('eliminated');
+    }, 500);
+    // Reveal correct + eliminate other wrong options
     document.querySelectorAll('.opt-btn').forEach(function(b){
-      if(b.getAttribute('data-value') === correct_room) b.classList.add('correct');
+      var val = b.getAttribute('data-value');
+      if(val === correct_room) {
+        b.classList.add('correct');
+      } else if(b !== btn) {
+        b.classList.add('eliminated');
+      }
     });
     document.getElementById('questionCard').classList.add('wrong-flash');
     document.getElementById('theBlank').textContent = correct_room;
@@ -587,8 +622,17 @@ function onRoomAnswer(chosen, correct_room, btn){
   } else {
     wrong++;
     btn.classList.add('wrong');
+    setTimeout(function(){
+      btn.classList.remove('wrong');
+      btn.classList.add('eliminated');
+    }, 500);
     document.querySelectorAll('[data-room-opt]').forEach(function(b){
-      if(b.getAttribute('data-room-opt')===correct_room) b.classList.add('correct');
+      var ropt = b.getAttribute('data-room-opt');
+      if(ropt === correct_room) {
+        b.classList.add('correct');
+      } else if(b !== btn) {
+        b.classList.add('eliminated');
+      }
     });
     document.getElementById('questionCard').classList.add('wrong-flash');
     document.getElementById('blankRoom').textContent = correct_room;

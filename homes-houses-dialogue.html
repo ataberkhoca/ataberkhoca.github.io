@@ -52,11 +52,89 @@
   .btn-start{display:block;width:100%;max-width:300px;margin:0 auto;background:linear-gradient(135deg,var(--orange),var(--orange-glow));color:var(--white);font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:700;border:none;border-radius:50px;padding:15px 32px;cursor:pointer;box-shadow:0 4px 18px rgba(255,107,53,0.38);transition:all 0.2s;}
   .btn-start:hover{transform:translateY(-2px);}
 
-  /* PROGRESS DOTS */
-  .stop-dots{display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-  .dot{width:32px;height:8px;border-radius:4px;background:#E5E7EB;transition:all 0.3s;}
-  .dot.done{background:var(--green);}
-  .dot.active{background:var(--orange);width:48px;}
+  /* PROGRESS DOTS — improved */
+  .stop-dots{display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;position:relative;}
+  .dot{
+    width:32px;height:32px;border-radius:50%;
+    background:#E5E7EB;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.9rem;font-family:'Baloo 2',cursive;font-weight:800;color:transparent;
+    transition:all 0.35s cubic-bezier(0.22,0.61,0.36,1);
+    position:relative;z-index:1;
+    flex-shrink:0;
+  }
+  .dot.done{background:var(--green);color:var(--white);}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.5)}50%{box-shadow:0 0 0 7px rgba(255,107,53,0)}}
+  .dot.active{background:var(--orange);color:var(--white);animation:dotPulse 1.4s ease-in-out infinite;}
+  /* Connector between dots */
+  .dot-connector{
+    width:20px;height:3px;background:#E5E7EB;border-radius:2px;
+    position:relative;overflow:hidden;flex-shrink:0;
+  }
+  .dot-connector.filled::after{
+    content:'';position:absolute;inset:0;background:var(--green);
+    animation:connFill 0.4s ease forwards;
+  }
+  @keyframes connFill{from{width:0}to{width:100%}}
+
+  /* SCENE CARD slide transition */
+  .scene-card{
+    border-radius:24px;overflow:hidden;
+    margin-bottom:18px;
+    box-shadow:0 6px 28px rgba(0,0,0,0.1);
+  }
+  @keyframes slideInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-40px)}}
+  .scene-card.entering{animation:slideInRight 0.32s cubic-bezier(0.22,0.61,0.36,1) both;}
+  .scene-card.leaving{animation:slideOutLeft 0.25s ease forwards;}
+
+  /* Room atmosphere emoji entering */
+  @keyframes atmosphereEnter{
+    from{opacity:0;transform:translateX(-24px) scale(0.8);}
+    to{opacity:1;transform:translateX(0) scale(1);}
+  }
+  .room-atmosphere.entering{animation:atmosphereEnter 0.4s 0.1s cubic-bezier(0.22,0.61,0.36,1) both;}
+
+  /* Door knock — card fine tremor */
+  @keyframes doorKnock{
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(2px)}
+    30%{transform:translateX(-2px)}
+    45%{transform:translateX(2px)}
+    60%{transform:translateX(-1px)}
+    75%{transform:translateX(1px)}
+  }
+  .scene-card.knocking{animation:doorKnock 0.45s ease;}
+
+  /* Door knock emoji */
+  .knock-emoji{
+    position:fixed;z-index:200;font-size:2rem;
+    pointer-events:none;
+    animation:knockEmojiPop 0.7s ease forwards;
+  }
+  @keyframes knockEmojiPop{
+    0%{opacity:0;transform:scale(0.4) rotate(-20deg);}
+    30%{opacity:1;transform:scale(1.2) rotate(10deg);}
+    60%{opacity:1;transform:scale(1) rotate(0deg);}
+    100%{opacity:0;transform:scale(0.7) translateY(-10px);}
+  }
+
+  /* Option buttons — stagger fade-in */
+  .opt-btn{
+    background:var(--cream);border:2.5px solid #E5E7EB;
+    border-radius:14px;padding:14px 18px;
+    font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:700;
+    color:var(--navy);cursor:pointer;transition:all 0.18s;
+    text-align:left;display:flex;align-items:center;gap:10px;
+    width:100%;
+    opacity:0;
+    animation:optFadeIn 0.3s ease forwards;
+  }
+  @keyframes optFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .opt-btn:hover:not(:disabled){border-color:var(--teal);background:rgba(46,196,182,0.07);transform:translateX(4px);}
+  .opt-btn.correct{border-color:var(--green);background:var(--green-light);color:#166534;}
+  .opt-btn.wrong{border-color:var(--red);background:var(--red-light);color:#991B1B;}
+  .opt-btn:disabled{cursor:default;}
 
   /* TOPBAR */
   .game-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
@@ -675,7 +753,14 @@ function buildDots() {
     var d = document.createElement('div');
     d.className = 'dot' + (i === 0 ? ' active' : '');
     d.id = 'dot-' + i;
+    d.textContent = i === 0 ? (i+1) : (i+1);
     row.appendChild(d);
+    if (i < stops.length - 1) {
+      var conn = document.createElement('div');
+      conn.className = 'dot-connector';
+      conn.id = 'conn-' + i;
+      row.appendChild(conn);
+    }
   });
 }
 
@@ -683,11 +768,27 @@ function updateDots() {
   stops.forEach(function(_, i) {
     var d = document.getElementById('dot-' + i);
     if (!d) return;
-    d.className = 'dot' + (i < stopIndex ? ' done' : i === stopIndex ? ' active' : '');
+    if (i < stopIndex) {
+      d.className = 'dot done';
+      d.textContent = '✓';
+      // Fill connector
+      var conn = document.getElementById('conn-' + i);
+      if (conn && !conn.classList.contains('filled')) {
+        conn.classList.add('filled');
+      }
+    } else if (i === stopIndex) {
+      d.className = 'dot active';
+      d.textContent = i + 1;
+    } else {
+      d.className = 'dot';
+      d.textContent = i + 1;
+    }
   });
 }
 
-// ── RENDER STOP ──
+// Active typewriter interval
+var twTimer = null;
+
 function renderStop() {
   answered = false;
   var cfg = DIFF_CONFIG[diff];
@@ -695,52 +796,102 @@ function renderStop() {
   var varIdx = chosenVariations[stopIndex];
   var v = stop.variations[varIdx];
 
-  // Update stop indicator
   document.getElementById('stopLabel').textContent = 'Stop ' + (stopIndex+1) + ' of ' + stops.length;
   document.getElementById('stopIndicator').textContent = 'Stop ' + (stopIndex+1) + ' / ' + stops.length;
   updateDots();
 
-  // Room atmosphere
-  document.getElementById('roomBanner').style.background = stop.bg;
-  document.getElementById('roomAtmosphere').textContent = stop.atmosphere;
-  document.getElementById('roomNameBadge').textContent = stop.roomName;
-  document.getElementById('roomTitle').textContent = 'You are in the ' + stop.roomName + '!';
+  var sceneCard = document.getElementById('sceneCard');
 
-  // Visitor avatar — random from stop's visitors
-  var vis = stop.visitors[Math.floor(Math.random() * stop.visitors.length)];
-  document.getElementById('visitorAvatar').textContent = vis;
+  // Door-knock effect + emoji
+  sceneCard.classList.remove('entering','leaving','knocking');
+  sceneCard.offsetWidth;
+  sceneCard.classList.add('knocking');
 
-  // Visitor says
-  document.getElementById('visitorSays').textContent = v.visitor;
+  // Door-knock emoji near scene card
+  var rect = sceneCard.getBoundingClientRect();
+  var knock = document.createElement('div');
+  knock.className = 'knock-emoji';
+  knock.textContent = '🚪✊';
+  knock.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+  knock.style.top  = (rect.top + 20) + 'px';
+  document.body.appendChild(knock);
+  setTimeout(function(){ knock.remove(); }, 750);
 
-  // Milo placeholder
-  document.getElementById('miloReply').innerHTML = '<span class="milo-placeholder">Choose your answer...</span>';
+  // Slide-in scene after knock settles
+  setTimeout(function() {
+    // Update room content
+    document.getElementById('roomBanner').style.background = stop.bg;
+    var atm = document.getElementById('roomAtmosphere');
+    atm.textContent = stop.atmosphere;
+    atm.classList.remove('entering');
+    atm.offsetWidth;
+    atm.classList.add('entering');
+    document.getElementById('roomNameBadge').textContent = stop.roomName;
+    document.getElementById('roomTitle').textContent = 'You are in the ' + stop.roomName + '!';
 
-  // Hint
-  var hb = document.getElementById('hintBox');
-  if (!cfg.showHint) { hb.classList.add('gone'); }
-  else { hb.classList.remove('gone'); document.getElementById('hintText').textContent = v.hint; }
+    // Visitor
+    var vis = stop.visitors[Math.floor(Math.random() * stop.visitors.length)];
+    document.getElementById('visitorAvatar').textContent = vis;
 
-  // Build options
+    // Clear visitor text + Milo
+    document.getElementById('visitorSays').textContent = '';
+    document.getElementById('miloReply').innerHTML = '<span class="milo-placeholder">Choose your answer...</span>';
+
+    // Hint
+    var hb = document.getElementById('hintBox');
+    if (!cfg.showHint) { hb.classList.add('gone'); }
+    else { hb.classList.remove('gone'); document.getElementById('hintText').textContent = v.hint; }
+
+    // Clear options (hidden until typewriter done)
+    var list = document.getElementById('optionsList');
+    list.innerHTML = '';
+
+    // Slide-in animation
+    sceneCard.classList.remove('knocking','entering');
+    sceneCard.offsetWidth;
+    sceneCard.classList.add('entering');
+
+    // Next button reset
+    document.getElementById('btnNext').className = 'btn-next';
+    var isLast = (stopIndex === stops.length - 1);
+    document.getElementById('btnNextLabel').textContent = isLast ? 'See Results 🏆' : 'Next Stop ➡️';
+
+    // Typewriter for visitor message
+    if (twTimer) clearInterval(twTimer);
+    var fullText = v.visitor;
+    var target = document.getElementById('visitorSays');
+    var idx = 0;
+    twTimer = setInterval(function() {
+      if (idx >= fullText.length) {
+        clearInterval(twTimer); twTimer = null;
+        // Stagger options after typing
+        showOptions(v, cfg);
+        return;
+      }
+      target.textContent += fullText[idx];
+      idx++;
+    }, 30);
+
+  }, 480); // after knock animation
+}
+
+function showOptions(v, cfg) {
   var allOpts = v.options.slice();
   var correct_opt = allOpts.filter(function(o){ return o.correct; })[0];
   var wrong_opts = shuffle(allOpts.filter(function(o){ return !o.correct; })).slice(0, cfg.optCount - 1);
   var opts = shuffle([correct_opt].concat(wrong_opts));
 
-  var list = document.getElementById('optionsList'); list.innerHTML = '';
+  var list = document.getElementById('optionsList');
+  list.innerHTML = '';
   var letters = ['A','B','C','D'];
   opts.forEach(function(opt, i) {
     var btn = document.createElement('button');
     btn.className = 'opt-btn';
+    btn.style.animationDelay = (i * 100) + 'ms';
     btn.innerHTML = '<span class="opt-letter">'+letters[i]+'</span>' + opt.text;
     btn.addEventListener('click', function(){ onAnswer(opt.correct, opt.text, btn, correct_opt.text); });
     list.appendChild(btn);
   });
-
-  // Next button
-  document.getElementById('btnNext').className = 'btn-next';
-  var isLast = (stopIndex === stops.length - 1);
-  document.getElementById('btnNextLabel').textContent = isLast ? 'See Results 🏆' : 'Next Stop ➡️';
 }
 
 // ── ANSWER ──
@@ -771,9 +922,14 @@ function onAnswer(isCorrect, chosenText, btn, correctText) {
 
 // ── NEXT STOP ──
 function nextStop() {
-  stopIndex++;
-  if (stopIndex >= stops.length) { endGame(); return; }
-  renderStop();
+  if (twTimer) { clearInterval(twTimer); twTimer = null; }
+  var sceneCard = document.getElementById('sceneCard');
+  sceneCard.classList.add('leaving');
+  setTimeout(function(){
+    stopIndex++;
+    if (stopIndex >= stops.length) { endGame(); return; }
+    renderStop();
+  }, 260);
 }
 
 // ── END ──

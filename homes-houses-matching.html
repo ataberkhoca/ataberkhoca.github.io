@@ -102,7 +102,15 @@
     position:relative; user-select:none; -webkit-user-select:none;
   }
   .animal-card:hover:not(.matched) { border-color:var(--teal); transform:translateX(-4px); box-shadow:4px 0 0 rgba(46,196,182,0.3); }
-  .animal-card.selected { border-color:var(--orange); background:rgba(255,107,53,0.06); transform:translateX(-5px); box-shadow:5px 0 0 var(--orange); }
+  .animal-card.selected { border-color:var(--orange); background:rgba(255,107,53,0.06); transform:translateX(-5px); }
+  .animal-card.selected { animation: spotlightPulse 0.5s ease forwards; }
+  @keyframes spotlightPulse {
+    0%   { box-shadow: 5px 0 0 var(--orange), 0 0 0 0 rgba(255,107,53,0.5); }
+    40%  { box-shadow: 5px 0 0 var(--orange), 0 0 0 10px rgba(255,107,53,0.2); }
+    100% { box-shadow: 5px 0 0 var(--orange), 0 0 0 6px rgba(255,107,53,0.08); }
+  }
+  /* Dimmed: other animal cards fade when one is selected */
+  .animal-card.dimmed { opacity: 0.42; transition: opacity 0.2s; }
   .animal-card.matched { border-color:var(--green); background:var(--green-light); cursor:default; transform:none; box-shadow:none; }
   .animal-card.shake { animation:shake 0.38s ease; }
   .animal-card .big-emoji { font-size:2.6rem; line-height:1; margin-bottom:6px; }
@@ -113,15 +121,37 @@
   .col-connector { position:relative; min-height:100%; }
   .col-connector svg { position:absolute; top:0; left:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
 
+  /* SVG line draw animation */
+  .svg-line-animated { animation: drawLine 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards; }
+  @keyframes drawLine { from { stroke-dashoffset: var(--line-len, 200); } to { stroke-dashoffset: 0; } }
+
+  /* Inline SVG feedback emoji */
+  .svg-feedback {
+    position: absolute;
+    font-size: 1.2rem;
+    pointer-events: none;
+    animation: feedbackPop 1.2s ease forwards;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+  }
+  @keyframes feedbackPop {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+    50%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) translateY(-14px); }
+  }
+
   .part-card {
     background:var(--white); border:2.5px solid #E5E7EB; border-radius:16px;
     padding:14px 10px; text-align:center; cursor:pointer; transition:all 0.18s;
     user-select:none; -webkit-user-select:none;
   }
-  .part-card:hover:not(.matched) { border-color:#8B5CF6; transform:translateX(4px); box-shadow:-4px 0 0 rgba(139,92,246,0.3); }
+  /* Per-card color hover — set via inline style data attr */
+  .part-card:hover:not(.matched) { transform:translateX(4px); }
   .part-card.matched { border-color:var(--green); background:var(--green-light); cursor:default; transform:none; box-shadow:none; }
   .part-card.shake { animation:shake 0.38s ease; }
-  .part-visual { width:60px; height:60px; margin:0 auto 8px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; }
+  .part-visual { width:60px; height:60px; margin:0 auto 8px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; transition: filter 0.18s; }
+  .part-card:hover:not(.matched) .part-visual { filter: saturate(1.6) brightness(0.96); }
   .part-card .card-word { font-family:'Baloo 2',cursive; font-size:0.88rem; font-weight:700; color:var(--navy); }
 
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
@@ -345,7 +375,19 @@ function renderParts() {
     var d = document.createElement('div');
     d.className = 'part-card'; d.id = 'pc-'+pos;
     d.setAttribute('data-orig', origIdx);
+    d.setAttribute('data-bg', pair.part.bg);
     d.innerHTML = '<div class="part-visual" style="background:'+pair.part.bg+'">'+pair.part.icon+'</div><div class="card-word">'+pair.part.word+'</div>';
+    // Per-card color hover
+    d.addEventListener('mouseenter', function() {
+      if (d.classList.contains('matched')) return;
+      d.style.borderColor = pair.part.bg;
+      d.style.boxShadow = '-4px 0 0 ' + pair.part.bg;
+    });
+    d.addEventListener('mouseleave', function() {
+      if (d.classList.contains('matched')) return;
+      d.style.borderColor = '';
+      d.style.boxShadow = '';
+    });
     d.addEventListener('click', function(){ clickPart(origIdx, pos); });
     col.appendChild(d);
   });
@@ -353,10 +395,25 @@ function renderParts() {
 
 function clickAnimal(i) {
   if (matchedSet[active[i].id]) return;
-  if (selAnimal >= 0) { var p = document.getElementById('ac-'+selAnimal); if(p) p.classList.remove('selected'); }
+  // Deselect previous
+  if (selAnimal >= 0) {
+    var p = document.getElementById('ac-'+selAnimal);
+    if (p) p.classList.remove('selected');
+  }
+  // Remove dimmed from all
+  document.querySelectorAll('.animal-card').forEach(function(c){ c.classList.remove('dimmed'); });
+
   if (selAnimal === i) { selAnimal = -1; return; }
   selAnimal = i;
-  document.getElementById('ac-'+i).classList.add('selected');
+  var sel = document.getElementById('ac-'+i);
+  sel.classList.add('selected');
+  // Dim others
+  active.forEach(function(_, idx) {
+    if (idx !== i && !matchedSet[active[idx].id]) {
+      var other = document.getElementById('ac-'+idx);
+      if (other) other.classList.add('dimmed');
+    }
+  });
   if (diff !== 'expansion') {
     var hintKey = diff === 'supporting' ? 'supporting' : 'standard';
     document.getElementById('hintText').textContent = active[i].hints[hintKey] || '';
@@ -365,26 +422,32 @@ function clickAnimal(i) {
 
 function clickPart(origIdx, pos) {
   if (matchedSet[active[origIdx].id]) return;
-  if (selAnimal < 0) { toast('Önce bir hayvan seç! 🐾','err'); return; }
+  if (selAnimal < 0) { inlineFeedback(null, null, '🐾 Önce bir hayvan seç!', false); return; }
   var anEl = document.getElementById('ac-'+selAnimal);
   var ptEl = document.getElementById('pc-'+pos);
+  // Clear dimmed state
+  document.querySelectorAll('.animal-card').forEach(function(c){ c.classList.remove('dimmed'); });
+
   if (selAnimal === origIdx) {
     correct++; matchedSet[active[origIdx].id] = true;
     anEl.classList.remove('selected'); anEl.classList.add('matched');
     ptEl.classList.add('matched');
-    drawLine(selAnimal, pos); selAnimal = -1;
+    ptEl.style.borderColor = ''; ptEl.style.boxShadow = '';
+    var savedSel = selAnimal;
+    selAnimal = -1;
+    drawLine(savedSel, pos, true);
     document.getElementById('scoreNum').textContent = correct;
-    updateProg(); toast('✅ Well done!','ok');
+    updateProg();
     if (correct === active.length) setTimeout(endGame, 750);
   } else {
     wrong++;
     anEl.classList.add('shake'); ptEl.classList.add('shake');
+    drawLine(selAnimal, pos, false);
     setTimeout(function(){ anEl.classList.remove('shake','selected'); ptEl.classList.remove('shake'); selAnimal=-1; }, 420);
-    toast('❌ Try again!','err');
   }
 }
 
-function drawLine(animalIdx, partPos) {
+function drawLine(animalIdx, partPos, isCorrect) {
   var svg = document.getElementById('svgLines');
   var arena = document.querySelector('.arena');
   var connEl = document.getElementById('colConnector');
@@ -395,14 +458,58 @@ function drawLine(animalIdx, partPos) {
   var aR = aEl.getBoundingClientRect();
   var pR = pEl.getBoundingClientRect();
   svg.setAttribute('viewBox','0 0 '+cr.width+' '+ar.height);
-  var y1 = (aR.top+aR.bottom)/2-ar.top;
-  var y2 = (pR.top+pR.bottom)/2-ar.top;
-  var line = document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1','0'); line.setAttribute('y1',y1);
-  line.setAttribute('x2',cr.width); line.setAttribute('y2',y2);
-  line.setAttribute('stroke','#22C55E'); line.setAttribute('stroke-width','3');
-  line.setAttribute('stroke-dasharray','7,4'); line.setAttribute('stroke-linecap','round');
-  line.setAttribute('opacity','0.85'); svg.appendChild(line);
+
+  var x1 = 0, y1 = (aR.top+aR.bottom)/2 - ar.top;
+  var x2 = cr.width, y2 = (pR.top+pR.bottom)/2 - ar.top;
+  var cx = cr.width / 2;
+  // Bezier curve: slight arc through midpoint
+  var pathD = 'M '+x1+' '+y1+' C '+cx+' '+y1+', '+cx+' '+y2+', '+x2+' '+y2;
+
+  var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', pathD);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', isCorrect ? '#22C55E' : '#EF4444');
+  path.setAttribute('stroke-width', '3');
+  path.setAttribute('stroke-linecap', 'round');
+  path.setAttribute('opacity', isCorrect ? '0.85' : '0.6');
+  if (!isCorrect) path.setAttribute('stroke-dasharray', '5,4');
+
+  // Animate draw
+  var len = path.getTotalLength ? path.getTotalLength() : 120;
+  path.setAttribute('stroke-dasharray', isCorrect ? len : '5,4');
+  path.setAttribute('stroke-dashoffset', len);
+  path.style.setProperty('--line-len', len);
+  path.classList.add('svg-line-animated');
+  svg.appendChild(path);
+
+  // Inline feedback emoji at midpoint of line
+  var midX = cr.left - ar.left + cx;
+  var midY = (y1 + y2) / 2;
+  inlineFeedback(midX, midY, isCorrect ? '✅' : '❌', isCorrect);
+
+  // Remove wrong line after shake
+  if (!isCorrect) {
+    setTimeout(function() { if (path.parentNode) path.parentNode.removeChild(path); }, 450);
+  }
+}
+
+function inlineFeedback(x, y, emoji, isCorrect) {
+  if (x === null) {
+    // No position — just flash a small positioned label near the connector
+    var connEl = document.getElementById('colConnector');
+    var cr = connEl.getBoundingClientRect();
+    var arena = document.querySelector('.arena').getBoundingClientRect();
+    x = cr.left - arena.left + cr.width / 2;
+    y = cr.height / 2;
+  }
+  var connEl = document.getElementById('colConnector');
+  var fb = document.createElement('div');
+  fb.className = 'svg-feedback';
+  fb.textContent = emoji;
+  fb.style.left = x + 'px';
+  fb.style.top = y + 'px';
+  connEl.appendChild(fb);
+  setTimeout(function() { if (fb.parentNode) fb.parentNode.removeChild(fb); }, 1300);
 }
 
 function updateProg() {
