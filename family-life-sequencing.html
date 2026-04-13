@@ -242,21 +242,68 @@
   }
   .tree-connector-h {
     height: 2px; background: #d1d5db;
+    transform-origin: center;
     transition: background 0.5s;
+    position: relative; overflow: hidden;
   }
-  .tree-connector-h.lit { background: var(--green); }
+  .tree-connector-h.lit { background: #d1d5db; }
+  .tree-connector-h.lit::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: connGrow 0.45s ease forwards;
+  }
+  @keyframes connGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
   .tree-trunk-visual {
     width: 14px; height: 28px;
     background: linear-gradient(180deg, var(--tree-trunk), #6b3f1f);
     border-radius: 3px; margin: 0 auto;
+    transition: height 0.6s cubic-bezier(0.22,0.61,0.36,1);
   }
   .tree-leaves-visual {
-    width: 70px; height: 50px;
     background: radial-gradient(ellipse, var(--tree-leaves-light) 30%, var(--tree-leaves) 100%);
     border-radius: 50% 50% 40% 40%;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.4rem; margin: 0 auto;
     box-shadow: 0 4px 12px rgba(45,122,58,0.3);
+    transition: width 0.6s cubic-bezier(0.22,0.61,0.36,1),
+                height 0.6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+
+  /* Flying star: left panel → right tree panel */
+  .flying-star {
+    position: fixed;
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 999;
+    animation: flyToTree 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes flyToTree {
+    0%   { opacity: 1; transform: scale(1) rotate(0deg); }
+    60%  { opacity: 1; transform: scale(1.4) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0.4) rotate(360deg); }
+  }
+
+  /* Chip arc fly animation */
+  .chip-flying {
+    position: fixed;
+    pointer-events: none;
+    z-index: 998;
+    font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 0.9rem;
+    background: var(--orange); color: white;
+    border-radius: 8px; padding: 8px 14px;
+    white-space: nowrap;
+    animation: chipArc 0.38s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes chipArc {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 1; transform: scale(1.1) translateY(-12px); }
+    100% { opacity: 0; transform: scale(0.7); }
   }
 
   /* END SCREEN */
@@ -466,8 +513,11 @@ var answered = false;
 var draggedChip = null;
 var touchChip = null;
 var touchClone = null;
-var zoneChips = []; // word chips currently in drop zone (in order)
-var bankChips = []; // remaining in word bank
+var zoneChips = [];
+var bankChips = [];
+// Tree growth state
+var treeGrowthStep = 0;
+var treeMaxSteps = 4;
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -481,6 +531,8 @@ function selectDiff(el) {
 
 function startGame() {
   currentSentIdx = 0; score = 0; answered = false;
+  treeGrowthStep = 0;
+  treeMaxSteps = SENTENCES[currentLevel === 'supporting' ? 'supporting' : currentLevel].length;
   sentences = SENTENCES[currentLevel].slice();
   buildTree();
   showScreen('gameScreen');
@@ -495,11 +547,16 @@ function buildTree() {
   // Tree top
   var leaves = document.createElement('div');
   leaves.className = 'tree-leaves-visual';
+  leaves.id = 'treeLeaves';
+  leaves.style.width = '40px';
+  leaves.style.height = '30px';
   leaves.textContent = '🌳';
   tv.appendChild(leaves);
 
   var trunk = document.createElement('div');
   trunk.className = 'tree-trunk-visual';
+  trunk.id = 'treeTrunk';
+  trunk.style.height = '12px';
   tv.appendChild(trunk);
 
   var rows = TREE_NODES[currentLevel];
@@ -540,7 +597,29 @@ function revealNode(idx) {
   if (node) {
     node.classList.add('revealed');
     node.querySelector('.node-label').classList.add('revealed-label');
+
+    // Light up the horizontal connector in the same row, if any
+    var row = node.parentNode;
+    if (row) {
+      row.querySelectorAll('.tree-connector-h').forEach(function(hc) {
+        hc.classList.remove('lit');
+        hc.offsetHeight; // reflow to restart animation
+        hc.classList.add('lit');
+      });
+    }
   }
+
+  // Grow the tree
+  treeGrowthStep++;
+  var total = sentences.length;
+  var ratio = treeGrowthStep / total;
+  var trunkTarget = 12 + Math.round(ratio * 36);      // 12px → 48px
+  var leavesW = 40 + Math.round(ratio * 50);           // 40px → 90px
+  var leavesH = 30 + Math.round(ratio * 36);           // 30px → 66px
+  var trunk = document.getElementById('treeTrunk');
+  var leavesEl = document.getElementById('treeLeaves');
+  if (trunk) trunk.style.height = trunkTarget + 'px';
+  if (leavesEl) { leavesEl.style.width = leavesW + 'px'; leavesEl.style.height = leavesH + 'px'; }
 }
 
 // ─── SENTENCE ───
@@ -624,26 +703,39 @@ function placeChip(chip) {
   var bank = document.getElementById('wordBank');
   var ph = document.getElementById('dropPlaceholder');
   var correctWords = sentences[currentSentIdx].answer.split(' ');
-  // Count how many correct chips already in zone
   var correctInZone = zone.querySelectorAll('.word-correct').length;
   var expected = correctWords[correctInZone];
 
   if (ph) ph.remove();
-  if (chip.parentNode === bank) bank.removeChild(chip);
+
+  var isFromBank = chip.parentNode === bank;
 
   if (chip.dataset.word === expected) {
+    // Chip arc: clone flies from bank position → zone
+    if (isFromBank) {
+      var chipRect = chip.getBoundingClientRect();
+      var clone = document.createElement('div');
+      clone.className = 'chip-flying';
+      clone.textContent = chip.textContent;
+      clone.style.left = chipRect.left + 'px';
+      clone.style.top  = chipRect.top + 'px';
+      clone.style.width = chipRect.width + 'px';
+      document.body.appendChild(clone);
+      setTimeout(function() { clone.remove(); }, 420);
+    }
+
+    if (isFromBank) bank.removeChild(chip);
     chip.classList.add('in-zone', 'word-correct');
     chip.classList.remove('word-wrong');
     zone.appendChild(chip);
-    // Check if sentence complete
     var totalCorrect = zone.querySelectorAll('.word-correct').length;
     if (totalCorrect === correctWords.length) {
       completeSentence();
     }
   } else {
+    if (isFromBank) bank.removeChild(chip);
     chip.classList.add('in-zone', 'word-wrong');
     zone.appendChild(chip);
-    // Shake and return after delay
     setTimeout(function() {
       chip.classList.remove('in-zone', 'word-wrong');
       if (chip.parentNode === zone) zone.removeChild(chip);
@@ -679,6 +771,33 @@ function completeSentence() {
   score++;
   document.getElementById('scoreNum').textContent = score;
   revealNode(currentSentIdx);
+
+  // Flying star: from drop-zone center → tree panel center
+  var zoneRect = zone.getBoundingClientRect();
+  var treePanel = document.querySelector('.tree-panel');
+  var treeRect = treePanel ? treePanel.getBoundingClientRect() : null;
+
+  if (treeRect) {
+    var star = document.createElement('div');
+    star.className = 'flying-star';
+    star.textContent = '⭐';
+    // Start at zone center
+    star.style.left = (zoneRect.left + zoneRect.width / 2 - 14) + 'px';
+    star.style.top  = (zoneRect.top  + zoneRect.height / 2 - 14) + 'px';
+    document.body.appendChild(star);
+
+    // After a tiny pause move it toward tree center via CSS custom property
+    // (we animate via translate since keyframes handle the fade)
+    var dx = (treeRect.left + treeRect.width / 2) - (zoneRect.left + zoneRect.width / 2);
+    var dy = (treeRect.top  + treeRect.height / 2) - (zoneRect.top  + zoneRect.height / 2);
+    star.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+    star.style.transition = 'transform 0.7s cubic-bezier(0.22,0.61,0.36,1)';
+    star.offsetHeight; // reflow
+    // Actually animate flyToTree handles scale/fade; translate starts now
+    // Override: use a manual translate via transition, layered on the keyframe scale/fade
+    setTimeout(function() { star.remove(); }, 750);
+  }
+
   var nextBtn = document.getElementById('nextBtn');
   nextBtn.classList.add('visible');
   nextBtn.textContent = currentSentIdx === sentences.length - 1 ? '🏁 Aile Ağacını Gör!' : 'Sonraki Cümle →';

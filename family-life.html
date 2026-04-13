@@ -150,15 +150,57 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 }
 
 .vocab-word {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex;
+  perspective: 400px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vocab-word-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.8rem; font-weight: 700;
   padding: 6px 14px; border-radius: 50px;
   background: var(--cream); color: var(--navy);
-  border: 1px solid var(--gray-200); white-space: nowrap; transition: all 0.2s;
+  border: 1px solid var(--gray-200);
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
 }
-.vocab-word:hover { background: rgba(255,107,53,0.08); color: var(--orange); border-color: rgba(255,107,53,0.2); cursor: default; }
+/* EN face (front) */
+.vocab-word-inner .face-en {
+  display: flex; align-items: center; gap: 6px;
+  backface-visibility: hidden;
+}
+/* TR face (back) — absolutely positioned, rotated 180deg */
+.vocab-word-inner .face-tr {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50px;
+  background: var(--orange); color: white;
+  font-size: 0.8rem; font-weight: 700;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  padding: 6px 14px;
+}
+/* Flipped state */
+.vocab-word.flipped .vocab-word-inner {
+  transform: rotateY(180deg);
+  border-color: var(--orange);
+}
+/* Hover (non-flipped) */
+.vocab-word:not(.flipped):hover .vocab-word-inner {
+  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
+}
 .vocab-word .en  { color: var(--orange); }
 .vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
+
+/* Pause scroll when any word in strip is hovered OR strip itself hovered */
+.vocab-strip:hover .vocab-scroll,
+.vocab-word.flipped ~ * { /* keep paused while flipped */ }
+.vocab-word:hover ~ .vocab-scroll { animation-play-state: paused; }
 
 /* ========== ACTIVITIES SECTION ========== */
 .section { padding: 70px 40px; position: relative; z-index: 1; }
@@ -185,7 +227,26 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 }
 .activity-card.active { cursor: pointer; }
 .activity-card.active:hover {
-  transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent;
+  transform: translateY(-6px); border-color: transparent;
+}
+
+/* Default (orange) glow */
+.activity-card.active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.22), 0 4px 14px rgba(255,107,53,0.12); }
+/* Per-theme glow overrides */
+.activity-card.teal.active:hover   { box-shadow: 0 12px 36px rgba(46,196,182,0.22),  0 4px 14px rgba(46,196,182,0.12); }
+.activity-card.purple.active:hover { box-shadow: 0 12px 36px rgba(139,92,246,0.22),  0 4px 14px rgba(139,92,246,0.12); }
+.activity-card.pink.active:hover   { box-shadow: 0 12px 36px rgba(236,72,153,0.22),  0 4px 14px rgba(236,72,153,0.12); }
+.activity-card.green.active:hover  { box-shadow: 0 12px 36px rgba(34,197,94,0.22),   0 4px 14px rgba(34,197,94,0.12); }
+
+/* Emoji bounce on card hover */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  35%       { transform: translateY(-8px) scale(1.12); }
+  65%       { transform: translateY(-3px) scale(1.06); }
+}
+.activity-card.active:hover .activity-emoji {
+  animation: emojiBounce 0.55s ease;
+  display: inline-block;
 }
 
 .activity-card-banner { height: 8px; background: linear-gradient(90deg, var(--orange), var(--yellow)); }
@@ -344,61 +405,61 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 <div class="vocab-strip">
   <div class="vocab-scroll">
     <!-- Set 1 -->
-    <span class="vocab-word"><span class="en">album</span><span class="sep">•</span>albüm</span>
-    <span class="vocab-word"><span class="en">all right</span><span class="sep">•</span>tamam</span>
-    <span class="vocab-word"><span class="en">baby</span><span class="sep">•</span>bebek</span>
-    <span class="vocab-word"><span class="en">beautiful</span><span class="sep">•</span>güzel</span>
-    <span class="vocab-word"><span class="en">brother</span><span class="sep">•</span>erkek kardeş</span>
-    <span class="vocab-word"><span class="en">dad</span><span class="sep">•</span>baba</span>
-    <span class="vocab-word"><span class="en">daughter</span><span class="sep">•</span>kız evlat</span>
-    <span class="vocab-word"><span class="en">family</span><span class="sep">•</span>aile</span>
-    <span class="vocab-word"><span class="en">father</span><span class="sep">•</span>baba</span>
-    <span class="vocab-word"><span class="en">friend</span><span class="sep">•</span>arkadaş</span>
-    <span class="vocab-word"><span class="en">grandfather</span><span class="sep">•</span>büyük baba</span>
-    <span class="vocab-word"><span class="en">grandmother</span><span class="sep">•</span>büyük anne</span>
-    <span class="vocab-word"><span class="en">handsome</span><span class="sep">•</span>yakışıklı</span>
-    <span class="vocab-word"><span class="en">hungry</span><span class="sep">•</span>aç</span>
-    <span class="vocab-word"><span class="en">lovely</span><span class="sep">•</span>sevimli</span>
-    <span class="vocab-word"><span class="en">lunch</span><span class="sep">•</span>öğle yemeği</span>
-    <span class="vocab-word"><span class="en">lunchtime</span><span class="sep">•</span>öğle yemeği zamanı</span>
-    <span class="vocab-word"><span class="en">mother</span><span class="sep">•</span>anne</span>
-    <span class="vocab-word"><span class="en">mum</span><span class="sep">•</span>anne</span>
-    <span class="vocab-word"><span class="en">nice</span><span class="sep">•</span>hoş</span>
-    <span class="vocab-word"><span class="en">photo</span><span class="sep">•</span>fotoğraf</span>
-    <span class="vocab-word"><span class="en">short</span><span class="sep">•</span>kısa</span>
-    <span class="vocab-word"><span class="en">sister</span><span class="sep">•</span>kız kardeş</span>
-    <span class="vocab-word"><span class="en">son</span><span class="sep">•</span>erkek evlat</span>
-    <span class="vocab-word"><span class="en">sorry</span><span class="sep">•</span>üzgün</span>
-    <span class="vocab-word"><span class="en">tall</span><span class="sep">•</span>uzun</span>
-    <span class="vocab-word"><span class="en">very</span><span class="sep">•</span>çok</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">album</span><span class="sep">•</span>albüm</span><span class="face-tr">albüm</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">all right</span><span class="sep">•</span>tamam</span><span class="face-tr">tamam</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">baby</span><span class="sep">•</span>bebek</span><span class="face-tr">bebek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">beautiful</span><span class="sep">•</span>güzel</span><span class="face-tr">güzel</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">brother</span><span class="sep">•</span>erkek kardeş</span><span class="face-tr">erkek kardeş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dad</span><span class="sep">•</span>baba</span><span class="face-tr">baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">daughter</span><span class="sep">•</span>kız evlat</span><span class="face-tr">kız evlat</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">family</span><span class="sep">•</span>aile</span><span class="face-tr">aile</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">father</span><span class="sep">•</span>baba</span><span class="face-tr">baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">friend</span><span class="sep">•</span>arkadaş</span><span class="face-tr">arkadaş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">grandfather</span><span class="sep">•</span>büyük baba</span><span class="face-tr">büyük baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">grandmother</span><span class="sep">•</span>büyük anne</span><span class="face-tr">büyük anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">handsome</span><span class="sep">•</span>yakışıklı</span><span class="face-tr">yakışıklı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hungry</span><span class="sep">•</span>aç</span><span class="face-tr">aç</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lovely</span><span class="sep">•</span>sevimli</span><span class="face-tr">sevimli</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lunch</span><span class="sep">•</span>öğle yemeği</span><span class="face-tr">öğle yemeği</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lunchtime</span><span class="sep">•</span>öğle yemeği zamanı</span><span class="face-tr">öğle yemeği zamanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mother</span><span class="sep">•</span>anne</span><span class="face-tr">anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mum</span><span class="sep">•</span>anne</span><span class="face-tr">anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nice</span><span class="sep">•</span>hoş</span><span class="face-tr">hoş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">photo</span><span class="sep">•</span>fotoğraf</span><span class="face-tr">fotoğraf</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sister</span><span class="sep">•</span>kız kardeş</span><span class="face-tr">kız kardeş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">son</span><span class="sep">•</span>erkek evlat</span><span class="face-tr">erkek evlat</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sorry</span><span class="sep">•</span>üzgün</span><span class="face-tr">üzgün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">very</span><span class="sep">•</span>çok</span><span class="face-tr">çok</span></span></span>
     <!-- Set 2 — kopya (sonsuz döngü için) -->
-    <span class="vocab-word"><span class="en">album</span><span class="sep">•</span>albüm</span>
-    <span class="vocab-word"><span class="en">all right</span><span class="sep">•</span>tamam</span>
-    <span class="vocab-word"><span class="en">baby</span><span class="sep">•</span>bebek</span>
-    <span class="vocab-word"><span class="en">beautiful</span><span class="sep">•</span>güzel</span>
-    <span class="vocab-word"><span class="en">brother</span><span class="sep">•</span>erkek kardeş</span>
-    <span class="vocab-word"><span class="en">dad</span><span class="sep">•</span>baba</span>
-    <span class="vocab-word"><span class="en">daughter</span><span class="sep">•</span>kız evlat</span>
-    <span class="vocab-word"><span class="en">family</span><span class="sep">•</span>aile</span>
-    <span class="vocab-word"><span class="en">father</span><span class="sep">•</span>baba</span>
-    <span class="vocab-word"><span class="en">friend</span><span class="sep">•</span>arkadaş</span>
-    <span class="vocab-word"><span class="en">grandfather</span><span class="sep">•</span>büyük baba</span>
-    <span class="vocab-word"><span class="en">grandmother</span><span class="sep">•</span>büyük anne</span>
-    <span class="vocab-word"><span class="en">handsome</span><span class="sep">•</span>yakışıklı</span>
-    <span class="vocab-word"><span class="en">hungry</span><span class="sep">•</span>aç</span>
-    <span class="vocab-word"><span class="en">lovely</span><span class="sep">•</span>sevimli</span>
-    <span class="vocab-word"><span class="en">lunch</span><span class="sep">•</span>öğle yemeği</span>
-    <span class="vocab-word"><span class="en">lunchtime</span><span class="sep">•</span>öğle yemeği zamanı</span>
-    <span class="vocab-word"><span class="en">mother</span><span class="sep">•</span>anne</span>
-    <span class="vocab-word"><span class="en">mum</span><span class="sep">•</span>anne</span>
-    <span class="vocab-word"><span class="en">nice</span><span class="sep">•</span>hoş</span>
-    <span class="vocab-word"><span class="en">photo</span><span class="sep">•</span>fotoğraf</span>
-    <span class="vocab-word"><span class="en">short</span><span class="sep">•</span>kısa</span>
-    <span class="vocab-word"><span class="en">sister</span><span class="sep">•</span>kız kardeş</span>
-    <span class="vocab-word"><span class="en">son</span><span class="sep">•</span>erkek evlat</span>
-    <span class="vocab-word"><span class="en">sorry</span><span class="sep">•</span>üzgün</span>
-    <span class="vocab-word"><span class="en">tall</span><span class="sep">•</span>uzun</span>
-    <span class="vocab-word"><span class="en">very</span><span class="sep">•</span>çok</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">album</span><span class="sep">•</span>albüm</span><span class="face-tr">albüm</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">all right</span><span class="sep">•</span>tamam</span><span class="face-tr">tamam</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">baby</span><span class="sep">•</span>bebek</span><span class="face-tr">bebek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">beautiful</span><span class="sep">•</span>güzel</span><span class="face-tr">güzel</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">brother</span><span class="sep">•</span>erkek kardeş</span><span class="face-tr">erkek kardeş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dad</span><span class="sep">•</span>baba</span><span class="face-tr">baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">daughter</span><span class="sep">•</span>kız evlat</span><span class="face-tr">kız evlat</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">family</span><span class="sep">•</span>aile</span><span class="face-tr">aile</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">father</span><span class="sep">•</span>baba</span><span class="face-tr">baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">friend</span><span class="sep">•</span>arkadaş</span><span class="face-tr">arkadaş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">grandfather</span><span class="sep">•</span>büyük baba</span><span class="face-tr">büyük baba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">grandmother</span><span class="sep">•</span>büyük anne</span><span class="face-tr">büyük anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">handsome</span><span class="sep">•</span>yakışıklı</span><span class="face-tr">yakışıklı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hungry</span><span class="sep">•</span>aç</span><span class="face-tr">aç</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lovely</span><span class="sep">•</span>sevimli</span><span class="face-tr">sevimli</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lunch</span><span class="sep">•</span>öğle yemeği</span><span class="face-tr">öğle yemeği</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">lunchtime</span><span class="sep">•</span>öğle yemeği zamanı</span><span class="face-tr">öğle yemeği zamanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mother</span><span class="sep">•</span>anne</span><span class="face-tr">anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mum</span><span class="sep">•</span>anne</span><span class="face-tr">anne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nice</span><span class="sep">•</span>hoş</span><span class="face-tr">hoş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">photo</span><span class="sep">•</span>fotoğraf</span><span class="face-tr">fotoğraf</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sister</span><span class="sep">•</span>kız kardeş</span><span class="face-tr">kız kardeş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">son</span><span class="sep">•</span>erkek evlat</span><span class="face-tr">erkek evlat</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sorry</span><span class="sep">•</span>üzgün</span><span class="face-tr">üzgün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">very</span><span class="sep">•</span>çok</span><span class="face-tr">çok</span></span></span>
   </div>
 </div>
 
@@ -602,6 +663,15 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
 });
+
+// Vocab word flip
+function flipWord(el) {
+  el.classList.toggle('flipped');
+  // Pause the scroll strip while any word is flipped
+  var strip = document.querySelector('.vocab-scroll');
+  var anyFlipped = document.querySelector('.vocab-word.flipped');
+  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
+}
 
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {

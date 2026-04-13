@@ -79,8 +79,7 @@
   }
   .stop-dot.done { background: var(--green); border-color: var(--green); }
   .stop-dot.current { background: var(--orange); border-color: var(--orange); transform: scale(1.2); }
-  .stop-connector { width: 20px; height: 2px; background: #e5e7eb; }
-  .stop-connector.done { background: var(--green); }
+  /* stop-connector styles now live in the animation block above */
 
   .difficulty-label { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--navy); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
   .difficulty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
@@ -167,6 +166,51 @@
     display: block;
   }
   .scene-char.speaker .s-emoji { font-size: 3.6rem; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+
+  /* Speaker wobble — applied only while speaking */
+  @keyframes speakerWobble {
+    0%,100% { transform: rotate(-3deg); }
+    50%      { transform: rotate(3deg); }
+  }
+  .scene-char.speaker.talking .s-emoji {
+    display: inline-block;
+    animation: speakerWobble 0.45s ease-in-out infinite;
+  }
+
+  /* Wave/bounce for the speaker when scene loads */
+  @keyframes charWave {
+    0%   { transform: translateY(0) scale(1); }
+    25%  { transform: translateY(-10px) scale(1.15); }
+    50%  { transform: translateY(0) scale(1.05); }
+    75%  { transform: translateY(-5px) scale(1.1); }
+    100% { transform: translateY(0) scale(1); }
+  }
+  .scene-char.speaker.waving .s-emoji {
+    display: inline-block;
+    animation: charWave 0.6s ease forwards;
+  }
+
+  /* Stop-dot pulse when transitioning to done */
+  @keyframes dotPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+    50%  { box-shadow: 0 0 0 8px rgba(34,197,94,0.25); }
+    100% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+  }
+  .stop-dot.pulsing { animation: dotPulse 0.6s ease forwards; }
+
+  /* Connector fill animation */
+  .stop-connector { width: 20px; height: 2px; background: #e5e7eb; position: relative; overflow: hidden; }
+  .stop-connector.done { background: #e5e7eb; }
+  .stop-connector.done::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--green);
+    animation: connFill 0.4s ease forwards;
+  }
+  @keyframes connFill {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
 
   .scene-label {
     position: absolute; top: 14px; left: 16px; z-index: 2;
@@ -580,6 +624,7 @@ var currentStop = 0;
 var score = 0;
 var answered = false;
 var chosenVariations = [];
+var twInterval = null;
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -611,12 +656,24 @@ function buildStartMap() {
 
 function buildProgressMap(currentIdx) {
   var map = document.getElementById('progressMap');
+  // Collect previous done-state to detect newly completed dots
+  var prevDone = [];
+  map.querySelectorAll('.stop-dot').forEach(function(d){ prevDone.push(d.classList.contains('done')); });
+
   map.innerHTML = '';
   STOPS.forEach(function(stop, i) {
     var dot = document.createElement('div');
     dot.className = 'stop-dot';
-    if (i < currentIdx) dot.classList.add('done');
-    else if (i === currentIdx) dot.classList.add('current');
+    if (i < currentIdx) {
+      dot.classList.add('done');
+      // If this dot was NOT done before, pulse it
+      if (!prevDone[i]) {
+        dot.classList.add('pulsing');
+        setTimeout(function(d){ d.classList.remove('pulsing'); }, 700, dot);
+      }
+    } else if (i === currentIdx) {
+      dot.classList.add('current');
+    }
     dot.textContent = stop.bgEmoji;
     map.appendChild(dot);
     if (i < STOPS.length - 1) {
@@ -656,6 +713,7 @@ function renderStop() {
   document.getElementById('sceneBgEmoji').textContent = stop.bgEmoji;
   document.getElementById('sceneLabel').textContent = stop.label;
 
+  // Characters — build then trigger wave on speaker
   var charsHtml = '';
   stop.characters.forEach(function(c) {
     var cls = 'scene-char' + (c.speaker ? ' speaker' : '');
@@ -667,9 +725,51 @@ function renderStop() {
   });
   document.getElementById('sceneChars').innerHTML = charsHtml;
 
+  // Wave: briefly bounce the speaker char on scene entry
+  var speakerEl = document.querySelector('#sceneChars .scene-char.speaker');
+  if (speakerEl) {
+    speakerEl.classList.add('waving');
+    setTimeout(function(){ speakerEl.classList.remove('waving'); }, 650);
+  }
+
   // Speech
   document.getElementById('speakerName').textContent = stop.speakerName + ' says:';
-  document.getElementById('speechText').textContent = data.speech;
+
+  // Typewriter for speech-text
+  var fullText = data.speech;
+  var speechEl = document.getElementById('speechText');
+  speechEl.textContent = '';
+  var ti = 0;
+  var twInterval = null;
+
+  // Start wobble when typewriter begins
+  if (speakerEl) {
+    setTimeout(function(){
+      speakerEl.classList.add('talking');
+    }, 660);
+  }
+
+  function typeNext() {
+    if (ti >= fullText.length) {
+      clearInterval(twInterval);
+      // Stop wobble when done
+      if (speakerEl) speakerEl.classList.remove('talking');
+      return;
+    }
+    var ch = fullText[ti];
+    speechEl.textContent += ch;
+    ti++;
+    // Pause on blank-answer marker
+    if (fullText.slice(ti, ti+3) === '___') {
+      clearInterval(twInterval);
+      setTimeout(function(){
+        twInterval = setInterval(typeNext, 35);
+      }, 400);
+    }
+  }
+  setTimeout(function(){
+    twInterval = setInterval(typeNext, 35);
+  }, 680);
 
   // Feedback clear
   document.getElementById('feedbackText').textContent = '';
@@ -699,6 +799,11 @@ function renderStop() {
 function selectAnswer(chosen, btn, correctAnswer) {
   if (answered) return;
   answered = true;
+
+  // Stop any running typewriter and wobble
+  if (twInterval) { clearInterval(twInterval); twInterval = null; }
+  var sp = document.querySelector('#sceneChars .scene-char.speaker');
+  if (sp) { sp.classList.remove('talking'); document.getElementById('speechText').textContent = STOPS[currentStop].levels[currentLevel].speech; }
 
   document.querySelectorAll('.opt-btn').forEach(function(b){ b.disabled = true; });
 

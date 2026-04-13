@@ -181,10 +181,20 @@
     transition: transform 0.15s, box-shadow 0.15s;
     max-width: 210px; min-width: 130px;
     display: flex; flex-direction: column; gap: 5px;
+    position: relative;
   }
   .sort-card:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
   .sort-card.dragging { opacity: 0.35; transform: scale(0.95); }
   .sort-card.touch-active { transform: scale(1.06) rotate(2deg); box-shadow: 0 12px 28px rgba(0,0,0,0.25); opacity: 0.88; z-index: 50; }
+
+  /* Wind entry — each card blows in from a random direction */
+  .sort-card.wind-in {
+    animation: windIn 0.5s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes windIn {
+    0%   { opacity: 0; transform: translateX(var(--wx,40px)) translateY(var(--wy,-30px)) rotate(var(--wr,8deg)); }
+    100% { opacity: 1; transform: translateX(0) translateY(0) rotate(0deg); }
+  }
 
   .card-who { font-size: 1.5rem; line-height: 1; }
   .card-sentence {
@@ -192,6 +202,9 @@
     font-size: 0.83rem; font-weight: 700;
     color: var(--navy); line-height: 1.4;
   }
+  /* Keyword highlights in sentence */
+  .kw-pronoun { color: #7C3AED; }   /* he/she */
+  .kw-desc    { color: #0369a1; }   /* tall/short/long/blond/dark/white/big/beautiful etc */
   .card-name { font-size: 0.7rem; color: #bbb; font-weight: 600; }
 
   .sort-card.correct {
@@ -205,6 +218,20 @@
   @keyframes correctPop { 0%{transform:scale(1)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
   @keyframes wrongShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
 
+  /* Card fly-to-basket clone */
+  .card-fly-clone {
+    position: fixed; pointer-events: none; z-index: 600;
+    border-radius: 12px; background: var(--white);
+    border: 2px solid var(--green);
+    box-shadow: 0 8px 24px rgba(34,197,94,0.25);
+    font-family: 'Quicksand', sans-serif; font-size: 0.82rem; font-weight: 700;
+    color: var(--navy); padding: 8px 12px; white-space: nowrap;
+    transition: left 0.38s cubic-bezier(.4,0,.2,1),
+                top  0.38s cubic-bezier(.4,0,.2,1),
+                opacity 0.38s ease,
+                transform 0.38s ease;
+  }
+
   /* BASKETS */
   .baskets-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .basket {
@@ -217,6 +244,13 @@
   .basket.drag-over { border-style: solid; transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
   .basket.mum.drag-over { border-color: #ec4899; }
   .basket.dad.drag-over { border-color: #3b82f6; }
+  /* Basket bounce when card lands */
+  .basket.basket-bounce { animation: basketBounce 0.35s cubic-bezier(.22,1.4,.36,1); }
+  @keyframes basketBounce {
+    0%   { transform: translateY(0) scale(1); }
+    40%  { transform: translateY(-5px) scale(1.03); }
+    100% { transform: translateY(0) scale(1); }
+  }
   .basket-label {
     font-family: 'Baloo 2', cursive; font-weight: 800;
     font-size: 1rem; color: var(--navy);
@@ -224,6 +258,20 @@
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
   .basket-cards { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 50px; }
+
+  /* Piknik örtüsü ilerleme — dinamik segment dolumu */
+  .cloth-strip {
+    height: 14px;
+    background: #e0e0e0;
+    border-radius: 6px; margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    overflow: hidden; position: relative;
+  }
+  .cloth-progress {
+    height: 100%; width: 0%; border-radius: 6px;
+    background: repeating-linear-gradient(90deg, #e63946 0, #e63946 14px, #f1faee 14px, #f1faee 28px);
+    transition: width 0.5s ease;
+  }
 
   /* END SCREEN */
   .end-screen { max-width: 560px; margin: 0 auto; padding: 40px 24px 60px; text-align: center; }
@@ -321,7 +369,7 @@
     <div id="hintBox" class="hint-box">💡 <span id="hintText"></span></div>
 
     <div class="picnic-scene">
-      <div class="cloth-strip"></div>
+      <div class="cloth-strip"><div class="cloth-progress" id="clothProgress"></div></div>
       <div class="pile-label">🌿 Çimenlere saçılan kartlar — oku ve sırala!</div>
       <div class="cards-pile" id="cardsPile"></div>
       <div class="baskets-row">
@@ -439,18 +487,37 @@ function startGame() {
   document.getElementById('basket-dad').innerHTML = '';
   updateStats();
   showHint();
-  shuffle(cards.slice()).forEach(function(data){ document.getElementById('cardsPile').appendChild(makeCard(data)); });
+  document.getElementById('clothProgress').style.width = '0%';
+  shuffle(cards.slice()).forEach(function(data, i){ document.getElementById('cardsPile').appendChild(makeCard(data, i * 120)); });
   showScreen('gameScreen');
 }
 
-function makeCard(data) {
+// Highlight pronouns and descriptive words in a sentence
+function highlightSentence(sentence) {
+  var pronouns = /\b(He|She|he|she)\b/g;
+  var descs = /\b(tall|short|long|blond|dark|white|big|small|beautiful|lovely|handsome|nice)\b/gi;
+  return sentence
+    .replace(pronouns, '<span class="kw-pronoun">$1</span>')
+    .replace(descs, function(m) { return '<span class="kw-desc">' + m + '</span>'; });
+}
+
+function makeCard(data, delay) {
   var el = document.createElement('div');
   el.className = 'sort-card';
   el.dataset.category = data.category;
   el.draggable = true;
+  // Wind entry random params
+  var wx = (Math.random() * 120 - 60) | 0;
+  var wy = (Math.random() * 80 - 60) | 0;
+  var wr = (Math.random() * 24 - 12) | 0;
+  el.style.setProperty('--wx', wx + 'px');
+  el.style.setProperty('--wy', wy + 'px');
+  el.style.setProperty('--wr', wr + 'deg');
+  el.style.animationDelay = delay + 'ms';
+  el.classList.add('wind-in');
   el.innerHTML =
     '<div class="card-who">' + data.who + '</div>' +
-    '<div class="card-sentence">' + data.sentence + '</div>' +
+    '<div class="card-sentence">' + highlightSentence(data.sentence) + '</div>' +
     '<div class="card-name">' + data.name + '</div>';
   el.addEventListener('dragstart', function(){ draggedCard = this; setTimeout(function(){ el.classList.add('dragging'); }, 0); });
   el.addEventListener('dragend', function(){ el.classList.remove('dragging'); draggedCard = null; });
@@ -467,13 +534,54 @@ function handleDrop(catId) {
 
 function placeCard(cardEl, catId) {
   if (catId === cardEl.dataset.category) {
-    cardEl.classList.add('correct');
-    cardEl.draggable = false;
-    document.getElementById('basket-' + catId).appendChild(cardEl);
-    sortedCount++;
-    updateStats();
-    cycleHint();
-    if (sortedCount === totalCards) setTimeout(showEndScreen, 700);
+    // ── Fly clone from card to basket ──
+    var cardRect = cardEl.getBoundingClientRect();
+    var basketEl = document.getElementById('basket-' + catId);
+    var basketRect = basketEl.getBoundingClientRect();
+
+    var fly = document.createElement('div');
+    fly.className = 'card-fly-clone';
+    fly.textContent = cardEl.querySelector('.card-who').textContent + ' ' +
+                      cardEl.querySelector('.card-name').textContent;
+    fly.style.left    = (cardRect.left + cardRect.width / 2 - 50) + 'px';
+    fly.style.top     = (cardRect.top  + cardRect.height / 2 - 20) + 'px';
+    fly.style.width   = cardRect.width + 'px';
+    document.body.appendChild(fly);
+
+    // Hide original immediately
+    cardEl.style.opacity = '0';
+
+    fly.getBoundingClientRect(); // force layout
+    fly.style.left      = (basketRect.left + basketRect.width / 2 - 50) + 'px';
+    fly.style.top       = (basketRect.top  + 20) + 'px';
+    fly.style.opacity   = '0';
+    fly.style.transform = 'scale(0.7)';
+
+    setTimeout(function() {
+      fly.remove();
+      cardEl.style.opacity = '';
+      cardEl.classList.add('correct');
+      cardEl.draggable = false;
+      basketEl.appendChild(cardEl);
+
+      // Basket bounce
+      var parentBasket = basketEl.closest('.basket');
+      if (parentBasket) {
+        parentBasket.classList.remove('basket-bounce');
+        void parentBasket.offsetWidth;
+        parentBasket.classList.add('basket-bounce');
+        setTimeout(function() { parentBasket.classList.remove('basket-bounce'); }, 400);
+      }
+
+      sortedCount++;
+      // Update picnic cloth progress
+      var pct = (sortedCount / totalCards) * 100;
+      document.getElementById('clothProgress').style.width = pct + '%';
+      updateStats();
+      cycleHint();
+      if (sortedCount === totalCards) setTimeout(showEndScreen, 700);
+    }, 400);
+
   } else {
     mistakes++;
     cardEl.classList.add('wrong');

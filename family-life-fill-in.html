@@ -202,7 +202,8 @@
   }
   .photo-character {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
-    transition: transform 0.2s;
+    transition: transform 0.2s, opacity 0.3s;
+    position: relative;
   }
   .photo-character .char-emoji {
     font-size: 2.8rem; line-height: 1;
@@ -213,18 +214,43 @@
     font-size: 0.65rem; color: rgba(255,255,255,0.9);
     font-weight: 700; background: rgba(0,0,0,0.35);
     border-radius: 4px; padding: 1px 5px;
+    position: relative; z-index: 2;
   }
+
+  /* Highlighted: spinning dashed halo ring */
   .photo-character.highlighted .char-emoji {
-    filter: none;
-    transform: scale(1.18);
-    filter: drop-shadow(0 0 8px rgba(255,200,87,0.8));
+    filter: none drop-shadow(0 0 6px rgba(255,200,87,0.7));
+    transform: scale(1.15);
   }
   .photo-character.highlighted .char-label {
     background: var(--orange); color: white;
   }
-  .photo-character.dimmed .char-emoji {
-    filter: grayscale(80%) brightness(0.7);
+  .photo-character.highlighted::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%; transform: translateX(-50%);
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2px dashed var(--yellow);
+    animation: haloSpin 2.5s linear infinite;
+    pointer-events: none;
+    z-index: 0;
   }
+  @keyframes haloSpin {
+    from { transform: translateX(-50%) rotate(0deg); }
+    to   { transform: translateX(-50%) rotate(360deg); }
+  }
+
+  /* Dimmed characters */
+  .photo-character.dimmed { opacity: 0.35; }
+  .photo-character.dimmed .char-emoji { filter: grayscale(80%) brightness(0.7); }
+
+  /* Photo-area slide-in when new question arrives */
+  @keyframes photoSlideIn {
+    from { opacity: 0; transform: translateY(-28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .photo-area.slide-in { animation: photoSlideIn 0.4s cubic-bezier(0.22,0.61,0.36,1) both; }
 
   /* Polaroid caption */
   .polaroid-caption {
@@ -252,9 +278,17 @@
   }
   .question-text .filled-correct {
     color: var(--green); border-bottom-color: var(--green);
+    clip-path: inset(0 100% 0 0);
+    animation: inkReveal 0.45s cubic-bezier(0.22,0.61,0.36,1) forwards;
   }
   .question-text .filled-wrong {
     color: var(--red); border-bottom-color: var(--red);
+    clip-path: inset(0 100% 0 0);
+    animation: inkReveal 0.45s cubic-bezier(0.22,0.61,0.36,1) forwards;
+  }
+  @keyframes inkReveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0% 0 0); }
   }
 
   /* OPTIONS */
@@ -727,7 +761,12 @@ function renderQuestion() {
     document.getElementById('hintBox').classList.remove('visible');
   }
 
-  // Polaroid photo
+  // Polaroid photo — slide-in animation on photo-area
+  var photoArea = document.querySelector('.photo-area');
+  photoArea.classList.remove('slide-in');
+  photoArea.offsetHeight; // reflow
+  photoArea.classList.add('slide-in');
+
   var charsHtml = '';
   q.characters.forEach(function(c) {
     var cls = c.highlighted ? 'photo-character highlighted' : 'photo-character dimmed';
