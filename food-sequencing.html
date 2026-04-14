@@ -118,13 +118,13 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
 }
 .hint-box.visible{display:flex;}
 
-/* TASK CARD */
+/* TASK CARD — meal color border transition */
 .task-card{
   background:var(--white);border-radius:20px;
   box-shadow:var(--shadow-lg);overflow:hidden;
   margin-bottom:1.2rem;
-  border:2.5px solid transparent;
-  transition:border-color .3s;
+  border:2.5px solid var(--task-border, transparent);
+  transition:border-color .5s ease;
 }
 .task-card.correct-flash{border-color:var(--green);}
 .task-card.wrong-flash  {border-color:var(--red);}
@@ -133,11 +133,68 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
 .meal-strip{
   padding:1rem 1.5rem;
   display:flex;align-items:center;gap:1rem;
+  transition:background 0.5s ease, border-bottom-color 0.5s ease;
 }
 .meal-icon{font-size:2.4rem;line-height:1;}
 .meal-info{}
 .meal-label{font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.7;margin-bottom:.1rem;}
 .meal-title{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;}
+
+/* ── DROP ZONE — plate metaphor ── */
+.drop-slot{
+  min-width:100px;height:44px;
+  border-radius:22px;               /* oval = plate rim */
+  border:2px dashed var(--gray-200);
+  background:var(--gray-100);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.92rem;
+  color:var(--gray-500);cursor:pointer;
+  transition:all .2s;position:relative;padding:0 .8rem;
+  user-select:none;
+}
+.drop-slot.drag-over{border-color:var(--yellow);background:var(--yellow-lt);color:var(--navy);}
+/* Filled plate — animate from pale to vivid */
+.drop-slot.filled{
+  border-style:solid;
+  border-color:var(--navy2);
+  background:var(--white);
+  color:var(--navy);
+  animation:plateFill 0.3s ease;
+}
+@keyframes plateFill{
+  from{background:var(--gray-100);transform:scale(0.95);}
+  60% {background:rgba(255,220,100,0.18);transform:scale(1.04);}
+  to  {background:var(--white);transform:scale(1);}
+}
+.drop-slot.correct{border-color:var(--green);background:var(--green-lt);color:#166534;}
+.drop-slot.wrong  {border-color:var(--red);  background:var(--red-lt);  color:#991B1B;}
+.drop-slot .remove-btn{
+  position:absolute;top:-7px;right:-7px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--red);color:#fff;font-size:.65rem;font-weight:800;
+  display:none;align-items:center;justify-content:center;cursor:pointer;
+  border:none;line-height:1;
+}
+.drop-slot.filled .remove-btn{display:flex;}
+
+/* Service celebration: plate + steam */
+.serve-celebrate{
+  text-align:center;margin-top:.6rem;
+  animation:serveFadeIn 0.4s ease forwards;
+}
+@keyframes serveFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.serve-plate{font-size:2rem;display:inline-block;animation:plateServe 0.5s cubic-bezier(0.22,0.61,0.36,1) both;}
+@keyframes plateServe{
+  from{transform:scale(0.3) rotate(-15deg);opacity:0;}
+  60% {transform:scale(1.2) rotate(5deg);}
+  100%{transform:scale(1) rotate(0);opacity:1;}
+}
+.serve-steam{font-size:1.1rem;letter-spacing:4px;opacity:0;animation:steamRise 1.2s 0.3s ease forwards;}
+@keyframes steamRise{
+  0%  {opacity:0;transform:translateY(0);}
+  30% {opacity:0.8;}
+  100%{opacity:0;transform:translateY(-18px);}
+}
 
 /* ── GAME BODY ── */
 .game-body{padding:1.2rem 1.5rem 1.5rem;}
@@ -157,7 +214,8 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   border:2px dashed var(--gray-200);
 }
 
-/* ── DROP ZONES (sentence slots) ── */
+/* drop-slot styles now in plate-metaphor block above */
+
 .sentence-wrap{
   display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;
   margin-bottom:1.2rem;
@@ -166,28 +224,6 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;color:var(--navy2);
   padding:.35rem .2rem;
 }
-.drop-slot{
-  min-width:90px;height:42px;
-  border-radius:10px;border:2px dashed var(--gray-200);
-  background:var(--gray-100);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Baloo 2',cursive;font-weight:700;font-size:.92rem;
-  color:var(--gray-500);cursor:pointer;
-  transition:all .2s;position:relative;padding:0 .5rem;
-  user-select:none;
-}
-.drop-slot.drag-over{border-color:var(--yellow);background:var(--yellow-lt);color:var(--navy);}
-.drop-slot.filled{border-style:solid;background:var(--white);color:var(--navy);}
-.drop-slot.correct{border-color:var(--green);background:var(--green-lt);color:#166534;}
-.drop-slot.wrong  {border-color:var(--red);  background:var(--red-lt);  color:#991B1B;}
-.drop-slot .remove-btn{
-  position:absolute;top:-7px;right:-7px;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--red);color:#fff;font-size:.65rem;font-weight:800;
-  display:none;align-items:center;justify-content:center;cursor:pointer;
-  border:none;line-height:1;
-}
-.drop-slot.filled .remove-btn{display:flex;}
 
 /* ── WORD CHIPS ── */
 .word-chip{
@@ -560,7 +596,9 @@ function renderQuestion(){
   const fb=document.getElementById('feedback');
   fb.className='feedback';fb.innerHTML='';
   document.getElementById('next-btn').classList.remove('visible');
-  document.getElementById('task-card').className='task-card';
+  // task-card meal border color
+  document.getElementById('task-card').style.setProperty('--task-border', meal.color + '55');
+  document.getElementById('task-card').className = 'task-card';
 }
 
 // ── POOL ──
@@ -573,17 +611,26 @@ function buildPool(q){
   });
 }
 
+// Food emoji lookup for chips
+const FOOD_EMOJIS = {
+  'an egg':'🥚','some milk':'🥛','a banana':'🍌','some bread':'🍞',
+  'some chicken':'🍗','some vegetables':'🥦','a tomato':'🍅',
+  'some fish':'🐟','some rice':'🍚','an apple':'🍎','yoghurt':'🥛',
+  'some tea':'🫖','some meat':'🥩','potato':'🥔','water':'💧',
+  'broccoli':'🥦','some grape juice':'🍇','a carrot':'🥕',
+  'some orange juice':'🍊','some pasta':'🍝',
+};
+
 function createChip(word){
   const chip=document.createElement('div');
   chip.className='word-chip';
   chip.id='chip-'+word.replace(/\s/g,'-');
-  chip.textContent=word;
   chip.dataset.word=word;
+  // Emoji prefix if available
+  const emoji = FOOD_EMOJIS[word];
+  chip.innerHTML = emoji ? `<span style="margin-right:4px">${emoji}</span>${word}` : word;
 
-  // CLICK
   chip.addEventListener('click',()=>clickChip(word,chip));
-
-  // DRAG (mouse + touch)
   chip.addEventListener('mousedown',e=>startChipDrag(word,chip,e.clientX,e.clientY,e));
   chip.addEventListener('touchstart',e=>{
     const t=e.touches[0];
@@ -837,6 +884,15 @@ function checkAnswer(){
     fb.className='feedback visible ok';
     fb.innerHTML='✅ Mükemmel! Cümle doğru!';
     card.classList.add('correct-flash');
+    // Service celebration
+    const existing = document.getElementById('serve-cel');
+    if (existing) existing.remove();
+    const cel = document.createElement('div');
+    cel.id = 'serve-cel';
+    cel.className = 'serve-celebrate';
+    cel.innerHTML = '<span class="serve-plate">🍽️</span><div class="serve-steam">〜 〜 〜</div>';
+    document.getElementById('feedback').after(cel);
+    setTimeout(() => { if (cel.parentNode) cel.remove(); }, 1800);
   } else {
     fb.className='feedback visible no';
     fb.innerHTML='❌ Bazı kelimeler yanlış — kırmızı kutulara bak!';

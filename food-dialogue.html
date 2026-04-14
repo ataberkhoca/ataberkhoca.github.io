@@ -134,8 +134,7 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   border:2.5px solid transparent;
   transition:border-color .3s;
 }
-.stand-card.correct-flash{border-color:var(--green);}
-.stand-card.wrong-flash  {border-color:var(--red);}
+/* stand-card border states now handled in scene block above */
 
 /* Stand visual scene */
 .stand-scene{
@@ -146,9 +145,67 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
 }
 /* Colourful striped awning background */
 .stand-scene::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:36px;
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:36px;
   background:repeating-linear-gradient(90deg,var(--scene-a) 0px,var(--scene-a) 24px,var(--scene-b) 24px,var(--scene-b) 48px);
+  transition:background 0.6s ease;
+  transform-origin:top center;
+  animation:awningOpen 0.4s cubic-bezier(0.22,0.61,0.36,1) both;
 }
+@keyframes awningOpen{
+  from{height:0;opacity:0;}
+  to{height:36px;opacity:1;}
+}
+
+/* Vendor enter from behind stand */
+@keyframes vendorEnter{
+  from{opacity:0;transform:translateY(20px) scale(0.85);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.vendor-avatar{
+  font-size:2.6rem;line-height:1;
+  display:inline-block;
+  animation:vendorEnter 0.45s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+/* Vendor joy jump on correct */
+@keyframes vendorJoy{
+  0%,100%{transform:translateY(0);}
+  30%{transform:translateY(-12px) rotate(-8deg);}
+  60%{transform:translateY(-6px) rotate(6deg);}
+}
+.vendor-avatar.joy{animation:vendorJoy 0.55s ease;}
+/* Vendor shake on wrong */
+@keyframes vendorShake{
+  0%,100%{transform:rotate(0deg);}
+  20%{transform:rotate(-8deg);}
+  40%{transform:rotate(8deg);}
+  60%{transform:rotate(-5deg);}
+  80%{transform:rotate(5deg);}
+}
+.vendor-avatar.shake{animation:vendorShake 0.45s ease;}
+
+/* Stand items stagger */
+@keyframes itemReveal{
+  from{transform:scale(0) rotate(-10deg);opacity:0;}
+  60%{transform:scale(1.2) rotate(4deg);}
+  100%{transform:scale(1) rotate(0deg);opacity:1;}
+}
+.stand-item.reveal{
+  animation:itemReveal 0.35s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+
+/* Stand card correct glow */
+@keyframes cardGlow{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,0.6);}
+  40%{box-shadow:0 0 0 12px rgba(34,197,94,0.25);}
+  100%{box-shadow:0 0 0 16px rgba(34,197,94,0);}
+}
+.stand-card.correct-flash{
+  border-color:var(--green);
+  animation:cardGlow 0.6s ease forwards;
+}
+/* Wrong: just border (existing behaviour), no glow needed */
+.stand-card.wrong-flash{border-color:var(--red);}
 
 /* Each stand has its own stripe colours set via inline style */
 .stand-vendor{
@@ -209,8 +266,7 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   display:flex;align-items:center;justify-content:center;
   font-family:'Baloo 2',cursive;
 }
-.option-btn.correct .opt-letter{background:#BBF7D0;color:#166534;}
-.option-btn.wrong   .opt-letter{background:#FECACA;color:#991B1B;}
+@keyframes optIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* Feedback */
 .feedback{
@@ -632,33 +688,60 @@ function updateDots() {
 }
 
 // ══════════════ RENDER ══════════════
+// Active typewriter timer
+let twTimer = null;
+
 function renderQuestion() {
   answered = false;
   const cfg  = DIFF[currentDiff];
   const {stand, variation} = queue[qIndex];
 
-  // Counter & progress
   document.getElementById('q-num').textContent   = qIndex + 1;
   document.getElementById('prog').style.width    = (qIndex / queue.length * 100) + '%';
   updateDots();
 
-  // Scene colours
+  // Scene colours — trigger awning re-open by restarting the ::before animation
   const scene = document.getElementById('stand-scene');
   scene.style.setProperty('--scene-a', stand.sceneA);
   scene.style.setProperty('--scene-b', stand.sceneB);
   scene.style.background = `linear-gradient(180deg, ${stand.sceneA}18 0%, ${stand.sceneB}12 100%)`;
+  // Restart awning animation
+  scene.classList.remove('awning-reset');
+  scene.offsetWidth;
+  scene.classList.add('awning-reset');
 
-  // Vendor
-  document.getElementById('vendor-avatar').textContent = stand.vendorEmoji;
+  // Vendor — enter animation
+  const vendorAvatar = document.getElementById('vendor-avatar');
+  vendorAvatar.textContent = stand.vendorEmoji;
+  vendorAvatar.classList.remove('joy','shake');
+  vendorAvatar.style.animation = 'none';
+  vendorAvatar.offsetWidth;
+  vendorAvatar.style.animation = '';
   document.getElementById('vendor-name').textContent   = stand.vendorName;
   document.getElementById('v-avatar2').textContent     = stand.vendorEmoji;
 
-  // Stand items
-  document.getElementById('stand-items').innerHTML =
-    stand.items.map(i=>`<div class="stand-item"><div class="si-emoji">${i.e}</div><div class="si-label">${i.l}</div></div>`).join('');
+  // Stand items — stagger reveal
+  const itemsEl = document.getElementById('stand-items');
+  itemsEl.innerHTML = stand.items.map((i, idx) =>
+    `<div class="stand-item reveal" style="animation-delay:${idx*100}ms">
+      <div class="si-emoji">${i.e}</div>
+      <div class="si-label">${i.l}</div>
+    </div>`
+  ).join('');
 
-  // Vendor says
-  document.getElementById('vendor-says').textContent = variation.vendorSays;
+  // Vendor says — typewriter (starts after vendor enters, 450ms)
+  if (twTimer) { clearInterval(twTimer); twTimer = null; }
+  const vendorSaysEl = document.getElementById('vendor-says');
+  vendorSaysEl.textContent = '';
+  const fullText = variation.vendorSays;
+  let idx = 0;
+  setTimeout(() => {
+    twTimer = setInterval(() => {
+      if (idx >= fullText.length) { clearInterval(twTimer); twTimer = null; return; }
+      vendorSaysEl.textContent += fullText[idx];
+      idx++;
+    }, 30);
+  }, 480);
 
   // User placeholder
   document.getElementById('user-placeholder').textContent = '???';
@@ -669,20 +752,25 @@ function renderQuestion() {
     document.getElementById('hint-text').textContent = variation.hint;
   }
 
-  // Options
+  // Options — shown after typewriter (estimate: 500ms + text length*30ms)
+  const optDelay = 500 + fullText.length * 30 + 100;
   const wrongPool = [variation.wrong2, variation.wrong3, variation.wrong4].slice(0, cfg.optCount - 1);
   const opts      = shuffle([variation.answer, ...wrongPool]);
   const letters   = ['A','B','C','D'];
 
   const optEl = document.getElementById('options');
   optEl.innerHTML = '';
-  opts.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
-    btn.addEventListener('click', () => pickAnswer(opt === variation.answer, btn, variation));
-    optEl.appendChild(btn);
-  });
+  setTimeout(() => {
+    opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.style.opacity = '0';
+      btn.style.animation = `optIn 0.3s ease ${i*80}ms forwards`;
+      btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+      btn.addEventListener('click', () => pickAnswer(opt === variation.answer, btn, variation));
+      optEl.appendChild(btn);
+    });
+  }, optDelay);
 
   // Reset
   const fb = document.getElementById('feedback');
@@ -717,11 +805,23 @@ function pickAnswer(isCorrect, clickedBtn, variation) {
     fb.className = 'feedback visible ok';
     fb.innerHTML = '✅ Harika! Doğru cevap!';
     card.classList.add('correct-flash');
+    // Vendor joy jump
+    const va = document.getElementById('vendor-avatar');
+    va.classList.remove('joy','shake');
+    va.offsetWidth;
+    va.classList.add('joy');
+    setTimeout(() => va.classList.remove('joy'), 600);
   } else {
     clickedBtn.classList.add('wrong');
     fb.className = 'feedback visible no';
     fb.innerHTML = `❌ Tekrar dene! Doğrusu: <strong>${variation.answer}</strong>`;
     card.classList.add('wrong-flash');
+    // Vendor head shake
+    const va = document.getElementById('vendor-avatar');
+    va.classList.remove('joy','shake');
+    va.offsetWidth;
+    va.classList.add('shake');
+    setTimeout(() => va.classList.remove('shake'), 500);
   }
 
   document.getElementById('next-btn').classList.add('visible');
@@ -729,6 +829,7 @@ function pickAnswer(isCorrect, clickedBtn, variation) {
 
 // ══════════════ NEXT ══════════════
 function nextQuestion() {
+  if (twTimer) { clearInterval(twTimer); twTimer = null; }
   qIndex++;
   if (qIndex >= queue.length) showWin();
   else renderQuestion();

@@ -134,7 +134,23 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   padding:1.4rem 1.5rem 1rem;
   position:relative;min-height:160px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
 }
+/* Floating kitchen items in background */
+.kitchen-scene::after{
+  content:'🍳 🫖 🥄 🧂 🍽️';
+  position:absolute;font-size:2.2rem;opacity:.055;
+  left:0;right:0;top:50%;transform:translateY(-50%);
+  text-align:center;letter-spacing:18px;white-space:nowrap;
+  animation:kitchenDrift 16s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes kitchenDrift{
+  from{letter-spacing:18px;transform:translateY(-50%) translateX(-4px);}
+  to  {letter-spacing:26px;transform:translateY(-50%) translateX(4px);}
+}
+
+/* Fridge 3D door open */
 .fridge{
   position:relative;width:140px;
   background:linear-gradient(180deg,#FFFFFF 0%,#EAF8F5 100%);
@@ -142,7 +158,46 @@ h1,h2,h3,.brand{font-family:'Baloo 2',cursive;}
   box-shadow:0 6px 20px rgba(42,157,143,.15);
   padding:.8rem .6rem 1rem;
   display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  transform-origin:left center;
+  perspective:600px;
+  animation:fridgeDoorOpen 0.55s cubic-bezier(0.22,0.61,0.36,1) both;
 }
+@keyframes fridgeDoorOpen{
+  from{transform:rotateY(-35deg);opacity:0.5;}
+  to  {transform:rotateY(0deg);opacity:1;}
+}
+
+/* Fridge item stagger reveal */
+@keyframes fridgeItemIn{
+  from{transform:scale(0) rotate(-10deg);opacity:0;}
+  60% {transform:scale(1.25) rotate(5deg);}
+  100%{transform:scale(1) rotate(0);opacity:1;}
+}
+.fridge-item.entering{
+  animation:fridgeItemIn 0.32s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+
+/* Character avatar */
+.char-avatar{
+  font-size:2.2rem;flex-shrink:0;
+  display:inline-block;
+  transition:transform 0.2s;
+}
+/* Correct: bounce + emoji swap handled in JS */
+@keyframes charBounce{
+  0%,100%{transform:translateY(0) scale(1);}
+  30%{transform:translateY(-14px) scale(1.15);}
+  60%{transform:translateY(-6px) scale(1.05);}
+}
+.char-avatar.bounce{animation:charBounce 0.55s ease;}
+/* Wrong: thinking wobble */
+@keyframes charThink{
+  0%,100%{transform:rotate(0deg);}
+  25%{transform:rotate(-10deg);}
+  50%{transform:rotate(10deg);}
+  75%{transform:rotate(-5deg);}
+}
+.char-avatar.think{animation:charThink 0.5s ease;}
 .fridge-top{
   width:100%;background:#F0FAFA;border-radius:8px;
   border:1.5px solid #C8EEE9;padding:.4rem;
@@ -303,7 +358,7 @@ footer{text-align:center;padding:1.5rem;font-size:.8rem;color:var(--gray-500);fo
       <!-- Question + answers -->
       <div class="question-area">
         <div class="char-row">
-          <div class="char-avatar">🧒</div>
+          <div class="char-avatar" id="char-avatar">🧒</div>
           <div class="speech-bubble" id="question-text"></div>
         </div>
 
@@ -510,9 +565,30 @@ function renderQuestion() {
   document.getElementById('q-num').textContent  = qIndex + 1;
   document.getElementById('prog').style.width   = (qIndex / queue.length * 100) + '%';
 
-  // Fridge items
-  document.getElementById('fridge-top').innerHTML    = q.fridge.top.map(e=>`<span class="fridge-item">${e}</span>`).join('');
-  document.getElementById('fridge-bottom').innerHTML = q.fridge.bottom.map(e=>`<span class="fridge-item">${e}</span>`).join('');
+  // Fridge items — with stagger reveal + door re-open
+  const fridge = document.querySelector('.fridge');
+  fridge.style.animation = 'none';
+  fridge.offsetWidth;
+  fridge.style.animation = '';
+
+  const topEl = document.getElementById('fridge-top');
+  const botEl = document.getElementById('fridge-bottom');
+  topEl.innerHTML = '';
+  botEl.innerHTML = '';
+  q.fridge.top.forEach((e, i) => {
+    const span = document.createElement('span');
+    span.className = 'fridge-item entering';
+    span.style.animationDelay = (i * 80) + 'ms';
+    span.textContent = e;
+    topEl.appendChild(span);
+  });
+  q.fridge.bottom.forEach((e, i) => {
+    const span = document.createElement('span');
+    span.className = 'fridge-item entering';
+    span.style.animationDelay = ((q.fridge.top.length + i) * 80) + 'ms';
+    span.textContent = e;
+    botEl.appendChild(span);
+  });
 
   // Question text
   document.getElementById('question-text').textContent = q.question;
@@ -562,6 +638,8 @@ function pickAnswer(isCorrect, clickedBtn, correctAnswer) {
   const fb   = document.getElementById('feedback');
   const card = document.getElementById('scene-card');
 
+  const avatar = document.getElementById('char-avatar');
+
   if (isCorrect) {
     clickedBtn.classList.add('correct');
     score++;
@@ -569,11 +647,23 @@ function pickAnswer(isCorrect, clickedBtn, correctAnswer) {
     fb.className = 'feedback visible ok';
     fb.innerHTML = '✅ Harika! Doğru cevap!';
     card.classList.add('correct-flash');
+    // Character joy
+    avatar.textContent = '😊';
+    avatar.classList.remove('bounce','think');
+    avatar.offsetWidth;
+    avatar.classList.add('bounce');
+    setTimeout(() => { avatar.textContent = '🧒'; avatar.classList.remove('bounce'); }, 700);
   } else {
     clickedBtn.classList.add('wrong');
     fb.className = 'feedback visible no';
     fb.innerHTML = `❌ Tekrar dene! Doğrusu: <strong>${correctAnswer}</strong>`;
     card.classList.add('wrong-flash');
+    // Character thinking
+    avatar.textContent = '🤔';
+    avatar.classList.remove('bounce','think');
+    avatar.offsetWidth;
+    avatar.classList.add('think');
+    setTimeout(() => { avatar.textContent = '🧒'; avatar.classList.remove('think'); }, 700);
   }
 
   document.getElementById('next-btn').classList.add('visible');
