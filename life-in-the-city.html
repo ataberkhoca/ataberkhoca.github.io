@@ -131,11 +131,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   line-height:1.1;margin-bottom:.8rem;
   text-shadow:0 2px 16px rgba(0,0,0,.2);
 }
-.page-hero h1 .highlight {
-  background:rgba(255,255,255,.2);
-  padding:.05em .25em;border-radius:8px;
-  border:1px solid rgba(255,255,255,.3);
-}
+.page-hero h1 .highlight { color: var(--orange); }
 
 .page-hero-desc {
   color:rgba(255,255,255,.88);font-size:1.05rem;font-weight:600;
@@ -154,22 +150,64 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 
 /* ══════════ VOCAB STRIP ══════════ */
 .vocab-strip {
-  background:var(--navy);padding:.7rem 0;overflow:hidden;position:relative;
+  background: white; border-bottom: 1px solid var(--gray-200);
+  padding: 16px 40px; overflow: hidden; position: relative;
 }
-.vocab-strip::before,.vocab-strip::after {
-  content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;
+.vocab-strip::before, .vocab-strip::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
 }
-.vocab-strip::before { left:0;background:linear-gradient(to right,var(--navy),transparent); }
-.vocab-strip::after  { right:0;background:linear-gradient(to left,var(--navy),transparent); }
+.vocab-strip::before { left: 0; background: linear-gradient(90deg, white, transparent); }
+.vocab-strip::after  { right: 0; background: linear-gradient(-90deg, white, transparent); }
 
 .vocab-scroll {
-  display:flex;gap:0;width:max-content;
-  animation:scroll-left 35s linear infinite;
+  display: flex; gap: 12px;
+  animation: none;
+  width: max-content;
 }
-.vocab-scroll:hover { animation-play-state:paused; }
-@keyframes scroll-left { from{transform:translateX(0);}to{transform:translateX(-50%);} }
+.vocab-scroll:hover { animation-play-state: paused; }
+@keyframes scrollWords { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-/* vocab-word styles now in flip block above */
+.vocab-word {
+  display: inline-flex;
+  perspective: 400px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vocab-word-inner {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 6px 14px; border-radius: 50px;
+  background: var(--cream); color: var(--navy);
+  border: 1px solid var(--gray-200);
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-en {
+  display: flex; align-items: center; gap: 6px;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-tr {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50px;
+  background: var(--orange); color: white;
+  font-size: 0.8rem; font-weight: 700;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  padding: 6px 14px;
+}
+.vocab-word.flipped .vocab-word-inner {
+  transform: rotateY(180deg);
+  border-color: var(--orange);
+}
+.vocab-word:not(.flipped):hover .vocab-word-inner {
+  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
+}
+.vocab-word .en  { color: var(--orange); }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
 
 /* ══════════ MAIN CONTENT ══════════ */
 .page-content { max-width:1100px;margin:0 auto;padding:4rem 40px; }
@@ -217,41 +255,6 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   animation:cardEmojiBounce 0.55s ease;
 }
 
-/* ══════════ VOCAB FLIP (dark strip variant) ══════════ */
-.vocab-word{
-  display:inline-flex;
-  perspective:400px;
-  cursor:pointer;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.vocab-word-inner{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.3rem 1.2rem;border-radius:99px;
-  font-size:.82rem;font-weight:600;
-  color:rgba(255,255,255,.7);
-  transition:transform 0.4s cubic-bezier(0.22,0.61,0.36,1);
-  transform-style:preserve-3d;
-  position:relative;backface-visibility:hidden;
-}
-.vocab-word-inner .face-en{
-  display:flex;align-items:center;gap:.5rem;
-  backface-visibility:hidden;
-}
-.vocab-word-inner .face-tr{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:99px;
-  background:var(--food-red);color:white;
-  font-size:.82rem;font-weight:700;
-  backface-visibility:hidden;
-  transform:rotateY(180deg);
-  padding:.3rem 1rem;
-}
-.vocab-word.flipped .vocab-word-inner{transform:rotateY(180deg);}
-.vocab-word:not(.flipped):hover .vocab-word-inner{color:#fff;}
-.vocab-word .en {color:#fff;font-weight:700;}
-.vocab-word .sep{color:rgba(255,255,255,.25);font-size:.7rem;}
 
 .card-visual {
   height:140px;display:flex;align-items:center;justify-content:center;
@@ -295,7 +298,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 }
 .card-btn:hover { transform:translateX(3px); }
 
-/* ══════════ DIFFICULTY LEGEND ══════════ */
+/* ══════════ DIFF LEGEND ══════════ */
 .diff-legend {
   background:var(--white);border-radius:var(--radius-lg);
   padding:1.6rem 2rem;box-shadow:var(--shadow-soft);
@@ -303,9 +306,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
   display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;
 }
 .diff-item { display:flex;align-items:flex-start;gap:.8rem; }
-.diff-dot {
-  width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px;
-}
+.diff-dot { width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px; }
 .diff-text strong { display:block;font-size:.88rem;font-weight:800;color:var(--navy);margin-bottom:.15rem; }
 .diff-text span   { font-size:.8rem;color:var(--gray-500);font-weight:600;line-height:1.5; }
 
@@ -402,7 +403,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
       <span class="current">Life in the City &amp; the World</span>
     </nav>
     <span class="page-hero-emoji">🍎</span>
-    <h1>Life in the City &amp; the World <span class="highlight">Etkinlikleri</span></h1>
+    <h1>Life in the City &amp; the World</h1>
     <p class="page-hero-desc">
       Yiyecekler ve içecekler temasına ait interaktif etkinlikler. Meyveleri, sebzeleri, öğünleri tanı ve sormayı öğren!
     </p>
@@ -755,7 +756,7 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 </main>
 
 <footer class="footer">
-  <p>© 2025 Ataberk Hoca İngilizce · TYMM 2025 · MEB Maarif Modeli · Tüm hakları saklıdır.</p>
+  <p>© 2026 ataberkhocaingilizce · TYMM 2025 · MEB Maarif Modeli · Tüm hakları saklıdır.</p>
 </footer>
 
 <script>
@@ -769,6 +770,35 @@ function flipWord(el) {
   const anyFlipped = document.querySelector('.vocab-word.flipped');
   strip.style.animationPlayState = anyFlipped ? 'paused' : '';
 }
+
+// Sabit px/saniye hızı ile vocab scroll
+function initVocabScroll() {
+  var scroll = document.querySelector('.vocab-scroll');
+  if (!scroll) return;
+  scroll.style.animation = 'none';
+  var pxPerSec = 80;
+  var pos = 0;
+  var paused = false;
+  var lastTime = null;
+  var totalWidth = scroll.scrollWidth / 2;
+
+  scroll.parentElement.addEventListener('mouseenter', function() { paused = true; });
+  scroll.parentElement.addEventListener('mouseleave', function() { paused = false; });
+
+  function step(ts) {
+    if (lastTime !== null && !paused) {
+      var delta = (ts - lastTime) / 1000;
+      pos += pxPerSec * delta;
+      if (pos >= totalWidth) pos -= totalWidth;
+      scroll.style.transform = 'translateX(-' + pos + 'px)';
+    }
+    lastTime = ts;
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+document.addEventListener('DOMContentLoaded', initVocabScroll);
+
 </script>
 </body>
 </html>

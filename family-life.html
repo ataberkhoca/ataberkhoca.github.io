@@ -139,7 +139,7 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 
 .vocab-scroll {
   display: flex; gap: 12px;
-  animation: scrollWords 35s linear infinite;
+  animation: none;
   width: max-content;
 }
 .vocab-scroll:hover { animation-play-state: paused; }
@@ -864,6 +864,35 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+// Sabit px/saniye hızı ile vocab scroll
+function initVocabScroll() {
+  var scroll = document.querySelector('.vocab-scroll');
+  if (!scroll) return;
+  scroll.style.animation = 'none';
+  var pxPerSec = 80;
+  var pos = 0;
+  var paused = false;
+  var lastTime = null;
+  var totalWidth = scroll.scrollWidth / 2;
+
+  scroll.parentElement.addEventListener('mouseenter', function() { paused = true; });
+  scroll.parentElement.addEventListener('mouseleave', function() { paused = false; });
+
+  function step(ts) {
+    if (lastTime !== null && !paused) {
+      var delta = (ts - lastTime) / 1000;
+      pos += pxPerSec * delta;
+      if (pos >= totalWidth) pos -= totalWidth;
+      scroll.style.transform = 'translateX(-' + pos + 'px)';
+    }
+    lastTime = ts;
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+document.addEventListener('DOMContentLoaded', initVocabScroll);
+
 </script>
 </body>
 </html>
