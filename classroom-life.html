@@ -126,47 +126,30 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 @keyframes scrollWords { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 .vocab-word {
   display: inline-flex;
-  perspective: 400px;
-  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  cursor: default;
 }
 .vocab-word-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.8rem; font-weight: 700;
   padding: 6px 14px; border-radius: 50px;
   background: var(--cream); color: var(--navy);
   border: 1px solid var(--gray-200);
-  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
-  transform-style: preserve-3d;
-  position: relative;
-  backface-visibility: hidden;
+  transition: all 0.25s ease;
 }
-.vocab-word-inner .face-en {
-  display: flex; align-items: center; gap: 6px;
-  backface-visibility: hidden;
-}
-.vocab-word-inner .face-tr {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50px;
-  background: var(--orange); color: white;
-  font-size: 0.8rem; font-weight: 700;
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
-  padding: 6px 14px;
-}
-.vocab-word.flipped .vocab-word-inner {
-  transform: rotateY(180deg);
+.vocab-word:hover .vocab-word-inner {
+  background: var(--orange);
   border-color: var(--orange);
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.25);
 }
-.vocab-word:not(.flipped):hover .vocab-word-inner {
-  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
-}
-.vocab-word .en  { color: var(--orange); }
-.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
+.vocab-word .en  { color: var(--orange); font-weight: 800; transition: color 0.25s; }
+.vocab-word:hover .en  { color: white; }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; transition: color 0.25s; }
+.vocab-word:hover .sep { color: rgba(255,255,255,0.4); }
+.vocab-word .tr  { color: var(--navy); transition: color 0.25s; }
+.vocab-word:hover .tr  { color: rgba(255,255,255,0.75); font-weight: 600; }
 
 /* ACTIVITIES SECTION */
 .section { padding: 70px 40px; position: relative; z-index: 1; }
@@ -424,99 +407,99 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 <div class="vocab-strip">
   <div class="vocab-scroll">
     <!-- Set 1 -->
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bag</span><span class="sep">•</span>çanta</span><span class="face-tr">çanta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blackboard</span><span class="sep">•</span>kara tahta</span><span class="face-tr">kara tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">board</span><span class="sep">•</span>tahta</span><span class="face-tr">tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">book</span><span class="sep">•</span>kitap</span><span class="face-tr">kitap</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bookcase</span><span class="sep">•</span>kitaplık</span><span class="face-tr">kitaplık</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">box</span><span class="sep">•</span>kutu</span><span class="face-tr">kutu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">chair</span><span class="sep">•</span>sandalye</span><span class="face-tr">sandalye</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">chalk</span><span class="sep">•</span>tebeşir</span><span class="face-tr">tebeşir</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">clock</span><span class="sep">•</span>duvar saati</span><span class="face-tr">duvar saati</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">computer</span><span class="sep">•</span>bilgisayar</span><span class="face-tr">bilgisayar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">crayon</span><span class="sep">•</span>pastel boya</span><span class="face-tr">pastel boya</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">desk</span><span class="sep">•</span>sıra</span><span class="face-tr">sıra</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">door</span><span class="sep">•</span>kapı</span><span class="face-tr">kapı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glue</span><span class="sep">•</span>yapıştırıcı</span><span class="face-tr">yapıştırıcı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">notebook</span><span class="sep">•</span>defter</span><span class="face-tr">defter</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pencil</span><span class="sep">•</span>kalem</span><span class="face-tr">kalem</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pencilcase</span><span class="sep">•</span>kalem kutusu</span><span class="face-tr">kalem kutusu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">picture</span><span class="sep">•</span>resim</span><span class="face-tr">resim</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rubber</span><span class="sep">•</span>silgi</span><span class="face-tr">silgi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scissors</span><span class="sep">•</span>makas</span><span class="face-tr">makas</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sharpener</span><span class="sep">•</span>kalemtıraş</span><span class="face-tr">kalemtıraş</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">smart board</span><span class="sep">•</span>akıllı tahta</span><span class="face-tr">akıllı tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">table</span><span class="sep">•</span>masa</span><span class="face-tr">masa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">wall</span><span class="sep">•</span>duvar</span><span class="face-tr">duvar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">whiteboard</span><span class="sep">•</span>beyaz tahta</span><span class="face-tr">beyaz tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">window</span><span class="sep">•</span>pencere</span><span class="face-tr">pencere</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">red</span><span class="sep">•</span>kırmızı</span><span class="face-tr">kırmızı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blue</span><span class="sep">•</span>mavi</span><span class="face-tr">mavi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">green</span><span class="sep">•</span>yeşil</span><span class="face-tr">yeşil</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">yellow</span><span class="sep">•</span>sarı</span><span class="face-tr">sarı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">orange</span><span class="sep">•</span>turuncu</span><span class="face-tr">turuncu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">purple</span><span class="sep">•</span>mor</span><span class="face-tr">mor</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pink</span><span class="sep">•</span>pembe</span><span class="face-tr">pembe</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">brown</span><span class="sep">•</span>kahverengi</span><span class="face-tr">kahverengi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">black</span><span class="sep">•</span>siyah</span><span class="face-tr">siyah</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">white</span><span class="sep">•</span>beyaz</span><span class="face-tr">beyaz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">open</span><span class="sep">•</span>açmak</span><span class="face-tr">açmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">close</span><span class="sep">•</span>kapatmak</span><span class="face-tr">kapatmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">listen</span><span class="sep">•</span>dinlemek</span><span class="face-tr">dinlemek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">look</span><span class="sep">•</span>bakmak</span><span class="face-tr">bakmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sit down</span><span class="sep">•</span>oturmak</span><span class="face-tr">oturmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">raise</span><span class="sep">•</span>el kaldırmak</span><span class="face-tr">el kaldırmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">quiet</span><span class="sep">•</span>sessiz</span><span class="face-tr">sessiz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">please</span><span class="sep">•</span>lütfen</span><span class="face-tr">lütfen</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">well done</span><span class="sep">•</span>aferin</span><span class="face-tr">aferin</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ready</span><span class="sep">•</span>hazır</span><span class="face-tr">hazır</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">bag</span><span class="sep">•</span><span class="tr">çanta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blackboard</span><span class="sep">•</span><span class="tr">kara tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">board</span><span class="sep">•</span><span class="tr">tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">book</span><span class="sep">•</span><span class="tr">kitap</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">bookcase</span><span class="sep">•</span><span class="tr">kitaplık</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">box</span><span class="sep">•</span><span class="tr">kutu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">chair</span><span class="sep">•</span><span class="tr">sandalye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">chalk</span><span class="sep">•</span><span class="tr">tebeşir</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">clock</span><span class="sep">•</span><span class="tr">duvar saati</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">computer</span><span class="sep">•</span><span class="tr">bilgisayar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">crayon</span><span class="sep">•</span><span class="tr">pastel boya</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">desk</span><span class="sep">•</span><span class="tr">sıra</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">door</span><span class="sep">•</span><span class="tr">kapı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">glue</span><span class="sep">•</span><span class="tr">yapıştırıcı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">notebook</span><span class="sep">•</span><span class="tr">defter</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pencil</span><span class="sep">•</span><span class="tr">kalem</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pencilcase</span><span class="sep">•</span><span class="tr">kalem kutusu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">picture</span><span class="sep">•</span><span class="tr">resim</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">rubber</span><span class="sep">•</span><span class="tr">silgi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">scissors</span><span class="sep">•</span><span class="tr">makas</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">sharpener</span><span class="sep">•</span><span class="tr">kalemtıraş</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">smart board</span><span class="sep">•</span><span class="tr">akıllı tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">table</span><span class="sep">•</span><span class="tr">masa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">wall</span><span class="sep">•</span><span class="tr">duvar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">whiteboard</span><span class="sep">•</span><span class="tr">beyaz tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">window</span><span class="sep">•</span><span class="tr">pencere</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">red</span><span class="sep">•</span><span class="tr">kırmızı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blue</span><span class="sep">•</span><span class="tr">mavi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">green</span><span class="sep">•</span><span class="tr">yeşil</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">yellow</span><span class="sep">•</span><span class="tr">sarı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">orange</span><span class="sep">•</span><span class="tr">turuncu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">purple</span><span class="sep">•</span><span class="tr">mor</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pink</span><span class="sep">•</span><span class="tr">pembe</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">brown</span><span class="sep">•</span><span class="tr">kahverengi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">black</span><span class="sep">•</span><span class="tr">siyah</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">white</span><span class="sep">•</span><span class="tr">beyaz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">open</span><span class="sep">•</span><span class="tr">açmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">close</span><span class="sep">•</span><span class="tr">kapatmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">listen</span><span class="sep">•</span><span class="tr">dinlemek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">look</span><span class="sep">•</span><span class="tr">bakmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">sit down</span><span class="sep">•</span><span class="tr">oturmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">raise</span><span class="sep">•</span><span class="tr">el kaldırmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">quiet</span><span class="sep">•</span><span class="tr">sessiz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">please</span><span class="sep">•</span><span class="tr">lütfen</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">well done</span><span class="sep">•</span><span class="tr">aferin</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">ready</span><span class="sep">•</span><span class="tr">hazır</span></span></span>
     <!-- Set 2 — kopya (sonsuz döngü için) -->
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bag</span><span class="sep">•</span>çanta</span><span class="face-tr">çanta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blackboard</span><span class="sep">•</span>kara tahta</span><span class="face-tr">kara tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">board</span><span class="sep">•</span>tahta</span><span class="face-tr">tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">book</span><span class="sep">•</span>kitap</span><span class="face-tr">kitap</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">bookcase</span><span class="sep">•</span>kitaplık</span><span class="face-tr">kitaplık</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">box</span><span class="sep">•</span>kutu</span><span class="face-tr">kutu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">chair</span><span class="sep">•</span>sandalye</span><span class="face-tr">sandalye</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">chalk</span><span class="sep">•</span>tebeşir</span><span class="face-tr">tebeşir</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">clock</span><span class="sep">•</span>duvar saati</span><span class="face-tr">duvar saati</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">computer</span><span class="sep">•</span>bilgisayar</span><span class="face-tr">bilgisayar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">crayon</span><span class="sep">•</span>pastel boya</span><span class="face-tr">pastel boya</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">desk</span><span class="sep">•</span>sıra</span><span class="face-tr">sıra</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">door</span><span class="sep">•</span>kapı</span><span class="face-tr">kapı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glue</span><span class="sep">•</span>yapıştırıcı</span><span class="face-tr">yapıştırıcı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">notebook</span><span class="sep">•</span>defter</span><span class="face-tr">defter</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pencil</span><span class="sep">•</span>kalem</span><span class="face-tr">kalem</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pencilcase</span><span class="sep">•</span>kalem kutusu</span><span class="face-tr">kalem kutusu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">picture</span><span class="sep">•</span>resim</span><span class="face-tr">resim</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rubber</span><span class="sep">•</span>silgi</span><span class="face-tr">silgi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scissors</span><span class="sep">•</span>makas</span><span class="face-tr">makas</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sharpener</span><span class="sep">•</span>kalemtıraş</span><span class="face-tr">kalemtıraş</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">smart board</span><span class="sep">•</span>akıllı tahta</span><span class="face-tr">akıllı tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">table</span><span class="sep">•</span>masa</span><span class="face-tr">masa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">wall</span><span class="sep">•</span>duvar</span><span class="face-tr">duvar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">whiteboard</span><span class="sep">•</span>beyaz tahta</span><span class="face-tr">beyaz tahta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">window</span><span class="sep">•</span>pencere</span><span class="face-tr">pencere</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">red</span><span class="sep">•</span>kırmızı</span><span class="face-tr">kırmızı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blue</span><span class="sep">•</span>mavi</span><span class="face-tr">mavi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">green</span><span class="sep">•</span>yeşil</span><span class="face-tr">yeşil</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">yellow</span><span class="sep">•</span>sarı</span><span class="face-tr">sarı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">orange</span><span class="sep">•</span>turuncu</span><span class="face-tr">turuncu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">purple</span><span class="sep">•</span>mor</span><span class="face-tr">mor</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">pink</span><span class="sep">•</span>pembe</span><span class="face-tr">pembe</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">brown</span><span class="sep">•</span>kahverengi</span><span class="face-tr">kahverengi</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">black</span><span class="sep">•</span>siyah</span><span class="face-tr">siyah</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">white</span><span class="sep">•</span>beyaz</span><span class="face-tr">beyaz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">open</span><span class="sep">•</span>açmak</span><span class="face-tr">açmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">close</span><span class="sep">•</span>kapatmak</span><span class="face-tr">kapatmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">listen</span><span class="sep">•</span>dinlemek</span><span class="face-tr">dinlemek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">look</span><span class="sep">•</span>bakmak</span><span class="face-tr">bakmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">sit down</span><span class="sep">•</span>oturmak</span><span class="face-tr">oturmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">raise</span><span class="sep">•</span>el kaldırmak</span><span class="face-tr">el kaldırmak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">quiet</span><span class="sep">•</span>sessiz</span><span class="face-tr">sessiz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">please</span><span class="sep">•</span>lütfen</span><span class="face-tr">lütfen</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">well done</span><span class="sep">•</span>aferin</span><span class="face-tr">aferin</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ready</span><span class="sep">•</span>hazır</span><span class="face-tr">hazır</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">bag</span><span class="sep">•</span><span class="tr">çanta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blackboard</span><span class="sep">•</span><span class="tr">kara tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">board</span><span class="sep">•</span><span class="tr">tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">book</span><span class="sep">•</span><span class="tr">kitap</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">bookcase</span><span class="sep">•</span><span class="tr">kitaplık</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">box</span><span class="sep">•</span><span class="tr">kutu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">chair</span><span class="sep">•</span><span class="tr">sandalye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">chalk</span><span class="sep">•</span><span class="tr">tebeşir</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">clock</span><span class="sep">•</span><span class="tr">duvar saati</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">computer</span><span class="sep">•</span><span class="tr">bilgisayar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">crayon</span><span class="sep">•</span><span class="tr">pastel boya</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">desk</span><span class="sep">•</span><span class="tr">sıra</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">door</span><span class="sep">•</span><span class="tr">kapı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">glue</span><span class="sep">•</span><span class="tr">yapıştırıcı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">notebook</span><span class="sep">•</span><span class="tr">defter</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pencil</span><span class="sep">•</span><span class="tr">kalem</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pencilcase</span><span class="sep">•</span><span class="tr">kalem kutusu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">picture</span><span class="sep">•</span><span class="tr">resim</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">rubber</span><span class="sep">•</span><span class="tr">silgi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">scissors</span><span class="sep">•</span><span class="tr">makas</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">sharpener</span><span class="sep">•</span><span class="tr">kalemtıraş</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">smart board</span><span class="sep">•</span><span class="tr">akıllı tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">table</span><span class="sep">•</span><span class="tr">masa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">wall</span><span class="sep">•</span><span class="tr">duvar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">whiteboard</span><span class="sep">•</span><span class="tr">beyaz tahta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">window</span><span class="sep">•</span><span class="tr">pencere</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">red</span><span class="sep">•</span><span class="tr">kırmızı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blue</span><span class="sep">•</span><span class="tr">mavi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">green</span><span class="sep">•</span><span class="tr">yeşil</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">yellow</span><span class="sep">•</span><span class="tr">sarı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">orange</span><span class="sep">•</span><span class="tr">turuncu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">purple</span><span class="sep">•</span><span class="tr">mor</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">pink</span><span class="sep">•</span><span class="tr">pembe</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">brown</span><span class="sep">•</span><span class="tr">kahverengi</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">black</span><span class="sep">•</span><span class="tr">siyah</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">white</span><span class="sep">•</span><span class="tr">beyaz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">open</span><span class="sep">•</span><span class="tr">açmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">close</span><span class="sep">•</span><span class="tr">kapatmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">listen</span><span class="sep">•</span><span class="tr">dinlemek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">look</span><span class="sep">•</span><span class="tr">bakmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">sit down</span><span class="sep">•</span><span class="tr">oturmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">raise</span><span class="sep">•</span><span class="tr">el kaldırmak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">quiet</span><span class="sep">•</span><span class="tr">sessiz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">please</span><span class="sep">•</span><span class="tr">lütfen</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">well done</span><span class="sep">•</span><span class="tr">aferin</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">ready</span><span class="sep">•</span><span class="tr">hazır</span></span></span>
   </div>
 </div>
 
@@ -892,12 +875,6 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 </footer>
 
 <script>
-function flipWord(el) {
-  el.classList.toggle('flipped');
-  var strip = document.querySelector('.vocab-scroll');
-  var anyFlipped = document.querySelector('.vocab-word.flipped');
-  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
-}
 
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);

@@ -158,47 +158,30 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 
 .vocab-word {
   display: inline-flex;
-  perspective: 400px;
-  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  cursor: default;
 }
 .vocab-word-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.8rem; font-weight: 700;
   padding: 6px 14px; border-radius: 50px;
   background: var(--cream); color: var(--navy);
   border: 1px solid var(--gray-200);
-  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
-  transform-style: preserve-3d;
-  position: relative;
-  backface-visibility: hidden;
+  transition: all 0.25s ease;
 }
-.vocab-word-inner .face-en {
-  display: flex; align-items: center; gap: 6px;
-  backface-visibility: hidden;
-}
-.vocab-word-inner .face-tr {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50px;
-  background: var(--orange); color: white;
-  font-size: 0.8rem; font-weight: 700;
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
-  padding: 6px 14px;
-}
-.vocab-word.flipped .vocab-word-inner {
-  transform: rotateY(180deg);
+.vocab-word:hover .vocab-word-inner {
+  background: var(--orange);
   border-color: var(--orange);
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(255,107,53,0.25);
 }
-.vocab-word:not(.flipped):hover .vocab-word-inner {
-  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
-}
-.vocab-word .en  { color: var(--orange); }
-.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
+.vocab-word .en  { color: var(--orange); font-weight: 800; transition: color 0.25s; }
+.vocab-word:hover .en  { color: white; }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; transition: color 0.25s; }
+.vocab-word:hover .sep { color: rgba(255,255,255,0.4); }
+.vocab-word .tr  { color: var(--navy); transition: color 0.25s; }
+.vocab-word:hover .tr  { color: rgba(255,255,255,0.75); font-weight: 600; }
 
 /* ══════════ MAIN CONTENT ══════════ */
 .page-content { max-width:1100px;margin:0 auto;padding:4rem 40px; }
@@ -411,89 +394,89 @@ h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 <div class="vocab-strip">
   <div class="vocab-scroll">
     <!-- Set 1 -->
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">arm</span><span class="sep">•</span>kol</span><span class="face-tr">kol</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">birthday</span><span class="sep">•</span>doğum günü</span><span class="face-tr">doğum günü</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blond</span><span class="sep">•</span>sarı saçlı</span><span class="face-tr">sarı saçlı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">body</span><span class="sep">•</span>vücut</span><span class="face-tr">vücut</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">break time</span><span class="sep">•</span>teneffüs zamanı</span><span class="face-tr">teneffüs zamanı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cake</span><span class="sep">•</span>pasta</span><span class="face-tr">pasta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cheer up</span><span class="sep">•</span>neşelenmek</span><span class="face-tr">neşelenmek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coat</span><span class="sep">•</span>mont</span><span class="face-tr">mont</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cold</span><span class="sep">•</span>soğuk</span><span class="face-tr">soğuk</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dark</span><span class="sep">•</span>karanlık</span><span class="face-tr">karanlık</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dear</span><span class="sep">•</span>sevgili</span><span class="face-tr">sevgili</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dress</span><span class="sep">•</span>elbise</span><span class="face-tr">elbise</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ear</span><span class="sep">•</span>kulak</span><span class="face-tr">kulak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">eye</span><span class="sep">•</span>göz</span><span class="face-tr">göz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">face</span><span class="sep">•</span>yüz</span><span class="face-tr">yüz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gift</span><span class="sep">•</span>hediye</span><span class="face-tr">hediye</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glasses</span><span class="sep">•</span>gözlük</span><span class="face-tr">gözlük</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gloves</span><span class="sep">•</span>eldiven</span><span class="face-tr">eldiven</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">great</span><span class="sep">•</span>harika</span><span class="face-tr">harika</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hair</span><span class="sep">•</span>saç</span><span class="face-tr">saç</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hand</span><span class="sep">•</span>el</span><span class="face-tr">el</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hat</span><span class="sep">•</span>şapka</span><span class="face-tr">şapka</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">head</span><span class="sep">•</span>kafa</span><span class="face-tr">kafa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hot</span><span class="sep">•</span>sıcak</span><span class="face-tr">sıcak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">jacket</span><span class="sep">•</span>ceket</span><span class="face-tr">ceket</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">leg</span><span class="sep">•</span>bacak</span><span class="face-tr">bacak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">long</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mouth</span><span class="sep">•</span>ağız</span><span class="face-tr">ağız</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nose</span><span class="sep">•</span>burun</span><span class="face-tr">burun</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">puppet</span><span class="sep">•</span>kukla</span><span class="face-tr">kukla</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rain</span><span class="sep">•</span>yağmur</span><span class="face-tr">yağmur</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scarf</span><span class="sep">•</span>atkı</span><span class="face-tr">atkı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shirt</span><span class="sep">•</span>gömlek</span><span class="face-tr">gömlek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shoes</span><span class="sep">•</span>ayakkabı</span><span class="face-tr">ayakkabı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">small</span><span class="sep">•</span>küçük</span><span class="face-tr">küçük</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">snow</span><span class="sep">•</span>kar</span><span class="face-tr">kar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun boylu</span><span class="face-tr">uzun boylu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">trousers</span><span class="sep">•</span>pantolon</span><span class="face-tr">pantolon</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">t-shirt</span><span class="sep">•</span>tişört</span><span class="face-tr">tişört</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">umbrella</span><span class="sep">•</span>şemsiye</span><span class="face-tr">şemsiye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">arm</span><span class="sep">•</span><span class="tr">kol</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">birthday</span><span class="sep">•</span><span class="tr">doğum günü</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blond</span><span class="sep">•</span><span class="tr">sarı saçlı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">body</span><span class="sep">•</span><span class="tr">vücut</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">break time</span><span class="sep">•</span><span class="tr">teneffüs zamanı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cake</span><span class="sep">•</span><span class="tr">pasta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cheer up</span><span class="sep">•</span><span class="tr">neşelenmek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">coat</span><span class="sep">•</span><span class="tr">mont</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cold</span><span class="sep">•</span><span class="tr">soğuk</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dark</span><span class="sep">•</span><span class="tr">karanlık</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dear</span><span class="sep">•</span><span class="tr">sevgili</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dress</span><span class="sep">•</span><span class="tr">elbise</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">ear</span><span class="sep">•</span><span class="tr">kulak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">eye</span><span class="sep">•</span><span class="tr">göz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">face</span><span class="sep">•</span><span class="tr">yüz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">gift</span><span class="sep">•</span><span class="tr">hediye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">glasses</span><span class="sep">•</span><span class="tr">gözlük</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">gloves</span><span class="sep">•</span><span class="tr">eldiven</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">great</span><span class="sep">•</span><span class="tr">harika</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hair</span><span class="sep">•</span><span class="tr">saç</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hand</span><span class="sep">•</span><span class="tr">el</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hat</span><span class="sep">•</span><span class="tr">şapka</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">head</span><span class="sep">•</span><span class="tr">kafa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hot</span><span class="sep">•</span><span class="tr">sıcak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">jacket</span><span class="sep">•</span><span class="tr">ceket</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">leg</span><span class="sep">•</span><span class="tr">bacak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">long</span><span class="sep">•</span><span class="tr">uzun</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">mouth</span><span class="sep">•</span><span class="tr">ağız</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">nose</span><span class="sep">•</span><span class="tr">burun</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">puppet</span><span class="sep">•</span><span class="tr">kukla</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">rain</span><span class="sep">•</span><span class="tr">yağmur</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">scarf</span><span class="sep">•</span><span class="tr">atkı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">shirt</span><span class="sep">•</span><span class="tr">gömlek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">shoes</span><span class="sep">•</span><span class="tr">ayakkabı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">short</span><span class="sep">•</span><span class="tr">kısa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">small</span><span class="sep">•</span><span class="tr">küçük</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">snow</span><span class="sep">•</span><span class="tr">kar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">tall</span><span class="sep">•</span><span class="tr">uzun boylu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">trousers</span><span class="sep">•</span><span class="tr">pantolon</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">t-shirt</span><span class="sep">•</span><span class="tr">tişört</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">umbrella</span><span class="sep">•</span><span class="tr">şemsiye</span></span></span>
     <!-- Set 2 — kopya (sonsuz döngü için) -->
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">arm</span><span class="sep">•</span>kol</span><span class="face-tr">kol</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">birthday</span><span class="sep">•</span>doğum günü</span><span class="face-tr">doğum günü</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blond</span><span class="sep">•</span>sarı saçlı</span><span class="face-tr">sarı saçlı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">body</span><span class="sep">•</span>vücut</span><span class="face-tr">vücut</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">break time</span><span class="sep">•</span>teneffüs zamanı</span><span class="face-tr">teneffüs zamanı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cake</span><span class="sep">•</span>pasta</span><span class="face-tr">pasta</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cheer up</span><span class="sep">•</span>neşelenmek</span><span class="face-tr">neşelenmek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coat</span><span class="sep">•</span>mont</span><span class="face-tr">mont</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cold</span><span class="sep">•</span>soğuk</span><span class="face-tr">soğuk</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dark</span><span class="sep">•</span>karanlık</span><span class="face-tr">karanlık</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dear</span><span class="sep">•</span>sevgili</span><span class="face-tr">sevgili</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dress</span><span class="sep">•</span>elbise</span><span class="face-tr">elbise</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ear</span><span class="sep">•</span>kulak</span><span class="face-tr">kulak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">eye</span><span class="sep">•</span>göz</span><span class="face-tr">göz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">face</span><span class="sep">•</span>yüz</span><span class="face-tr">yüz</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gift</span><span class="sep">•</span>hediye</span><span class="face-tr">hediye</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glasses</span><span class="sep">•</span>gözlük</span><span class="face-tr">gözlük</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gloves</span><span class="sep">•</span>eldiven</span><span class="face-tr">eldiven</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">great</span><span class="sep">•</span>harika</span><span class="face-tr">harika</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hair</span><span class="sep">•</span>saç</span><span class="face-tr">saç</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hand</span><span class="sep">•</span>el</span><span class="face-tr">el</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hat</span><span class="sep">•</span>şapka</span><span class="face-tr">şapka</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">head</span><span class="sep">•</span>kafa</span><span class="face-tr">kafa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hot</span><span class="sep">•</span>sıcak</span><span class="face-tr">sıcak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">jacket</span><span class="sep">•</span>ceket</span><span class="face-tr">ceket</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">leg</span><span class="sep">•</span>bacak</span><span class="face-tr">bacak</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">long</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mouth</span><span class="sep">•</span>ağız</span><span class="face-tr">ağız</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nose</span><span class="sep">•</span>burun</span><span class="face-tr">burun</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">puppet</span><span class="sep">•</span>kukla</span><span class="face-tr">kukla</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rain</span><span class="sep">•</span>yağmur</span><span class="face-tr">yağmur</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scarf</span><span class="sep">•</span>atkı</span><span class="face-tr">atkı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shirt</span><span class="sep">•</span>gömlek</span><span class="face-tr">gömlek</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shoes</span><span class="sep">•</span>ayakkabı</span><span class="face-tr">ayakkabı</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">small</span><span class="sep">•</span>küçük</span><span class="face-tr">küçük</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">snow</span><span class="sep">•</span>kar</span><span class="face-tr">kar</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun boylu</span><span class="face-tr">uzun boylu</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">trousers</span><span class="sep">•</span>pantolon</span><span class="face-tr">pantolon</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">t-shirt</span><span class="sep">•</span>tişört</span><span class="face-tr">tişört</span></span></span>
-    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">umbrella</span><span class="sep">•</span>şemsiye</span><span class="face-tr">şemsiye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">arm</span><span class="sep">•</span><span class="tr">kol</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">birthday</span><span class="sep">•</span><span class="tr">doğum günü</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">blond</span><span class="sep">•</span><span class="tr">sarı saçlı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">body</span><span class="sep">•</span><span class="tr">vücut</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">break time</span><span class="sep">•</span><span class="tr">teneffüs zamanı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cake</span><span class="sep">•</span><span class="tr">pasta</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cheer up</span><span class="sep">•</span><span class="tr">neşelenmek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">coat</span><span class="sep">•</span><span class="tr">mont</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">cold</span><span class="sep">•</span><span class="tr">soğuk</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dark</span><span class="sep">•</span><span class="tr">karanlık</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dear</span><span class="sep">•</span><span class="tr">sevgili</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">dress</span><span class="sep">•</span><span class="tr">elbise</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">ear</span><span class="sep">•</span><span class="tr">kulak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">eye</span><span class="sep">•</span><span class="tr">göz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">face</span><span class="sep">•</span><span class="tr">yüz</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">gift</span><span class="sep">•</span><span class="tr">hediye</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">glasses</span><span class="sep">•</span><span class="tr">gözlük</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">gloves</span><span class="sep">•</span><span class="tr">eldiven</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">great</span><span class="sep">•</span><span class="tr">harika</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hair</span><span class="sep">•</span><span class="tr">saç</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hand</span><span class="sep">•</span><span class="tr">el</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hat</span><span class="sep">•</span><span class="tr">şapka</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">head</span><span class="sep">•</span><span class="tr">kafa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">hot</span><span class="sep">•</span><span class="tr">sıcak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">jacket</span><span class="sep">•</span><span class="tr">ceket</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">leg</span><span class="sep">•</span><span class="tr">bacak</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">long</span><span class="sep">•</span><span class="tr">uzun</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">mouth</span><span class="sep">•</span><span class="tr">ağız</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">nose</span><span class="sep">•</span><span class="tr">burun</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">puppet</span><span class="sep">•</span><span class="tr">kukla</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">rain</span><span class="sep">•</span><span class="tr">yağmur</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">scarf</span><span class="sep">•</span><span class="tr">atkı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">shirt</span><span class="sep">•</span><span class="tr">gömlek</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">shoes</span><span class="sep">•</span><span class="tr">ayakkabı</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">short</span><span class="sep">•</span><span class="tr">kısa</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">small</span><span class="sep">•</span><span class="tr">küçük</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">snow</span><span class="sep">•</span><span class="tr">kar</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">tall</span><span class="sep">•</span><span class="tr">uzun boylu</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">trousers</span><span class="sep">•</span><span class="tr">pantolon</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">t-shirt</span><span class="sep">•</span><span class="tr">tişört</span></span></span>
+    <span class="vocab-word"><span class="vocab-word-inner"><span class="en">umbrella</span><span class="sep">•</span><span class="tr">şemsiye</span></span></span>
   </div>
 </div>
 
@@ -785,12 +768,6 @@ window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
 });
 
-function flipWord(el) {
-  el.classList.toggle('flipped');
-  const strip = document.querySelector('.vocab-scroll');
-  const anyFlipped = document.querySelector('.vocab-word.flipped');
-  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
-}
 
 // Sabit px/saniye hızı ile vocab scroll
 function initVocabScroll() {
