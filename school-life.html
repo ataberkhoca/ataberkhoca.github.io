@@ -175,16 +175,47 @@ h1, h2, h3, h4, .brand-name {
 }
 
 .vocab-word {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex;
+  perspective: 400px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vocab-word-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.8rem; font-weight: 700;
   padding: 6px 14px; border-radius: 50px;
   background: var(--cream); color: var(--navy);
   border: 1px solid var(--gray-200);
-  white-space: nowrap;
-  transition: all 0.2s;
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
 }
-.vocab-word:hover { background: rgba(255,107,53,0.08); color: var(--orange); border-color: rgba(255,107,53,0.2); cursor: default; }
-.vocab-word .en { color: var(--orange); }
+.vocab-word-inner .face-en {
+  display: flex; align-items: center; gap: 6px;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-tr {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50px;
+  background: var(--orange); color: white;
+  font-size: 0.8rem; font-weight: 700;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  padding: 6px 14px;
+}
+.vocab-word.flipped .vocab-word-inner {
+  transform: rotateY(180deg);
+  border-color: var(--orange);
+}
+.vocab-word:not(.flipped):hover .vocab-word-inner {
+  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
+}
+.vocab-word .en  { color: var(--orange); }
 .vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
 
 /* ========== ACTIVITIES SECTION ========== */
@@ -225,6 +256,26 @@ h1, h2, h3, h4, .brand-name {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
   border-color: transparent;
+}
+
+/* Per-card hover glow */
+.activities-grid .activity-card:nth-child(1).active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14); }
+.activities-grid .activity-card:nth-child(2).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+.activities-grid .activity-card:nth-child(3).active:hover { box-shadow: 0 12px 36px rgba(139,92,246,0.28),  0 4px 14px rgba(139,92,246,0.14); }
+.activities-grid .activity-card:nth-child(4).active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14); }
+.activities-grid .activity-card:nth-child(5).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+.activities-grid .activity-card:nth-child(6).active:hover { box-shadow: 0 12px 36px rgba(59,130,246,0.28),  0 4px 14px rgba(59,130,246,0.14); }
+.activities-grid .activity-card:nth-child(7).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+
+/* Emoji bounce on card hover */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  35%       { transform: translateY(-8px) scale(1.12); }
+  65%       { transform: translateY(-3px) scale(1.06); }
+}
+.activity-card.active:hover .activity-emoji {
+  animation: emojiBounce 0.55s ease;
+  display: inline-block;
 }
 
 .activity-card.coming {
@@ -375,6 +426,65 @@ h1, h2, h3, h4, .brand-name {
   .vocab-strip { padding: 16px 20px; }
 }
 
+/* ========== VOCAB & GRAMMAR SECTIONS ========== */
+.content-sections { max-width: 1100px; margin: 0 auto; padding: 0 0 20px; }
+
+.vocab-section, .grammar-section-block {
+  border-radius: var(--radius-lg);
+  padding: 2rem; margin-bottom: 1.5rem;
+}
+.vocab-section {
+  background: white; box-shadow: var(--shadow-soft);
+}
+.vocab-section-title, .grammar-section-title {
+  font-size: 1.3rem; font-weight: 800; color: var(--navy); margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.vocab-categories {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;
+}
+.vocab-cat-title {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  margin-bottom: 0.6rem; padding: 0.25rem 0.7rem; border-radius: 50px; display: inline-block;
+}
+.vocab-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.vocab-pill {
+  font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 50px;
+  background: var(--gray-100); color: var(--navy);
+}
+
+.grammar-section-block {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  box-shadow: var(--shadow-md);
+}
+.grammar-section-title { color: white; }
+.grammar-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.8rem;
+}
+.grammar-item {
+  background: rgba(255,255,255,0.08); border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem; border: 1px solid rgba(255,255,255,0.1);
+}
+.grammar-item .structure {
+  font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700;
+  color: var(--yellow); margin-bottom: 0.25rem;
+}
+.grammar-item .example {
+  font-size: 0.8rem; color: rgba(255,255,255,0.65); font-weight: 600; line-height: 1.5;
+}
+
+/* ========== DIFF LEGEND ========== */
+.diff-legend {
+  max-width: 1100px; margin: 0 auto 40px;
+  background: white; border-radius: var(--radius-lg);
+  padding: 1.4rem 2rem; box-shadow: var(--shadow-soft);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;
+}
+.diff-item { display: flex; align-items: flex-start; gap: 0.8rem; }
+.diff-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.diff-text strong { display: block; font-size: 0.88rem; font-weight: 800; color: var(--navy); margin-bottom: 0.15rem; }
+.diff-text span   { font-size: 0.8rem; color: var(--gray-500); font-weight: 600; line-height: 1.5; }
+
 /* ========== SCROLL ANIMATIONS ========== */
 .reveal {
   opacity: 0; transform: translateY(30px);
@@ -427,103 +537,103 @@ h1, h2, h3, h4, .brand-name {
 <!-- VOCAB STRIP -->
 <div class="vocab-strip">
   <div class="vocab-scroll">
-    <span class="vocab-word"><span class="en">Big</span><span class="sep">•</span>Büyük</span>
-    <span class="vocab-word"><span class="en">Boy</span><span class="sep">•</span>Erkek Çocuk</span>
-    <span class="vocab-word"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span>
-    <span class="vocab-word"><span class="en">Clap</span><span class="sep">•</span>Alkışlamak</span>
-    <span class="vocab-word"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span>
-    <span class="vocab-word"><span class="en">Day</span><span class="sep">•</span>Gün</span>
-    <span class="vocab-word"><span class="en">Excuse Me</span><span class="sep">•</span>Affedersiniz</span>
-    <span class="vocab-word"><span class="en">Fine</span><span class="sep">•</span>İyi</span>
-    <span class="vocab-word"><span class="en">Finish</span><span class="sep">•</span>Bitirmek</span>
-    <span class="vocab-word"><span class="en">Friday</span><span class="sep">•</span>Cuma</span>
-    <span class="vocab-word"><span class="en">Friend</span><span class="sep">•</span>Arkadaş</span>
-    <span class="vocab-word"><span class="en">Garden</span><span class="sep">•</span>Bahçe</span>
-    <span class="vocab-word"><span class="en">Girl</span><span class="sep">•</span>Kız Çocuk</span>
-    <span class="vocab-word"><span class="en">Headmaster</span><span class="sep">•</span>Erkek Okul Müdürü</span>
-    <span class="vocab-word"><span class="en">Headmistress</span><span class="sep">•</span>Kadın Okul Müdürü</span>
-    <span class="vocab-word"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span>
-    <span class="vocab-word"><span class="en">Hi</span><span class="sep">•</span>Selam</span>
-    <span class="vocab-word"><span class="en">How</span><span class="sep">•</span>Nasıl</span>
-    <span class="vocab-word"><span class="en">Jump</span><span class="sep">•</span>Zıplamak</span>
-    <span class="vocab-word"><span class="en">Kid</span><span class="sep">•</span>Çocuk</span>
-    <span class="vocab-word"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span>
-    <span class="vocab-word"><span class="en">Lunch Hall</span><span class="sep">•</span>Yemekhane</span>
-    <span class="vocab-word"><span class="en">Meet</span><span class="sep">•</span>Tanışmak</span>
-    <span class="vocab-word"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span>
-    <span class="vocab-word"><span class="en">Name</span><span class="sep">•</span>İsim</span>
-    <span class="vocab-word"><span class="en">People</span><span class="sep">•</span>İnsanlar</span>
-    <span class="vocab-word"><span class="en">Place</span><span class="sep">•</span>Yer</span>
-    <span class="vocab-word"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span>
-    <span class="vocab-word"><span class="en">Pupil</span><span class="sep">•</span>Öğrenci</span>
-    <span class="vocab-word"><span class="en">Saturday</span><span class="sep">•</span>Cumartesi</span>
-    <span class="vocab-word"><span class="en">School</span><span class="sep">•</span>Okul</span>
-    <span class="vocab-word"><span class="en">Sing</span><span class="sep">•</span>Şarkı Söylemek</span>
-    <span class="vocab-word"><span class="en">Sports Hall</span><span class="sep">•</span>Spor Salonu</span>
-    <span class="vocab-word"><span class="en">Start</span><span class="sep">•</span>Başlamak</span>
-    <span class="vocab-word"><span class="en">Sunday</span><span class="sep">•</span>Pazar</span>
-    <span class="vocab-word"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span>
-    <span class="vocab-word"><span class="en">Teacher's Room</span><span class="sep">•</span>Öğretmenler Odası</span>
-    <span class="vocab-word"><span class="en">Thank You</span><span class="sep">•</span>Teşekkür Ederim</span>
-    <span class="vocab-word"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span>
-    <span class="vocab-word"><span class="en">Today</span><span class="sep">•</span>Bugün</span>
-    <span class="vocab-word"><span class="en">Together</span><span class="sep">•</span>Birlikte</span>
-    <span class="vocab-word"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span>
-    <span class="vocab-word"><span class="en">Wait</span><span class="sep">•</span>Beklemek</span>
-    <span class="vocab-word"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span>
-    <span class="vocab-word"><span class="en">Week</span><span class="sep">•</span>Hafta</span>
-    <span class="vocab-word"><span class="en">What</span><span class="sep">•</span>Ne</span>
-    <span class="vocab-word"><span class="en">Where</span><span class="sep">•</span>Nerede</span>
-    <span class="vocab-word"><span class="en">Who</span><span class="sep">•</span>Kim</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Big</span><span class="sep">•</span>Büyük</span><span class="face-tr">Büyük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Boy</span><span class="sep">•</span>Erkek Çocuk</span><span class="face-tr">Erkek Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span><span class="face-tr">Kantin</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Clap</span><span class="sep">•</span>Alkışlamak</span><span class="face-tr">Alkışlamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span><span class="face-tr">Sınıf</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Day</span><span class="sep">•</span>Gün</span><span class="face-tr">Gün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Excuse Me</span><span class="sep">•</span>Affedersiniz</span><span class="face-tr">Affedersiniz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Fine</span><span class="sep">•</span>İyi</span><span class="face-tr">İyi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Finish</span><span class="sep">•</span>Bitirmek</span><span class="face-tr">Bitirmek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Friday</span><span class="sep">•</span>Cuma</span><span class="face-tr">Cuma</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Friend</span><span class="sep">•</span>Arkadaş</span><span class="face-tr">Arkadaş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Garden</span><span class="sep">•</span>Bahçe</span><span class="face-tr">Bahçe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Girl</span><span class="sep">•</span>Kız Çocuk</span><span class="face-tr">Kız Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Headmaster</span><span class="sep">•</span>Erkek Okul Müdürü</span><span class="face-tr">Erkek Okul Müdürü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Headmistress</span><span class="sep">•</span>Kadın Okul Müdürü</span><span class="face-tr">Kadın Okul Müdürü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span><span class="face-tr">Merhaba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Hi</span><span class="sep">•</span>Selam</span><span class="face-tr">Selam</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">How</span><span class="sep">•</span>Nasıl</span><span class="face-tr">Nasıl</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Jump</span><span class="sep">•</span>Zıplamak</span><span class="face-tr">Zıplamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Kid</span><span class="sep">•</span>Çocuk</span><span class="face-tr">Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span><span class="face-tr">Kütüphane</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Lunch Hall</span><span class="sep">•</span>Yemekhane</span><span class="face-tr">Yemekhane</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Meet</span><span class="sep">•</span>Tanışmak</span><span class="face-tr">Tanışmak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span><span class="face-tr">Pazartesi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Name</span><span class="sep">•</span>İsim</span><span class="face-tr">İsim</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">People</span><span class="sep">•</span>İnsanlar</span><span class="face-tr">İnsanlar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Place</span><span class="sep">•</span>Yer</span><span class="face-tr">Yer</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span><span class="face-tr">Oyun Alanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Pupil</span><span class="sep">•</span>Öğrenci</span><span class="face-tr">Öğrenci</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Saturday</span><span class="sep">•</span>Cumartesi</span><span class="face-tr">Cumartesi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">School</span><span class="sep">•</span>Okul</span><span class="face-tr">Okul</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sing</span><span class="sep">•</span>Şarkı Söylemek</span><span class="face-tr">Şarkı Söylemek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sports Hall</span><span class="sep">•</span>Spor Salonu</span><span class="face-tr">Spor Salonu</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Start</span><span class="sep">•</span>Başlamak</span><span class="face-tr">Başlamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sunday</span><span class="sep">•</span>Pazar</span><span class="face-tr">Pazar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span><span class="face-tr">Öğretmen</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Teacher's Room</span><span class="sep">•</span>Öğretmenler Odası</span><span class="face-tr">Öğretmenler Odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Thank You</span><span class="sep">•</span>Teşekkür Ederim</span><span class="face-tr">Teşekkür Ederim</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span><span class="face-tr">Perşembe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Today</span><span class="sep">•</span>Bugün</span><span class="face-tr">Bugün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Together</span><span class="sep">•</span>Birlikte</span><span class="face-tr">Birlikte</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span><span class="face-tr">Salı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Wait</span><span class="sep">•</span>Beklemek</span><span class="face-tr">Beklemek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span><span class="face-tr">Çarşamba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Week</span><span class="sep">•</span>Hafta</span><span class="face-tr">Hafta</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">What</span><span class="sep">•</span>Ne</span><span class="face-tr">Ne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Where</span><span class="sep">•</span>Nerede</span><span class="face-tr">Nerede</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Who</span><span class="sep">•</span>Kim</span><span class="face-tr">Kim</span></span></span>
     <!-- Tekrar (sonsuz döngü için) -->
-    <span class="vocab-word"><span class="en">Big</span><span class="sep">•</span>Büyük</span>
-    <span class="vocab-word"><span class="en">Boy</span><span class="sep">•</span>Erkek Çocuk</span>
-    <span class="vocab-word"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span>
-    <span class="vocab-word"><span class="en">Clap</span><span class="sep">•</span>Alkışlamak</span>
-    <span class="vocab-word"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span>
-    <span class="vocab-word"><span class="en">Day</span><span class="sep">•</span>Gün</span>
-    <span class="vocab-word"><span class="en">Excuse Me</span><span class="sep">•</span>Affedersiniz</span>
-    <span class="vocab-word"><span class="en">Fine</span><span class="sep">•</span>İyi</span>
-    <span class="vocab-word"><span class="en">Finish</span><span class="sep">•</span>Bitirmek</span>
-    <span class="vocab-word"><span class="en">Friday</span><span class="sep">•</span>Cuma</span>
-    <span class="vocab-word"><span class="en">Friend</span><span class="sep">•</span>Arkadaş</span>
-    <span class="vocab-word"><span class="en">Garden</span><span class="sep">•</span>Bahçe</span>
-    <span class="vocab-word"><span class="en">Girl</span><span class="sep">•</span>Kız Çocuk</span>
-    <span class="vocab-word"><span class="en">Headmaster</span><span class="sep">•</span>Erkek Okul Müdürü</span>
-    <span class="vocab-word"><span class="en">Headmistress</span><span class="sep">•</span>Kadın Okul Müdürü</span>
-    <span class="vocab-word"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span>
-    <span class="vocab-word"><span class="en">Hi</span><span class="sep">•</span>Selam</span>
-    <span class="vocab-word"><span class="en">How</span><span class="sep">•</span>Nasıl</span>
-    <span class="vocab-word"><span class="en">Jump</span><span class="sep">•</span>Zıplamak</span>
-    <span class="vocab-word"><span class="en">Kid</span><span class="sep">•</span>Çocuk</span>
-    <span class="vocab-word"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span>
-    <span class="vocab-word"><span class="en">Lunch Hall</span><span class="sep">•</span>Yemekhane</span>
-    <span class="vocab-word"><span class="en">Meet</span><span class="sep">•</span>Tanışmak</span>
-    <span class="vocab-word"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span>
-    <span class="vocab-word"><span class="en">Name</span><span class="sep">•</span>İsim</span>
-    <span class="vocab-word"><span class="en">People</span><span class="sep">•</span>İnsanlar</span>
-    <span class="vocab-word"><span class="en">Place</span><span class="sep">•</span>Yer</span>
-    <span class="vocab-word"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span>
-    <span class="vocab-word"><span class="en">Pupil</span><span class="sep">•</span>Öğrenci</span>
-    <span class="vocab-word"><span class="en">Saturday</span><span class="sep">•</span>Cumartesi</span>
-    <span class="vocab-word"><span class="en">School</span><span class="sep">•</span>Okul</span>
-    <span class="vocab-word"><span class="en">Sing</span><span class="sep">•</span>Şarkı Söylemek</span>
-    <span class="vocab-word"><span class="en">Sports Hall</span><span class="sep">•</span>Spor Salonu</span>
-    <span class="vocab-word"><span class="en">Start</span><span class="sep">•</span>Başlamak</span>
-    <span class="vocab-word"><span class="en">Sunday</span><span class="sep">•</span>Pazar</span>
-    <span class="vocab-word"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span>
-    <span class="vocab-word"><span class="en">Teacher's Room</span><span class="sep">•</span>Öğretmenler Odası</span>
-    <span class="vocab-word"><span class="en">Thank You</span><span class="sep">•</span>Teşekkür Ederim</span>
-    <span class="vocab-word"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span>
-    <span class="vocab-word"><span class="en">Today</span><span class="sep">•</span>Bugün</span>
-    <span class="vocab-word"><span class="en">Together</span><span class="sep">•</span>Birlikte</span>
-    <span class="vocab-word"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span>
-    <span class="vocab-word"><span class="en">Wait</span><span class="sep">•</span>Beklemek</span>
-    <span class="vocab-word"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span>
-    <span class="vocab-word"><span class="en">Week</span><span class="sep">•</span>Hafta</span>
-    <span class="vocab-word"><span class="en">What</span><span class="sep">•</span>Ne</span>
-    <span class="vocab-word"><span class="en">Where</span><span class="sep">•</span>Nerede</span>
-    <span class="vocab-word"><span class="en">Who</span><span class="sep">•</span>Kim</span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Big</span><span class="sep">•</span>Büyük</span><span class="face-tr">Büyük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Boy</span><span class="sep">•</span>Erkek Çocuk</span><span class="face-tr">Erkek Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Canteen</span><span class="sep">•</span>Kantin</span><span class="face-tr">Kantin</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Clap</span><span class="sep">•</span>Alkışlamak</span><span class="face-tr">Alkışlamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Classroom</span><span class="sep">•</span>Sınıf</span><span class="face-tr">Sınıf</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Day</span><span class="sep">•</span>Gün</span><span class="face-tr">Gün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Excuse Me</span><span class="sep">•</span>Affedersiniz</span><span class="face-tr">Affedersiniz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Fine</span><span class="sep">•</span>İyi</span><span class="face-tr">İyi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Finish</span><span class="sep">•</span>Bitirmek</span><span class="face-tr">Bitirmek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Friday</span><span class="sep">•</span>Cuma</span><span class="face-tr">Cuma</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Friend</span><span class="sep">•</span>Arkadaş</span><span class="face-tr">Arkadaş</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Garden</span><span class="sep">•</span>Bahçe</span><span class="face-tr">Bahçe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Girl</span><span class="sep">•</span>Kız Çocuk</span><span class="face-tr">Kız Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Headmaster</span><span class="sep">•</span>Erkek Okul Müdürü</span><span class="face-tr">Erkek Okul Müdürü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Headmistress</span><span class="sep">•</span>Kadın Okul Müdürü</span><span class="face-tr">Kadın Okul Müdürü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Hello</span><span class="sep">•</span>Merhaba</span><span class="face-tr">Merhaba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Hi</span><span class="sep">•</span>Selam</span><span class="face-tr">Selam</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">How</span><span class="sep">•</span>Nasıl</span><span class="face-tr">Nasıl</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Jump</span><span class="sep">•</span>Zıplamak</span><span class="face-tr">Zıplamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Kid</span><span class="sep">•</span>Çocuk</span><span class="face-tr">Çocuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Library</span><span class="sep">•</span>Kütüphane</span><span class="face-tr">Kütüphane</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Lunch Hall</span><span class="sep">•</span>Yemekhane</span><span class="face-tr">Yemekhane</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Meet</span><span class="sep">•</span>Tanışmak</span><span class="face-tr">Tanışmak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Monday</span><span class="sep">•</span>Pazartesi</span><span class="face-tr">Pazartesi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Name</span><span class="sep">•</span>İsim</span><span class="face-tr">İsim</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">People</span><span class="sep">•</span>İnsanlar</span><span class="face-tr">İnsanlar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Place</span><span class="sep">•</span>Yer</span><span class="face-tr">Yer</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Playground</span><span class="sep">•</span>Oyun Alanı</span><span class="face-tr">Oyun Alanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Pupil</span><span class="sep">•</span>Öğrenci</span><span class="face-tr">Öğrenci</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Saturday</span><span class="sep">•</span>Cumartesi</span><span class="face-tr">Cumartesi</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">School</span><span class="sep">•</span>Okul</span><span class="face-tr">Okul</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sing</span><span class="sep">•</span>Şarkı Söylemek</span><span class="face-tr">Şarkı Söylemek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sports Hall</span><span class="sep">•</span>Spor Salonu</span><span class="face-tr">Spor Salonu</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Start</span><span class="sep">•</span>Başlamak</span><span class="face-tr">Başlamak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Sunday</span><span class="sep">•</span>Pazar</span><span class="face-tr">Pazar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Teacher</span><span class="sep">•</span>Öğretmen</span><span class="face-tr">Öğretmen</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Teacher's Room</span><span class="sep">•</span>Öğretmenler Odası</span><span class="face-tr">Öğretmenler Odası</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Thank You</span><span class="sep">•</span>Teşekkür Ederim</span><span class="face-tr">Teşekkür Ederim</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Thursday</span><span class="sep">•</span>Perşembe</span><span class="face-tr">Perşembe</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Today</span><span class="sep">•</span>Bugün</span><span class="face-tr">Bugün</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Together</span><span class="sep">•</span>Birlikte</span><span class="face-tr">Birlikte</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Tuesday</span><span class="sep">•</span>Salı</span><span class="face-tr">Salı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Wait</span><span class="sep">•</span>Beklemek</span><span class="face-tr">Beklemek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Wednesday</span><span class="sep">•</span>Çarşamba</span><span class="face-tr">Çarşamba</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Week</span><span class="sep">•</span>Hafta</span><span class="face-tr">Hafta</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">What</span><span class="sep">•</span>Ne</span><span class="face-tr">Ne</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Where</span><span class="sep">•</span>Nerede</span><span class="face-tr">Nerede</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">Who</span><span class="sep">•</span>Kim</span><span class="face-tr">Kim</span></span></span>
   </div>
 </div>
 
@@ -535,17 +645,42 @@ h1, h2, h3, h4, .brand-name {
     <p class="section-desc">Her etkinlik MEB TYMM müfredatının Tema 1 kazanımlarına uygun olarak hazırlanmıştır.</p>
   </div>
 
+  <!-- DIFF LEGEND -->
+  <div class="diff-legend">
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#3CB371;"></div>
+      <div class="diff-text">
+        <strong>🟢 Supporting</strong>
+        <span>Az seçenek, Türkçe ipucu. Öğrenmeye yeni başlayanlar için.</span>
+      </div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#4BA3C3;"></div>
+      <div class="diff-text">
+        <strong>🔵 Standard</strong>
+        <span>Orta zorluk, Türkçe ipucu. Çoğu öğrenci için önerilen seviye.</span>
+      </div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#8B5CF6;"></div>
+      <div class="diff-text">
+        <strong>🟣 Expansion</strong>
+        <span>Daha fazla seçenek, ipucu yok. İleri seviye öğrenciler için.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="activities-grid">
 
     <!-- KART 1: Memory Match — AKTİF -->
     <div class="activity-card active reveal">
       <div class="activity-card-banner"></div>
       <div class="activity-card-body">
-        <div class="activity-type-badge badge-memory">🃏 Memory Match</div>
+        <div class="activity-type-badge badge-memory">🃏 Eşleştirme Oyunu</div>
         <span class="activity-emoji">🧠</span>
         <div class="activity-title">School Life Memory Match</div>
         <div class="activity-desc">
-          Okul hayatı kelimelerini eşleştir! Kartları çevir, çiftleri bul. Hafızanı test et.
+          Okul hayatı kelimeleri karıştı! Kartları çevir, İngilizce ve Türkçe çiftleri bul. Hafızanı test et!
         </div>
         <div class="activity-features">
           <span class="feature-tag">👥 Takım Modu</span>
@@ -564,7 +699,7 @@ h1, h2, h3, h4, .brand-name {
           </div>
           <div class="play-count">⭐ Yeni</div>
         </div>
-        <a href="school-life-memory-match.html" class="activity-btn">🚀 Oynamaya Başla</a>
+        <a href="school-life-matching.html" class="activity-btn">🚀 Oynamaya Başla</a>
       </div>
     </div>
 
@@ -576,7 +711,7 @@ h1, h2, h3, h4, .brand-name {
         <span class="activity-emoji">🚶</span>
         <div class="activity-title">First Day at School</div>
         <div class="activity-desc">
-          Okulda ilk gün! Öğretmenle, müdürle ve yeni arkadaşlarınla tanış. Doğru cümleyi seç!
+          Okulda ilk gün! Öğretmenle, müdürle ve yeni arkadaşlarınla tanış. Her durağında doğru cümleyi seç!
         </div>
         <div class="activity-features">
           <span class="feature-tag">💬 Selamlama</span>
@@ -607,7 +742,7 @@ h1, h2, h3, h4, .brand-name {
         <span class="activity-emoji">🗓️</span>
         <div class="activity-title">Haftayı Kur!</div>
         <div class="activity-desc">
-          Mrs. Hopkins'in programı karıştı! Haftanın günlerini sürükleyerek doğru sıraya koy!
+          Mrs. Hopkins'in haftalık programı karıştı! Haftanın günlerini sürükle-bırak ile doğru sıraya diz.
         </div>
         <div class="activity-features">
           <span class="feature-tag">🖱️ Sürükle & Bırak</span>
@@ -638,7 +773,7 @@ h1, h2, h3, h4, .brand-name {
         <span class="activity-emoji">🚶</span>
         <div class="activity-title">Boşlukları Doldur!</div>
         <div class="activity-desc">
-          Okulu gez, sahnelere bak ve eksik kelimeyi seç! Who, Where, What sorularını cevapla.
+          Okulu gez, sahnelere bak ve eksik kelimeyi seç! Who, Where, What sorularını doğru cevapla.
         </div>
         <div class="activity-features">
           <span class="feature-tag">🔍 8 Sahne</span>
@@ -669,7 +804,7 @@ h1, h2, h3, h4, .brand-name {
         <span class="activity-emoji">🗂️</span>
         <div class="activity-title">İnsanlar mı, Yerler mi?</div>
         <div class="activity-desc">
-          Okul kartlarını sürükle ve doğru gruba bırak! People (kişiler) mi, Places (yerler) mi?
+          Okul kartlarını sürükle ve doğru gruba bırak! People mi (kişiler) yoksa Places mi (yerler)?
         </div>
         <div class="activity-features">
           <span class="feature-tag">🖱️ Sürükle & Bırak</span>
@@ -755,6 +890,121 @@ h1, h2, h3, h4, .brand-name {
   </div>
 </section>
 
+<!-- VOCAB & GRAMMAR SECTIONS -->
+<div class="section content-sections">
+
+  <!-- VOCAB SECTION -->
+  <div class="vocab-section reveal">
+    <div class="vocab-section-title">📚 Tema Kelime Listesi</div>
+    <div class="vocab-categories">
+
+      <div>
+        <div class="vocab-cat-title" style="background:#EAF5FB;color:#0369A1;">👤 People in the School</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">teacher</span>
+          <span class="vocab-pill">headmaster</span>
+          <span class="vocab-pill">headmistress</span>
+          <span class="vocab-pill">pupil</span>
+          <span class="vocab-pill">friend</span>
+          <span class="vocab-pill">boy</span>
+          <span class="vocab-pill">girl</span>
+          <span class="vocab-pill">kid</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#EBF8F0;color:#166534;">📍 Places in the School</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">school</span>
+          <span class="vocab-pill">classroom</span>
+          <span class="vocab-pill">garden</span>
+          <span class="vocab-pill">playground</span>
+          <span class="vocab-pill">library</span>
+          <span class="vocab-pill">canteen</span>
+          <span class="vocab-pill">lunch hall</span>
+          <span class="vocab-pill">sports hall</span>
+          <span class="vocab-pill">teacher's room</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#FEF0E8;color:#92400E;">📅 Days of the Week</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">Monday</span>
+          <span class="vocab-pill">Tuesday</span>
+          <span class="vocab-pill">Wednesday</span>
+          <span class="vocab-pill">Thursday</span>
+          <span class="vocab-pill">Friday</span>
+          <span class="vocab-pill">Saturday</span>
+          <span class="vocab-pill">Sunday</span>
+          <span class="vocab-pill">week</span>
+          <span class="vocab-pill">today</span>
+          <span class="vocab-pill">day</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#FDEEF2;color:#C0254C;">🎉 Celebrations</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">festival</span>
+          <span class="vocab-pill">celebration</span>
+          <span class="vocab-pill">national day</span>
+          <span class="vocab-pill">religious day</span>
+          <span class="vocab-pill">together</span>
+          <span class="vocab-pill">people</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#EDE9FE;color:#5B21B6;">💬 Key Expressions</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">hello</span>
+          <span class="vocab-pill">hi</span>
+          <span class="vocab-pill">excuse me</span>
+          <span class="vocab-pill">thank you</span>
+          <span class="vocab-pill">fine</span>
+          <span class="vocab-pill">come here</span>
+          <span class="vocab-pill">meet</span>
+          <span class="vocab-pill">name</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GRAMMAR SECTION -->
+  <div class="grammar-section-block reveal">
+    <div class="grammar-section-title">📐 Hedef Yapılar</div>
+    <div class="grammar-grid">
+      <div class="grammar-item">
+        <div class="structure">What's your name?</div>
+        <div class="example">I'm / My name is...</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What's/is it/this?</div>
+        <div class="example">It's/is a/an...</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">Who's she/he?</div>
+        <div class="example">She's Mrs Hopkins. He's my English teacher.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">Where is she/he?</div>
+        <div class="example">She is in the garden.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What day is it today?</div>
+        <div class="example">It's/is Monday today.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">Come here, please.</div>
+        <div class="example">Sınıf talimatları ve nezaket ifadeleri.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <!-- COMING SOON -->
 <section class="coming-section">
   <div class="coming-content reveal">
@@ -784,6 +1034,14 @@ h1, h2, h3, h4, .brand-name {
 </footer>
 
 <script>
+// Vocab flip
+function flipWord(el) {
+  el.classList.toggle('flipped');
+  var strip = document.querySelector('.vocab-scroll');
+  var anyFlipped = document.querySelector('.vocab-word.flipped');
+  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
+}
+
 // Navbar scroll
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);

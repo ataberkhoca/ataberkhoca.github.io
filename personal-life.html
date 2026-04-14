@@ -1,498 +1,796 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Life — 2. Sınıf | Ataberk Hoca İngilizce</title>
+<title>Personal Life Etkinlikleri | Ataberk Hoca İngilizce</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #1B2845;
-    --navy-light: #274472;
-    --orange: #FF6B35;
-    --orange-glow: #FF8C5A;
-    --yellow: #FFC857;
-    --yellow-light: #FFE4A0;
-    --teal: #2EC4B6;
-    --white: #FFFFFF;
-    --cream: #FFF9F0;
-    --green: #22C55E;
-  }
+:root {
+  --navy:       #1B2845;
+  --navy-light: #274472;
+  --orange:     #FF6B35;
+  --orange-glow:#FF8C5A;
+  --yellow:     #FFC857;
+  --yellow-light:#FFE4A0;
+  --teal:       #2EC4B6;
+  --teal-light: #CBF3F0;
+  --white:      #FFFFFF;
+  --cream:      #FFF9F0;
+  --gray-100:   #F7F7F7;
+  --gray-200:   #E8E8E8;
+  --gray-500:   #888;
+  --gray-700:   #444;
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+  --shadow-soft:0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md:  0 8px 30px rgba(27,40,69,0.12);
+  --shadow-lg:  0 12px 40px rgba(27,40,69,0.16);
+  --shadow-glow-orange: 0 4px 30px rgba(255,107,53,0.3);
+  --shadow-glow-teal:   0 4px 30px rgba(46,196,182,0.3);
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Quicksand',sans-serif;
+  color:var(--navy);
+  background:var(--cream);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.brand-name { font-family:'Baloo 2',cursive; }
 
-  body {
-    font-family: 'Quicksand', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-  }
+/* ══════════ NAVBAR ══════════ */
+.navbar {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 40px;height:70px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(27,40,69,0.06);
+  transition:all .3s ease;
+}
+.navbar.scrolled { box-shadow:var(--shadow-soft); }
 
-  /* ── NAVBAR ── */
-  .navbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(27,40,69,0.95);
-    backdrop-filter: blur(10px);
-    padding: 0 2rem; height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
-    transition: box-shadow 0.3s;
-  }
-  .navbar-brand {
-    font-family: 'Baloo 2', cursive;
-    font-size: 1.3rem; font-weight: 800;
-    color: var(--white); text-decoration: none;
-    display: flex; align-items: center; gap: 0.4rem;
-  }
-  .navbar-brand span { color: var(--orange); }
-  .navbar-back {
-    color: rgba(255,255,255,0.7); text-decoration: none;
-    font-size: 0.9rem; font-weight: 600;
-    display: flex; align-items: center; gap: 0.3rem;
-    transition: color 0.2s;
-  }
-  .navbar-back:hover { color: var(--orange); }
+.nav-brand { display:flex;align-items:center;gap:10px;text-decoration:none; }
+.nav-logo {
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;box-shadow:0 3px 12px rgba(255,107,53,0.25);
+}
+.brand-name { font-size:1.25rem;font-weight:800;color:var(--navy);line-height:1.1; }
+.brand-sub  { font-size:.7rem;font-weight:600;color:var(--gray-500);letter-spacing:.05em; }
 
-  /* ── HERO ── */
-  .hero {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-    padding: 100px 2rem 3rem;
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 15% 60%, rgba(255,107,53,0.18) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 25%, rgba(46,196,182,0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(255,199,87,0.1) 0%, transparent 45%);
-  }
-  .breadcrumb {
-    font-size: 0.82rem; color: rgba(255,255,255,0.55);
-    margin-bottom: 1rem; position: relative;
-  }
-  .breadcrumb a { color: rgba(255,255,255,0.55); text-decoration: none; }
-  .breadcrumb a:hover { color: var(--orange); }
+.nav-links { display:flex;align-items:center;gap:8px;list-style:none; }
+.nav-links a {
+  text-decoration:none;color:var(--navy-light);font-weight:600;font-size:.9rem;
+  padding:.4rem .9rem;border-radius:99px;transition:all .2s;
+}
+.nav-links a:hover { background:rgba(255,107,53,.08);color:var(--orange); }
+.nav-links .nav-cta {
+  background: var(--navy);
+  color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(27,40,69,0.25);
+}
+.nav-links .nav-cta:hover { transform:translateY(-1px);box-shadow:0 5px 16px rgba(27,40,69,0.35);color:#fff;background:var(--orange); }
 
-  .hero-badge {
-    display: inline-block;
-    background: rgba(255,107,53,0.2);
-    border: 1px solid rgba(255,107,53,0.4);
-    color: var(--orange);
-    font-family: 'Baloo 2', cursive;
-    font-size: 0.85rem; font-weight: 700;
-    padding: 0.3rem 1rem; border-radius: 99px;
-    margin-bottom: 1rem; position: relative;
-    letter-spacing: 0.5px;
-  }
+.nav-hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px; }
+.nav-hamburger span { display:block;width:22px;height:2px;background:var(--navy);border-radius:99px; }
 
-  .hero-title {
-    font-family: 'Baloo 2', cursive;
-    font-size: 3rem; font-weight: 800;
-    color: var(--white); position: relative;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.3);
-    line-height: 1.1; margin-bottom: 0.8rem;
-  }
-  .hero-title .emoji { font-size: 2.8rem; margin-right: 0.3rem; }
+@media(max-width:768px){
+  .navbar{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+}
 
-  .hero-subtitle {
-    color: rgba(255,255,255,0.7);
-    font-size: 1.05rem; position: relative;
-    margin-bottom: 2rem; line-height: 1.6;
-  }
+/* ══════════ PAGE HERO ══════════ */
+.page-hero {
+  padding:110px 40px 50px;
+  background:linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  position:relative;overflow:hidden;text-align:center;
+}
+.page-hero::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.page-hero::after { display:none; }
+.page-hero-content { position:relative;z-index:1;max-width:700px;margin:0 auto; }
 
-  /* Topic pills */
-  .topic-pills {
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
-    justify-content: center; position: relative;
-  }
-  .topic-pill {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.85);
-    font-size: 0.82rem; font-weight: 600;
-    padding: 0.3rem 0.85rem; border-radius: 99px;
-  }
+.breadcrumb {
+  display:flex;align-items:center;justify-content:center;gap:.4rem;
+  margin-bottom:1.2rem;font-size:.82rem;font-weight:600;
+}
+.breadcrumb a { color:rgba(255,255,255,.75);text-decoration:none;transition:color .2s; }
+.breadcrumb a:hover { color:#fff; }
+.breadcrumb .sep { color:rgba(255,255,255,.4); }
+.breadcrumb .current { color:#fff;font-weight:700; }
 
-  /* ── MAIN ── */
-  .main {
-    max-width: 900px; margin: 0 auto;
-    padding: 3rem 1.5rem 5rem;
-  }
+.page-hero-emoji {
+  font-size:3.5rem;display:block;margin-bottom:12px;
+  animation:floatBounce 3s ease-in-out infinite;
+}
+@keyframes floatBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 
-  .section-title {
-    font-family: 'Baloo 2', cursive;
-    font-size: 1.3rem; font-weight: 800;
-    color: var(--navy); margin-bottom: 1.5rem;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .section-title::after {
-    content: ''; flex: 1;
-    height: 2px; background: linear-gradient(90deg, #E5E7EB, transparent);
-    margin-left: 0.5rem;
-  }
+.page-hero h1 {
+  font-size:2.6rem;font-weight:800;color:#fff;
+  line-height:1.15;margin-bottom:10px;
+}
+.page-hero h1 .highlight { color:var(--orange); }
 
-  /* ── GAME CARDS ── */
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.2rem;
-    margin-bottom: 3rem;
-  }
+.page-hero-desc {
+  color:rgba(255,255,255,.65);font-size:1.05rem;font-weight:500;
+  max-width:560px;margin:0 auto 20px;line-height:1.6;
+}
 
-  .game-card {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 1.5rem;
-    text-decoration: none;
-    display: flex; flex-direction: column;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-    border: 2px solid transparent;
-    transition: all 0.25s;
-    position: relative; overflow: hidden;
-  }
-  .game-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 4px;
-    background: var(--card-accent, var(--orange));
-  }
-  .game-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-    border-color: var(--card-accent, var(--orange));
-  }
+.page-hero-badges { display:flex;flex-wrap:wrap;gap:10px;justify-content:center; }
+.hero-chip {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:50px;font-size:.78rem;font-weight:700;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,0.7);
+  border:1px solid rgba(255,255,255,.1);
+}
+.hero-chip.active {
+  background:rgba(255,107,53,0.2);color:var(--orange);border-color:rgba(255,107,53,0.3);
+}
 
-  .card-icon {
-    font-size: 2.8rem; margin-bottom: 0.8rem;
-    line-height: 1;
-  }
-  .card-type {
-    font-size: 0.72rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: var(--card-accent, var(--orange));
-    margin-bottom: 0.3rem;
-  }
-  .card-title {
-    font-family: 'Baloo 2', cursive;
-    font-size: 1.25rem; font-weight: 800;
-    color: var(--navy); margin-bottom: 0.4rem;
-    line-height: 1.2;
-  }
-  .card-desc {
-    font-size: 0.88rem; color: #777;
-    line-height: 1.5; flex: 1;
-    margin-bottom: 1rem;
-  }
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .card-levels {
-    display: flex; gap: 0.25rem;
-  }
-  .level-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #E5E7EB;
-  }
-  .level-dot.filled { background: var(--card-accent, var(--orange)); }
+/* ══════════ VOCAB STRIP ══════════ */
+.vocab-strip {
+  background: white; border-bottom: 1px solid var(--gray-200);
+  padding: 16px 40px; overflow: hidden; position: relative;
+}
+.vocab-strip::before, .vocab-strip::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+}
+.vocab-strip::before { left: 0; background: linear-gradient(90deg, white, transparent); }
+.vocab-strip::after  { right: 0; background: linear-gradient(-90deg, white, transparent); }
 
-  .card-cta {
-    font-family: 'Baloo 2', cursive;
-    font-size: 0.85rem; font-weight: 700;
-    color: var(--card-accent, var(--orange));
-    display: flex; align-items: center; gap: 0.2rem;
-  }
+.vocab-scroll {
+  display: flex; gap: 12px;
+  animation: scrollWords 35s linear infinite;
+  width: max-content;
+}
+.vocab-scroll:hover { animation-play-state: paused; }
+@keyframes scrollWords { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-  /* Card accent colors */
-  .card-matching  { --card-accent: #2EC4B6; }
-  .card-sorting   { --card-accent: #FF6B35; }
-  .card-fillin    { --card-accent: #FFC857; }
-  .card-dialogue  { --card-accent: #E91E8C; }
-  .card-sequencing{ --card-accent: #7C3AED; }
+.vocab-word {
+  display: inline-flex;
+  perspective: 400px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vocab-word-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 6px 14px; border-radius: 50px;
+  background: var(--cream); color: var(--navy);
+  border: 1px solid var(--gray-200);
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), background 0.2s, border-color 0.2s;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-en {
+  display: flex; align-items: center; gap: 6px;
+  backface-visibility: hidden;
+}
+.vocab-word-inner .face-tr {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50px;
+  background: var(--orange); color: white;
+  font-size: 0.8rem; font-weight: 700;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  padding: 6px 14px;
+}
+.vocab-word.flipped .vocab-word-inner {
+  transform: rotateY(180deg);
+  border-color: var(--orange);
+}
+.vocab-word:not(.flipped):hover .vocab-word-inner {
+  background: rgba(255,107,53,0.08); border-color: rgba(255,107,53,0.2);
+}
+.vocab-word .en  { color: var(--orange); }
+.vocab-word .sep { color: var(--gray-200); margin: 0 2px; }
 
-  /* ── VOCABULARY PREVIEW ── */
-  .vocab-section {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    margin-bottom: 2rem;
-  }
-  .vocab-groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.2rem;
-    margin-top: 1rem;
-  }
-  .vocab-group-title {
-    font-family: 'Baloo 2', cursive;
-    font-size: 0.85rem; font-weight: 700;
-    color: var(--navy); margin-bottom: 0.5rem;
-    display: flex; align-items: center; gap: 0.3rem;
-  }
-  .vocab-tags {
-    display: flex; flex-wrap: wrap; gap: 0.35rem;
-  }
-  .vocab-tag {
-    background: var(--cream);
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    padding: 0.25rem 0.6rem;
-    font-size: 0.8rem; font-weight: 600; color: #555;
-  }
+/* ══════════ MAIN CONTENT ══════════ */
+.page-content { max-width:1100px;margin:0 auto;padding:4rem 40px; }
 
-  /* ── BACK BUTTON ── */
-  .back-section {
-    text-align: center;
-  }
-  .back-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--navy);
-    color: var(--white); text-decoration: none;
-    font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
-    padding: 0.85rem 2rem; border-radius: 14px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 16px rgba(27,40,69,0.25);
-  }
-  .back-btn:hover { transform: translateY(-2px); background: var(--navy-light); }
+/* section label */
+.section-label {
+  display:flex;align-items:center;gap:.8rem;margin-bottom:2rem;
+}
+.section-label h2 { font-size:1.6rem;font-weight:800;color:var(--navy); }
+.label-line { flex:1;height:2px;background:var(--gray-200);border-radius:99px; }
+.label-count {
+  background:var(--orange);color:#fff;font-size:.78rem;font-weight:700;
+  padding:.2rem .7rem;border-radius:99px;
+}
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .hero-title { font-size: 2rem; }
-    .games-grid { grid-template-columns: 1fr; }
-    .vocab-groups { grid-template-columns: 1fr 1fr; }
-    .navbar-back span { display: none; }
-  }
+/* ══════════ GAME CARDS ══════════ */
+.games-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem; }
+
+.game-card {
+  background:var(--white);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-soft);overflow:hidden;
+  border:1.5px solid transparent;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  text-decoration:none;color:inherit;display:block;
+}
+/* Default glow (Matching — red/amber) */
+.game-card:hover {
+  transform:translateY(-6px);
+  border-color:transparent;
+}
+/* Per-card glow — use nth-child to target each game */
+.games-grid .game-card:nth-child(1):hover{box-shadow:0 12px 36px rgba(232,59,42,0.28),0 4px 14px rgba(245,158,11,0.18);}
+.games-grid .game-card:nth-child(2):hover{box-shadow:0 12px 36px rgba(232,93,117,0.28),0 4px 14px rgba(249,192,48,0.18);}
+.games-grid .game-card:nth-child(3):hover{box-shadow:0 12px 36px rgba(29,122,110,0.25),0 4px 14px rgba(82,201,187,0.18);}
+.games-grid .game-card:nth-child(4):hover{box-shadow:0 12px 36px rgba(155,27,106,0.25),0 4px 14px rgba(232,67,147,0.18);}
+.games-grid .game-card:nth-child(5):hover{box-shadow:0 12px 36px rgba(146,64,14,0.22),0 4px 14px rgba(99,102,241,0.18);}
+
+/* Emoji bounce on card hover */
+@keyframes cardEmojiBounce{
+  0%,100%{transform:translateY(0) scale(1);}
+  35%{transform:translateY(-10px) scale(1.14);}
+  65%{transform:translateY(-4px) scale(1.06);}
+}
+.game-card:hover .card-emoji-big{
+  animation:cardEmojiBounce 0.55s ease;
+}
+
+.card-visual {
+  height:140px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.card-emoji-big {
+  font-size:4rem;z-index:1;position:relative;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.15));
+  animation:float 3.5s ease-in-out infinite;
+}
+.card-emoji-big:nth-child(1){animation-delay:0s;}
+
+/* background pattern per card */
+.card-visual::before {
+  content:'';position:absolute;inset:0;opacity:.12;
+  background-image:radial-gradient(circle at 30% 40%, rgba(255,255,255,.8) 0%, transparent 60%);
+}
+
+.card-body { padding:1.4rem 1.5rem 1.6rem; }
+.card-meta { display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem; }
+.card-type {
+  font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:.2rem .65rem;border-radius:99px;background:var(--gray-100);color:var(--gray-500);
+}
+.card-diff {
+  font-size:.72rem;font-weight:700;color:var(--gray-500);margin-left:auto;
+}
+.game-card h3 { font-size:1.2rem;font-weight:800;margin-bottom:.4rem;color:var(--navy); }
+.game-card p  { font-size:.88rem;font-weight:600;color:var(--gray-500);line-height:1.55;margin-bottom:1rem; }
+
+.card-tags { display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem; }
+.card-tag {
+  font-size:.72rem;font-weight:700;padding:.22rem .65rem;border-radius:99px;
+  background:var(--gray-100);color:var(--gray-700);
+}
+
+.card-btn {
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem 1.2rem;border-radius:99px;font-size:.88rem;font-weight:700;
+  color:#fff;transition:all .2s;font-family:'Baloo 2',cursive;
+}
+.card-btn:hover { transform:translateX(3px); }
+
+/* ══════════ DIFFICULTY LEGEND ══════════ */
+.diff-legend {
+  background:var(--white);border-radius:var(--radius-lg);
+  padding:1.6rem 2rem;box-shadow:var(--shadow-soft);
+  margin-bottom:3rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;
+}
+.diff-item { display:flex;align-items:flex-start;gap:.8rem; }
+.diff-dot {
+  width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px;
+}
+.diff-text strong { display:block;font-size:.88rem;font-weight:800;color:var(--navy);margin-bottom:.15rem; }
+.diff-text span   { font-size:.8rem;color:var(--gray-500);font-weight:600;line-height:1.5; }
+
+/* ══════════ VOCAB SECTION ══════════ */
+.vocab-section {
+  background:var(--white);border-radius:var(--radius-lg);
+  padding:2rem;box-shadow:var(--shadow-soft);margin-bottom:3rem;
+}
+.vocab-section h2 { font-size:1.4rem;font-weight:800;margin-bottom:1.2rem; }
+
+.vocab-categories { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem; }
+.vocab-cat { }
+.vocab-cat-title {
+  font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:.6rem;padding:.25rem .7rem;border-radius:99px;display:inline-block;
+}
+.vocab-pills { display:flex;flex-wrap:wrap;gap:.4rem; }
+.vocab-pill {
+  font-size:.78rem;font-weight:700;padding:.25rem .65rem;border-radius:99px;
+  background:var(--gray-100);color:var(--navy);
+}
+
+/* ══════════ GRAMMAR SECTION ══════════ */
+.grammar-section {
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
+  border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-md);
+  margin-bottom:3rem;color:#fff;
+}
+.grammar-section h2 { font-size:1.4rem;font-weight:800;margin-bottom:1.2rem;color:#fff; }
+.grammar-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.8rem; }
+.grammar-item {
+  background:rgba(255,255,255,.08);border-radius:var(--radius-sm);
+  padding:.8rem 1rem;border:1px solid rgba(255,255,255,.1);
+}
+.grammar-item .structure {
+  font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;
+  color:var(--yellow);margin-bottom:.25rem;
+}
+.grammar-item .example {
+  font-size:.8rem;color:rgba(255,255,255,.65);font-weight:600;line-height:1.5;
+}
+
+/* ══════════ BACK BUTTON ══════════ */
+.back-section { text-align:center;padding:2rem 0 1rem; }
+.back-btn {
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.75rem 2rem;border-radius:99px;font-size:1rem;font-weight:700;
+  background:var(--white);color:var(--navy);border:2px solid var(--gray-200);
+  text-decoration:none;transition:all .2s;font-family:'Baloo 2',cursive;
+}
+.back-btn:hover { border-color:var(--food-red);color:var(--food-red);transform:translateY(-2px);box-shadow:var(--shadow-soft); }
+
+/* ══════════ FOOTER ══════════ */
+.footer {
+  background:var(--navy);padding:2rem 40px;text-align:center;
+  color:rgba(255,255,255,.45);font-size:.82rem;font-weight:600;
+}
+.footer a { color:rgba(255,255,255,.6);text-decoration:none; }
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--food-red);border-radius:99px;}
 </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar">
-  <a href="index.html" class="navbar-brand">
-    <span>📚</span>ataberk<span>hoca</span>ingilizce
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div>
+      <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+    </div>
   </a>
-  <a href="2-sinif.html" class="navbar-back">
-    ← <span>2. Sınıf</span>
-  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="2-sinif.html" class="nav-cta">← Temalara Dön</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
 </nav>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="breadcrumb">
-    <a href="index.html">Ana Sayfa</a> ›
-    <a href="2-sinif.html">2. Sınıf</a> ›
-    Personal Life
+<section class="page-hero">
+  <div class="page-hero-content">
+    <nav class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a>
+      <span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a>
+      <span class="sep">›</span>
+      <span class="current">Personal Life</span>
+    </nav>
+    <span class="page-hero-emoji">🧒</span>
+    <h1>Personal Life <span class="highlight">Etkinlikleri</span></h1>
+    <p class="page-hero-desc">
+      Vücut bölümleri, kıyafetler, renkler, yaşlar ve doğum günleri, hava durumu. Beş farklı oyunla Tema 3 kazanımlarını pekiştir!
+    </p>
+    <div class="page-hero-badges">
+      <span class="hero-chip active">📋 Tema 3</span>
+      <span class="hero-chip">🧒 Personal Life</span>
+      <span class="hero-chip">⏱️ 11 Ders Saati</span>
+      <span class="hero-chip">💰 Ücretsiz</span>
+    </div>
   </div>
-  <div class="hero-badge">📘 Tema 3 — 2. Sınıf</div>
-  <h1 class="hero-title">
-    <span class="emoji">🧒</span>Personal Life
-  </h1>
-  <p class="hero-subtitle">
-    Body parts, clothes, colours, ages &amp; birthdays, and weather!
-  </p>
-  <div class="topic-pills">
-    <div class="topic-pill">👁️ Body Parts</div>
-    <div class="topic-pill">👕 Clothes</div>
-    <div class="topic-pill">🌈 Colours</div>
-    <div class="topic-pill">🎂 Ages &amp; Birthdays</div>
-    <div class="topic-pill">☀️ Weather</div>
-    <div class="topic-pill">📏 Adjectives</div>
+</section>
+
+<!-- VOCAB STRIP -->
+<div class="vocab-strip">
+  <div class="vocab-scroll">
+    <!-- Set 1 -->
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">arm</span><span class="sep">•</span>kol</span><span class="face-tr">kol</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">birthday</span><span class="sep">•</span>doğum günü</span><span class="face-tr">doğum günü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blond</span><span class="sep">•</span>sarı saçlı</span><span class="face-tr">sarı saçlı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">body</span><span class="sep">•</span>vücut</span><span class="face-tr">vücut</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">break time</span><span class="sep">•</span>teneffüs zamanı</span><span class="face-tr">teneffüs zamanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cake</span><span class="sep">•</span>pasta</span><span class="face-tr">pasta</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cheer up</span><span class="sep">•</span>neşelenmek</span><span class="face-tr">neşelenmek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coat</span><span class="sep">•</span>mont</span><span class="face-tr">mont</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cold</span><span class="sep">•</span>soğuk</span><span class="face-tr">soğuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dark</span><span class="sep">•</span>karanlık</span><span class="face-tr">karanlık</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dear</span><span class="sep">•</span>sevgili</span><span class="face-tr">sevgili</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dress</span><span class="sep">•</span>elbise</span><span class="face-tr">elbise</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ear</span><span class="sep">•</span>kulak</span><span class="face-tr">kulak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">eye</span><span class="sep">•</span>göz</span><span class="face-tr">göz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">face</span><span class="sep">•</span>yüz</span><span class="face-tr">yüz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gift</span><span class="sep">•</span>hediye</span><span class="face-tr">hediye</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glasses</span><span class="sep">•</span>gözlük</span><span class="face-tr">gözlük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gloves</span><span class="sep">•</span>eldiven</span><span class="face-tr">eldiven</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">great</span><span class="sep">•</span>harika</span><span class="face-tr">harika</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hair</span><span class="sep">•</span>saç</span><span class="face-tr">saç</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hand</span><span class="sep">•</span>el</span><span class="face-tr">el</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hat</span><span class="sep">•</span>şapka</span><span class="face-tr">şapka</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">head</span><span class="sep">•</span>kafa</span><span class="face-tr">kafa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hot</span><span class="sep">•</span>sıcak</span><span class="face-tr">sıcak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">jacket</span><span class="sep">•</span>ceket</span><span class="face-tr">ceket</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">leg</span><span class="sep">•</span>bacak</span><span class="face-tr">bacak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">long</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mouth</span><span class="sep">•</span>ağız</span><span class="face-tr">ağız</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nose</span><span class="sep">•</span>burun</span><span class="face-tr">burun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">puppet</span><span class="sep">•</span>kukla</span><span class="face-tr">kukla</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rain</span><span class="sep">•</span>yağmur</span><span class="face-tr">yağmur</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scarf</span><span class="sep">•</span>atkı</span><span class="face-tr">atkı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shirt</span><span class="sep">•</span>gömlek</span><span class="face-tr">gömlek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shoes</span><span class="sep">•</span>ayakkabı</span><span class="face-tr">ayakkabı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">small</span><span class="sep">•</span>küçük</span><span class="face-tr">küçük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">snow</span><span class="sep">•</span>kar</span><span class="face-tr">kar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun boylu</span><span class="face-tr">uzun boylu</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">trousers</span><span class="sep">•</span>pantolon</span><span class="face-tr">pantolon</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">t-shirt</span><span class="sep">•</span>tişört</span><span class="face-tr">tişört</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">umbrella</span><span class="sep">•</span>şemsiye</span><span class="face-tr">şemsiye</span></span></span>
+    <!-- Set 2 — kopya (sonsuz döngü için) -->
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">arm</span><span class="sep">•</span>kol</span><span class="face-tr">kol</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">birthday</span><span class="sep">•</span>doğum günü</span><span class="face-tr">doğum günü</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">blond</span><span class="sep">•</span>sarı saçlı</span><span class="face-tr">sarı saçlı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">body</span><span class="sep">•</span>vücut</span><span class="face-tr">vücut</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">break time</span><span class="sep">•</span>teneffüs zamanı</span><span class="face-tr">teneffüs zamanı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cake</span><span class="sep">•</span>pasta</span><span class="face-tr">pasta</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cheer up</span><span class="sep">•</span>neşelenmek</span><span class="face-tr">neşelenmek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">coat</span><span class="sep">•</span>mont</span><span class="face-tr">mont</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">cold</span><span class="sep">•</span>soğuk</span><span class="face-tr">soğuk</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dark</span><span class="sep">•</span>karanlık</span><span class="face-tr">karanlık</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dear</span><span class="sep">•</span>sevgili</span><span class="face-tr">sevgili</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">dress</span><span class="sep">•</span>elbise</span><span class="face-tr">elbise</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">ear</span><span class="sep">•</span>kulak</span><span class="face-tr">kulak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">eye</span><span class="sep">•</span>göz</span><span class="face-tr">göz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">face</span><span class="sep">•</span>yüz</span><span class="face-tr">yüz</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gift</span><span class="sep">•</span>hediye</span><span class="face-tr">hediye</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">glasses</span><span class="sep">•</span>gözlük</span><span class="face-tr">gözlük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">gloves</span><span class="sep">•</span>eldiven</span><span class="face-tr">eldiven</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">great</span><span class="sep">•</span>harika</span><span class="face-tr">harika</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hair</span><span class="sep">•</span>saç</span><span class="face-tr">saç</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hand</span><span class="sep">•</span>el</span><span class="face-tr">el</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hat</span><span class="sep">•</span>şapka</span><span class="face-tr">şapka</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">head</span><span class="sep">•</span>kafa</span><span class="face-tr">kafa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">hot</span><span class="sep">•</span>sıcak</span><span class="face-tr">sıcak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">jacket</span><span class="sep">•</span>ceket</span><span class="face-tr">ceket</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">leg</span><span class="sep">•</span>bacak</span><span class="face-tr">bacak</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">long</span><span class="sep">•</span>uzun</span><span class="face-tr">uzun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">mouth</span><span class="sep">•</span>ağız</span><span class="face-tr">ağız</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">nose</span><span class="sep">•</span>burun</span><span class="face-tr">burun</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">puppet</span><span class="sep">•</span>kukla</span><span class="face-tr">kukla</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">rain</span><span class="sep">•</span>yağmur</span><span class="face-tr">yağmur</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">scarf</span><span class="sep">•</span>atkı</span><span class="face-tr">atkı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shirt</span><span class="sep">•</span>gömlek</span><span class="face-tr">gömlek</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">shoes</span><span class="sep">•</span>ayakkabı</span><span class="face-tr">ayakkabı</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">short</span><span class="sep">•</span>kısa</span><span class="face-tr">kısa</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">small</span><span class="sep">•</span>küçük</span><span class="face-tr">küçük</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">snow</span><span class="sep">•</span>kar</span><span class="face-tr">kar</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">tall</span><span class="sep">•</span>uzun boylu</span><span class="face-tr">uzun boylu</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">trousers</span><span class="sep">•</span>pantolon</span><span class="face-tr">pantolon</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">t-shirt</span><span class="sep">•</span>tişört</span><span class="face-tr">tişört</span></span></span>
+    <span class="vocab-word" onclick="flipWord(this)"><span class="vocab-word-inner"><span class="face-en"><span class="en">umbrella</span><span class="sep">•</span>şemsiye</span><span class="face-tr">şemsiye</span></span></span>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<!-- MAIN CONTENT -->
+<main class="page-content">
 
-  <!-- Games -->
-  <div class="section-title">🎮 Oyunlar</div>
-  <div class="games-grid">
-
-    <!-- 1. Matching -->
-    <a href="personal-life-matching.html" class="game-card card-matching">
-      <div class="card-icon">🤖</div>
-      <div class="card-type">Matching</div>
-      <div class="card-title">Build Robix!</div>
-      <div class="card-desc">
-        Robix's body part labels have fallen off! Match each picture to the correct word and help Robix.
+  <!-- DIFFICULTY LEGEND -->
+  <div class="diff-legend">
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#3CB371;"></div>
+      <div class="diff-text">
+        <strong>🟢 Supporting</strong>
+        <span>Az seçenek, Türkçe ipucu. Öğrenmeye yeni başlayanlar için.</span>
       </div>
-      <div class="card-footer">
-        <div class="card-levels">
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-        </div>
-        <div class="card-cta">Oyna →</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#4BA3C3;"></div>
+      <div class="diff-text">
+        <strong>🔵 Standard</strong>
+        <span>Orta zorluk, Türkçe ipucu. Çoğu öğrenci için önerilen seviye.</span>
       </div>
-    </a>
-
-    <!-- 2. Sorting -->
-    <a href="personal-life-sorting.html" class="game-card card-sorting">
-      <div class="card-icon">🎒</div>
-      <div class="card-type">Sorting</div>
-      <div class="card-title">Pack Yiğit's Bag!</div>
-      <div class="card-desc">
-        Yiğit is going on a school trip! Sort each item of clothing into the right weather bag.
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#8B5CF6;"></div>
+      <div class="diff-text">
+        <strong>🟣 Expansion</strong>
+        <span>Daha fazla seçenek, ipucu yok. İleri seviye öğrenciler için.</span>
       </div>
-      <div class="card-footer">
-        <div class="card-levels">
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-        </div>
-        <div class="card-cta">Oyna →</div>
-      </div>
-    </a>
-
-    <!-- 3. Fill-in -->
-    <a href="personal-life-fill-in.html" class="game-card card-fillin">
-      <div class="card-icon">🪞</div>
-      <div class="card-type">Fill In</div>
-      <div class="card-title">Yiğit's Mirror</div>
-      <div class="card-desc">
-        Yiğit is looking in the mirror! Complete each sentence by choosing the right word.
-      </div>
-      <div class="card-footer">
-        <div class="card-levels">
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-        </div>
-        <div class="card-cta">Oyna →</div>
-      </div>
-    </a>
-
-    <!-- 4. Dialogue -->
-    <a href="personal-life-dialogue.html" class="game-card card-dialogue">
-      <div class="card-icon">🎂</div>
-      <div class="card-type">Dialogue</div>
-      <div class="card-title">Yiğit's Birthday Party!</div>
-      <div class="card-desc">
-        Today is Yiğit's birthday! Help him answer Robix's questions at every stop of the party.
-      </div>
-      <div class="card-footer">
-        <div class="card-levels">
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-        </div>
-        <div class="card-cta">Oyna →</div>
-      </div>
-    </a>
-
-    <!-- 5. Sequencing -->
-    <a href="personal-life-sequencing.html" class="game-card card-sequencing">
-      <div class="card-icon">🪆</div>
-      <div class="card-type">Sequencing</div>
-      <div class="card-title">Describe the Puppet!</div>
-      <div class="card-desc">
-        Yiğit is making puppets! Put the words in the right order to describe each puppet.
-      </div>
-      <div class="card-footer">
-        <div class="card-levels">
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-          <div class="level-dot filled"></div>
-        </div>
-        <div class="card-cta">Oyna →</div>
-      </div>
-    </a>
-
+    </div>
   </div>
 
-  <!-- Vocabulary preview -->
-  <div class="vocab-section">
-    <div class="section-title">📚 Bu Temada Öğreneceklerimiz</div>
-    <div class="vocab-groups">
-      <div>
-        <div class="vocab-group-title">👁️ Body Parts</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">head</span>
-          <span class="vocab-tag">face</span>
-          <span class="vocab-tag">hair</span>
-          <span class="vocab-tag">eye</span>
-          <span class="vocab-tag">ear</span>
-          <span class="vocab-tag">nose</span>
-          <span class="vocab-tag">mouth</span>
-          <span class="vocab-tag">arm</span>
-          <span class="vocab-tag">hand</span>
-          <span class="vocab-tag">leg</span>
+  <!-- GAME CARDS -->
+  <div class="section-label">
+    <h2>🎮 Etkinlikler</h2>
+    <div class="label-line"></div>
+    <span class="label-count">5 etkinlik</span>
+  </div>
+
+  <div class="games-grid">
+
+    <!-- 1. MATCHING -->
+    <a href="personal-life-matching.html" class="game-card">
+      <div class="card-visual" style="background:linear-gradient(135deg,#2EC4B6,#6EE7E7);">
+        <div class="card-emoji-big">🤖</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">Matching</span>
+          <span class="card-diff">4 – 12 kelime</span>
+        </div>
+        <h3>Build Robix!</h3>
+        <p>Robix'in vücut bölümü etiketleri düşmüş! Her resmi doğru kelimeyle eşleştir ve Robix'i yeniden kur.</p>
+        <div class="card-tags">
+          <span class="card-tag">👁️ eye</span>
+          <span class="card-tag">👃 nose</span>
+          <span class="card-tag">👂 ear</span>
+          <span class="card-tag">+9 daha</span>
+        </div>
+        <span class="card-btn" style="background:linear-gradient(135deg,#2EC4B6,#6EE7E7);">
+          Oyna →
+        </span>
+      </div>
+    </a>
+
+    <!-- 2. SORTING -->
+    <a href="personal-life-sorting.html" class="game-card">
+      <div class="card-visual" style="background:linear-gradient(135deg,#FF6B35,#FFC857);">
+        <div class="card-emoji-big">🎒</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">Sorting</span>
+          <span class="card-diff">6 – 12 öğe</span>
+        </div>
+        <h3>Pack Yiğit's Bag!</h3>
+        <p>Yiğit okul gezisine çıkıyor! Her kıyafeti doğru hava durumu çantasına sürükle ve bavulu hazırla.</p>
+        <div class="card-tags">
+          <span class="card-tag">☀️ Hot</span>
+          <span class="card-tag">❄️ Cold</span>
+          <span class="card-tag">🌧️ Rainy</span>
+        </div>
+        <span class="card-btn" style="background:linear-gradient(135deg,#FF6B35,#FFC857);">
+          Oyna →
+        </span>
+      </div>
+    </a>
+
+    <!-- 3. FILL-IN -->
+    <a href="personal-life-fill-in.html" class="game-card">
+      <div class="card-visual" style="background:linear-gradient(135deg,#8B5CF6,#C4B5FD);">
+        <div class="card-emoji-big">🪞</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">Fill-in</span>
+          <span class="card-diff">6 – 10 soru</span>
+        </div>
+        <h3>Yiğit's Mirror</h3>
+        <p>Yiğit aynaya bakıyor! Her cümledeki boşluğu doğru kelimeyle tamamla ve Yiğit'i tanımla.</p>
+        <div class="card-tags">
+          <span class="card-tag">I've got…</span>
+          <span class="card-tag">She has got…</span>
+          <span class="card-tag">What colour?</span>
+        </div>
+        <span class="card-btn" style="background:linear-gradient(135deg,#8B5CF6,#C4B5FD);">
+          Oyna →
+        </span>
+      </div>
+    </a>
+
+    <!-- 4. DIALOGUE -->
+    <a href="personal-life-dialogue.html" class="game-card">
+      <div class="card-visual" style="background:linear-gradient(135deg,#EC4899,#F9A8D4);">
+        <div class="card-emoji-big">🎂</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">Dialogue</span>
+          <span class="card-diff">3 – 5 durak</span>
+        </div>
+        <h3>Yiğit's Birthday Party!</h3>
+        <p>Bugün Yiğit'in doğum günü! Robix'in her durağındaki sorularını doğru cevapla ve partiyi tamamla.</p>
+        <div class="card-tags">
+          <span class="card-tag">How old are you?</span>
+          <span class="card-tag">Is she tall?</span>
+          <span class="card-tag">How's the weather?</span>
+        </div>
+        <span class="card-btn" style="background:linear-gradient(135deg,#EC4899,#F9A8D4);">
+          Oyna →
+        </span>
+      </div>
+    </a>
+
+    <!-- 5. SEQUENCING -->
+    <a href="personal-life-sequencing.html" class="game-card">
+      <div class="card-visual" style="background:linear-gradient(135deg,#274472,#2EC4B6);">
+        <div class="card-emoji-big">🪆</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">Sequencing</span>
+          <span class="card-diff">5 – 8 soru</span>
+        </div>
+        <h3>Describe the Puppet!</h3>
+        <p>Yiğit kukla yapıyor! Kelimeleri doğru sıraya diz ve her kuklayı İngilizce olarak tanımla.</p>
+        <div class="card-tags">
+          <span class="card-tag">She has got…</span>
+          <span class="card-tag">He's tall.</span>
+          <span class="card-tag">It's/is pink.</span>
+        </div>
+        <span class="card-btn" style="background:linear-gradient(135deg,#274472,#2EC4B6);">
+          Oyna →
+        </span>
+      </div>
+    </a>
+
+  </div><!-- /games-grid -->
+
+  <!-- VOCAB SECTION -->
+  <div class="vocab-section" style="margin-top:3rem;">
+    <h2>📚 Tema Kelime Listesi</h2>
+    <div class="vocab-categories">
+      <div class="vocab-cat">
+        <div class="vocab-cat-title" style="background:#EAF5FB;color:#0369A1;">👤 Parts of the Body</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">head</span>
+          <span class="vocab-pill">face</span>
+          <span class="vocab-pill">hair</span>
+          <span class="vocab-pill">eye</span>
+          <span class="vocab-pill">ear</span>
+          <span class="vocab-pill">nose</span>
+          <span class="vocab-pill">mouth</span>
+          <span class="vocab-pill">arm</span>
+          <span class="vocab-pill">hand</span>
+          <span class="vocab-pill">leg</span>
+          <span class="vocab-pill">body</span>
         </div>
       </div>
-      <div>
-        <div class="vocab-group-title">👕 Clothes</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">shirt</span>
-          <span class="vocab-tag">t-shirt</span>
-          <span class="vocab-tag">trousers</span>
-          <span class="vocab-tag">dress</span>
-          <span class="vocab-tag">coat</span>
-          <span class="vocab-tag">jacket</span>
-          <span class="vocab-tag">hat</span>
-          <span class="vocab-tag">scarf</span>
-          <span class="vocab-tag">gloves</span>
-          <span class="vocab-tag">shoes</span>
-          <span class="vocab-tag">umbrella</span>
+      <div class="vocab-cat">
+        <div class="vocab-cat-title" style="background:#FEF0E8;color:#92400E;">👕 Clothes</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">shirt</span>
+          <span class="vocab-pill">t-shirt</span>
+          <span class="vocab-pill">trousers</span>
+          <span class="vocab-pill">dress</span>
+          <span class="vocab-pill">shoes</span>
+          <span class="vocab-pill">glasses</span>
         </div>
       </div>
-      <div>
-        <div class="vocab-group-title">🌈 Colours</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">red</span>
-          <span class="vocab-tag">blue</span>
-          <span class="vocab-tag">green</span>
-          <span class="vocab-tag">yellow</span>
-          <span class="vocab-tag">purple</span>
-          <span class="vocab-tag">orange</span>
-          <span class="vocab-tag">pink</span>
-          <span class="vocab-tag">black</span>
-          <span class="vocab-tag">white</span>
-          <span class="vocab-tag">brown</span>
+      <div class="vocab-cat">
+        <div class="vocab-cat-title" style="background:#EBF8F0;color:#166534;">🧥 Outwear</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">coat</span>
+          <span class="vocab-pill">jacket</span>
+          <span class="vocab-pill">hat</span>
+          <span class="vocab-pill">scarf</span>
+          <span class="vocab-pill">gloves</span>
+          <span class="vocab-pill">umbrella</span>
         </div>
       </div>
-      <div>
-        <div class="vocab-group-title">📏 Adjectives</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">tall</span>
-          <span class="vocab-tag">short</span>
-          <span class="vocab-tag">big</span>
-          <span class="vocab-tag">small</span>
-          <span class="vocab-tag">long</span>
-          <span class="vocab-tag">blond</span>
-          <span class="vocab-tag">dark</span>
+      <div class="vocab-cat">
+        <div class="vocab-cat-title" style="background:#EDE9FE;color:#5B21B6;">📏 Adjectives</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">tall</span>
+          <span class="vocab-pill">short</span>
+          <span class="vocab-pill">long</span>
+          <span class="vocab-pill">small</span>
+          <span class="vocab-pill">blond</span>
+          <span class="vocab-pill">dark</span>
+          <span class="vocab-pill">great</span>
+          <span class="vocab-pill">hot</span>
+          <span class="vocab-pill">cold</span>
         </div>
       </div>
-      <div>
-        <div class="vocab-group-title">☀️ Weather</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">cold</span>
-          <span class="vocab-tag">hot</span>
-          <span class="vocab-tag">rain</span>
-          <span class="vocab-tag">snow</span>
-        </div>
-      </div>
-      <div>
-        <div class="vocab-group-title">💬 Key Chunks</div>
-        <div class="vocab-tags">
-          <span class="vocab-tag">I've got...</span>
-          <span class="vocab-tag">She has got...</span>
-          <span class="vocab-tag">How old are you?</span>
-          <span class="vocab-tag">I'm 7.</span>
-          <span class="vocab-tag">Is she tall?</span>
-          <span class="vocab-tag">How's the weather?</span>
-          <span class="vocab-tag">It's cold.</span>
-          <span class="vocab-tag">What colour is it?</span>
+      <div class="vocab-cat">
+        <div class="vocab-cat-title" style="background:#FDEEF2;color:#C0254C;">🎂 Ages &amp; Special Days</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">birthday</span>
+          <span class="vocab-pill">cake</span>
+          <span class="vocab-pill">gift</span>
+          <span class="vocab-pill">puppet</span>
+          <span class="vocab-pill">dear</span>
+          <span class="vocab-pill">great</span>
+          <span class="vocab-pill">cheer up</span>
+          <span class="vocab-pill">break time</span>
+          <span class="vocab-pill">rain</span>
+          <span class="vocab-pill">snow</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Back -->
-  <div class="back-section">
-    <a href="2-sinif.html" class="back-btn">← 2. Sınıf Sayfasına Dön</a>
+  <!-- GRAMMAR SECTION -->
+  <div class="grammar-section">
+    <h2>📐 Hedef Yapılar</h2>
+    <div class="grammar-grid">
+      <div class="grammar-item">
+        <div class="structure">How old are you?</div>
+        <div class="example">I'm/am 7.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">Is it your birthday today?</div>
+        <div class="example">Yes, it is.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What's/is it?</div>
+        <div class="example">It/This is a nose. / It/This is a shirt.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What colour is it?</div>
+        <div class="example">It's/is pink.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">Is she tall?</div>
+        <div class="example">Yes, she is. / No, she isn't/is not.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What day is it today?</div>
+        <div class="example">It's/is Monday today.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">How's the weather?</div>
+        <div class="example">It's cold.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What have you got?</div>
+        <div class="example">I've got a nose. / I've got blue trousers.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">How many ears have you got?</div>
+        <div class="example">I've got two ears.</div>
+      </div>
+    </div>
   </div>
 
-</div>
+  <!-- BACK BUTTON -->
+  <div class="back-section">
+    <a href="2-sinif.html" class="back-btn">← 2. Sınıf Temalarına Dön</a>
+  </div>
 
+</main>
+
+<footer class="footer">
+  <p>© 2026 ataberkhocaingilizce · TYMM 2025 · MEB Maarif Modeli · Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+function flipWord(el) {
+  el.classList.toggle('flipped');
+  const strip = document.querySelector('.vocab-scroll');
+  const anyFlipped = document.querySelector('.vocab-word.flipped');
+  strip.style.animationPlayState = anyFlipped ? 'paused' : '';
+}
+</script>
 </body>
 </html>

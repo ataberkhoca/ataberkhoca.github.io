@@ -230,6 +230,24 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
   transform: translateY(-6px); border-color: transparent;
 }
 
+/* Per-card hover glow */
+.activities-grid .activity-card:nth-child(1).active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14); }
+.activities-grid .activity-card:nth-child(2).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+.activities-grid .activity-card:nth-child(3).active:hover { box-shadow: 0 12px 36px rgba(139,92,246,0.28),  0 4px 14px rgba(139,92,246,0.14); }
+.activities-grid .activity-card:nth-child(4).active:hover { box-shadow: 0 12px 36px rgba(236,72,153,0.28),  0 4px 14px rgba(236,72,153,0.14); }
+.activities-grid .activity-card:nth-child(5).active:hover { box-shadow: 0 12px 36px rgba(34,197,94,0.28),   0 4px 14px rgba(34,197,94,0.14); }
+
+/* Emoji bounce on card hover */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  35%       { transform: translateY(-8px) scale(1.12); }
+  65%       { transform: translateY(-3px) scale(1.06); }
+}
+.activity-card.active:hover .activity-emoji {
+  animation: emojiBounce 0.55s ease;
+  display: inline-block;
+}
+
 /* Default (orange) glow */
 .activity-card.active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.22), 0 4px 14px rgba(255,107,53,0.12); }
 /* Per-theme glow overrides */
@@ -355,6 +373,48 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
   .vocab-strip { padding: 16px 20px; }
 }
 
+/* ========== DIFF LEGEND ========== */
+.diff-legend {
+  max-width: 1100px; margin: 0 auto 40px;
+  background: white; border-radius: var(--radius-lg);
+  padding: 1.4rem 2rem; box-shadow: var(--shadow-soft);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;
+}
+.diff-item { display: flex; align-items: flex-start; gap: 0.8rem; }
+.diff-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.diff-text strong { display: block; font-size: 0.88rem; font-weight: 800; color: var(--navy); margin-bottom: 0.15rem; }
+.diff-text span   { font-size: 0.8rem; color: var(--gray-500); font-weight: 600; line-height: 1.5; }
+
+/* ========== VOCAB & GRAMMAR SECTIONS ========== */
+.content-sections { max-width: 1100px; margin: 0 auto; padding: 0 0 20px; }
+.vocab-section, .grammar-section-block {
+  border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem;
+}
+.vocab-section { background: white; box-shadow: var(--shadow-soft); }
+.vocab-section-title, .grammar-section-title {
+  font-size: 1.3rem; font-weight: 800; color: var(--navy); margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.vocab-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.vocab-cat-title {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  margin-bottom: 0.6rem; padding: 0.25rem 0.7rem; border-radius: 50px; display: inline-block;
+}
+.vocab-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.vocab-pill { font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 50px; background: var(--gray-100); color: var(--navy); }
+.grammar-section-block {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  box-shadow: var(--shadow-md);
+}
+.grammar-section-title { color: white; }
+.grammar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.8rem; }
+.grammar-item {
+  background: rgba(255,255,255,0.08); border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem; border: 1px solid rgba(255,255,255,0.1);
+}
+.grammar-item .structure { font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; color: var(--yellow); margin-bottom: 0.25rem; }
+.grammar-item .example { font-size: 0.8rem; color: rgba(255,255,255,0.65); font-weight: 600; line-height: 1.5; }
+
 /* ========== SCROLL ANIMATIONS ========== */
 .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -469,6 +529,31 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
     <div class="section-badge">🎮 Etkinlikler</div>
     <h2 class="section-title">Family Life Oyunları</h2>
     <p class="section-desc">Her etkinlik MEB TYMM müfredatının Tema 4 kazanımlarına uygun olarak hazırlanmıştır.</p>
+  </div>
+
+  <!-- DIFF LEGEND -->
+  <div class="diff-legend">
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#3CB371;"></div>
+      <div class="diff-text">
+        <strong>🟢 Supporting</strong>
+        <span>Az seçenek, Türkçe ipucu. Öğrenmeye yeni başlayanlar için.</span>
+      </div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#4BA3C3;"></div>
+      <div class="diff-text">
+        <strong>🔵 Standard</strong>
+        <span>Orta zorluk, Türkçe ipucu. Çoğu öğrenci için önerilen seviye.</span>
+      </div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-dot" style="background:#8B5CF6;"></div>
+      <div class="diff-text">
+        <strong>🟣 Expansion</strong>
+        <span>Daha fazla seçenek, ipucu yok. İleri seviye öğrenciler için.</span>
+      </div>
+    </div>
   </div>
 
   <div class="activities-grid">
@@ -630,6 +715,94 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 
   </div>
 </section>
+
+<!-- VOCAB & GRAMMAR SECTIONS -->
+<div class="section content-sections">
+
+  <!-- VOCAB SECTION -->
+  <div class="vocab-section reveal">
+    <div class="vocab-section-title">📚 Tema Kelime Listesi</div>
+    <div class="vocab-categories">
+
+      <div>
+        <div class="vocab-cat-title" style="background:#FDEEF2;color:#C0254C;">👨‍👩‍👧‍👦 Family Members</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">father</span>
+          <span class="vocab-pill">dad</span>
+          <span class="vocab-pill">mother</span>
+          <span class="vocab-pill">mum</span>
+          <span class="vocab-pill">brother</span>
+          <span class="vocab-pill">sister</span>
+          <span class="vocab-pill">son</span>
+          <span class="vocab-pill">daughter</span>
+          <span class="vocab-pill">grandfather</span>
+          <span class="vocab-pill">grandmother</span>
+          <span class="vocab-pill">baby</span>
+          <span class="vocab-pill">friend</span>
+          <span class="vocab-pill">family</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#EBF8F0;color:#166534;">✨ Physical Appearances</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">beautiful</span>
+          <span class="vocab-pill">handsome</span>
+          <span class="vocab-pill">lovely</span>
+          <span class="vocab-pill">nice</span>
+          <span class="vocab-pill">tall</span>
+          <span class="vocab-pill">short</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#EDE9FE;color:#5B21B6;">💬 Adjectives &amp; Feelings</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">hungry</span>
+          <span class="vocab-pill">sorry</span>
+          <span class="vocab-pill">all right</span>
+          <span class="vocab-pill">very</span>
+          <span class="vocab-pill">great</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="vocab-cat-title" style="background:#FEF0E8;color:#92400E;">📷 Other</div>
+        <div class="vocab-pills">
+          <span class="vocab-pill">album</span>
+          <span class="vocab-pill">photo</span>
+          <span class="vocab-pill">lunch</span>
+          <span class="vocab-pill">lunchtime</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GRAMMAR SECTION -->
+  <div class="grammar-section-block reveal">
+    <div class="grammar-section-title">📐 Hedef Yapılar</div>
+    <div class="grammar-grid">
+      <div class="grammar-item">
+        <div class="structure">Who is he? / Who is she?</div>
+        <div class="example">He's/is my father. She's/is my mother.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">What colour eyes has your mother got?</div>
+        <div class="example">My mother's/has got blue eyes.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">She's/has got blue eyes.</div>
+        <div class="example">Fiziksel özellik tanımlama yapısı.</div>
+      </div>
+      <div class="grammar-item">
+        <div class="structure">He's my father.</div>
+        <div class="example">Aile üyelerini tanıtma ve ilişki kurma.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <!-- COMING SOON -->
 <section class="coming-section">
