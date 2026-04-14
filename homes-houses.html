@@ -414,6 +414,20 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 .grammar-item .structure { font-family: 'Baloo 2', cursive; font-size: 0.95rem; font-weight: 700; color: var(--yellow); margin-bottom: 0.25rem; }
 .grammar-item .example { font-size: 0.8rem; color: rgba(255,255,255,0.65); font-weight: 600; line-height: 1.5; }
 
+
+/* ========== SECTION LABEL ========== */
+.section-label {
+  display: flex; align-items: center; gap: 0.8rem;
+  margin: 0 auto 2rem; max-width: 1100px;
+}
+.section-label h2 { font-size: 1.6rem; font-weight: 800; color: var(--navy); white-space: nowrap; }
+.label-line { flex: 1; height: 2px; background: var(--gray-200); border-radius: 99px; }
+.label-count {
+  background: var(--orange); color: #fff;
+  font-size: 0.78rem; font-weight: 700;
+  padding: 0.2rem 0.7rem; border-radius: 99px;
+  white-space: nowrap;
+}
 /* ========== SCROLL ANIMATIONS ========== */
 .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -516,10 +530,10 @@ h1, h2, h3, h4, .brand-name { font-family: 'Baloo 2', cursive; }
 
 <!-- ACTIVITIES -->
 <section class="section" id="etkinlikler">
-  <div class="section-header reveal">
-    <div class="section-badge">🎮 Etkinlikler</div>
-    <h2 class="section-title">Homes & Houses Oyunları</h2>
-    <p class="section-desc">Her etkinlik MEB TYMM müfredatının Tema 5 kazanımlarına uygun olarak hazırlanmıştır.</p>
+  <div class="section-label reveal">
+    <h2>🎮 Homes & Houses Oyunları</h2>
+    <div class="label-line"></div>
+    <span class="label-count">5 etkinlik</span>
   </div>
 
   <!-- DIFF LEGEND -->
