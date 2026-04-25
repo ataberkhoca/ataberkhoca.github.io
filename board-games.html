@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Games | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2845;--navy-light:#274472;
+    --orange:#FF6B35;--orange-glow:rgba(255,107,53,0.85);
+    --teal:#2EC4B6;--cream:#FFFBF5;--white:#FFFFFF;
+    --gray-500:#64748B;
+    --shadow-glow-orange:0 8px 30px rgba(255,107,53,0.4);
+    --shadow-glow-teal:0 8px 30px rgba(46,196,182,0.4);
+    --card-shadow:0 4px 20px rgba(27,40,69,0.10);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Quicksand',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;display:flex;flex-direction:column;}
+
+  /* NAV */
+  nav{background:var(--navy);padding:.75rem 1.5rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;}
+  nav a{color:rgba(255,255,255,.7);text-decoration:none;font-family:'Baloo 2',sans-serif;font-size:.85rem;transition:color .2s;}
+  nav a:hover{color:var(--orange);}
+  nav .sep{color:rgba(255,255,255,.35);font-size:.8rem;}
+  nav .current{color:var(--orange);font-weight:700;}
+
+  /* HERO */
+  .hero{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
+    color:var(--white);text-align:center;padding:4rem 1rem 3rem;
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'🎲';font-size:12rem;position:absolute;
+    right:-2rem;top:-2rem;opacity:.06;
+    animation:floatDice 6s ease-in-out infinite;
+  }
+  @keyframes floatDice{0%,100%{transform:rotate(-10deg) translateY(0)}50%{transform:rotate(10deg) translateY(-12px)}}
+  .hero-badge{display:inline-block;background:rgba(255,107,53,.2);color:var(--orange);border:1px solid rgba(255,107,53,.3);border-radius:99px;padding:.3rem 1rem;font-size:.8rem;font-weight:700;letter-spacing:.05em;margin-bottom:1rem;}
+  .hero h1{font-family:'Baloo 2',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;margin-bottom:.5rem;}
+  .hero p{font-size:1rem;opacity:.8;max-width:500px;margin:0 auto;}
+
+  /* BREADCRUMB */
+  .breadcrumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;flex-wrap:wrap;justify-content:center;margin-top:1.2rem;opacity:.7;}
+  .breadcrumb a{color:rgba(255,255,255,.8);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--orange);}
+  .breadcrumb span{color:rgba(255,255,255,.4);}
+
+  /* MAIN */
+  main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:3rem 1.5rem;}
+
+  /* SECTION LABEL */
+  .section-label{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;}
+  .section-label h2{font-family:'Baloo 2',sans-serif;font-size:1.5rem;font-weight:800;color:var(--navy);}
+  .label-line{flex:1;height:2px;background:linear-gradient(90deg,rgba(27,40,69,.15),transparent);}
+  .label-count{font-size:.78rem;color:var(--gray-500);font-weight:600;white-space:nowrap;background:#f0f4f8;padding:.25rem .75rem;border-radius:99px;}
+
+  /* GRID */
+  .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3rem;}
+
+  /* CARD */
+  .game-card{
+    background:var(--white);border-radius:20px;
+    box-shadow:var(--card-shadow);
+    overflow:hidden;transition:all .25s;
+    border:2px solid transparent;
+    text-decoration:none;color:var(--navy);
+    display:flex;flex-direction:column;
+  }
+  .game-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(255,107,53,.2);border-color:var(--orange);}
+  .game-card-banner{height:6px;background:linear-gradient(90deg,var(--orange),#ff9a5c);}
+  .game-card.teal .game-card-banner{background:linear-gradient(90deg,var(--teal),#5ee7df);}
+  .game-card.purple .game-card-banner{background:linear-gradient(90deg,#8B5CF6,#c084fc);}
+  .game-card-body{padding:1.5rem;flex:1;display:flex;flex-direction:column;}
+  .game-badge{display:inline-block;font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;background:#fff3ee;color:var(--orange);margin-bottom:.8rem;border:1px solid rgba(255,107,53,.2);}
+  .game-card.teal .game-badge{background:#e6faf9;color:var(--teal);border-color:rgba(46,196,182,.2);}
+  .game-card.purple .game-badge{background:#f3eeff;color:#8B5CF6;border-color:rgba(139,92,246,.2);}
+  .game-emoji{font-size:3rem;margin-bottom:.6rem;display:block;}
+  .game-title{font-family:'Baloo 2',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:.4rem;}
+  .game-theme{font-size:.75rem;color:var(--gray-500);font-weight:600;margin-bottom:.6rem;}
+  .game-desc{font-size:.85rem;color:var(--gray-500);line-height:1.5;flex:1;margin-bottom:1rem;}
+  .game-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;}
+  .game-tag{font-size:.7rem;background:#f0f4f8;color:var(--navy);padding:.2rem .6rem;border-radius:99px;font-weight:600;}
+  .game-btn{
+    display:block;text-align:center;
+    background:var(--orange);color:var(--white);
+    border-radius:10px;padding:.6rem;
+    font-family:'Baloo 2',sans-serif;font-size:.9rem;font-weight:700;
+    text-decoration:none;transition:all .2s;
+    box-shadow:0 3px 10px rgba(255,107,53,.3);
+  }
+  .game-btn:hover{background:var(--orange-glow);transform:translateY(-2px);}
+  .game-card.teal .game-btn{background:var(--teal);box-shadow:var(--shadow-glow-teal);}
+  .game-card.teal .game-btn:hover{background:#25B0A4;}
+  .game-card.purple .game-btn{background:#8B5CF6;box-shadow:0 3px 10px rgba(139,92,246,.3);}
+  .game-card.purple .game-btn:hover{background:#7C3AED;}
+
+  /* COMING SOON card */
+  .game-card.coming{opacity:.6;pointer-events:none;}
+  .game-card.coming .game-btn{background:#ccc;box-shadow:none;}
+
+  /* FOOTER */
+  footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:1.5rem;font-size:.82rem;}
+  footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+  footer a:hover{color:var(--orange);}
+
+  @media(max-width:768px){.games-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.games-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">🏠 Ana Sayfa</a>
+  <span class="sep">›</span>
+  <span class="current">🎲 Board Games</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">🎲 Board Games</div>
+  <h1>Board Game Hub</h1>
+  <p>Zar at, ilerle, öğren! Tüm sınıflar için dijital tahta oyunları burada.</p>
+  <div class="breadcrumb">
+    <a href="index.html">Ana Sayfa</a>
+    <span>›</span>
+    <span>Board Games</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- 2. SINIF -->
+  <div class="section-label">
+    <h2>🎒 2. Sınıf</h2>
+    <div class="label-line"></div>
+    <span class="label-count">1 oyun</span>
+  </div>
+
+  <div class="games-grid">
+
+    <!-- School Life Board Game -->
+    <a href="school-life-board-game.html" class="game-card">
+      <div class="game-card-banner"></div>
+      <div class="game-card-body">
+        <div class="game-badge">🎒 Tema 1</div>
+        <span class="game-emoji">🎲</span>
+        <div class="game-title">School Life</div>
+        <div class="game-theme">2. Sınıf · Tema 1: School Life</div>
+        <div class="game-desc">
+          Zar at, ilerle ve School Life kelimelerini öğren! Sınıf arkadaşlarınla oynayabileceğin eğlenceli bir tahta oyunu.
+        </div>
+        <div class="game-tags">
+          <span class="game-tag">🎲 Zar</span>
+          <span class="game-tag">👥 Çok Oyunculu</span>
+          <span class="game-tag">🖥️ Akıllı Tahta</span>
+        </div>
+        <div class="game-btn">🚀 Oynamaya Başla</div>
+      </div>
+    </a>
+
+    <!-- Coming Soon 1 -->
+    <div class="game-card teal coming">
+      <div class="game-card-banner"></div>
+      <div class="game-card-body">
+        <div class="game-badge">🎒 Tema 2</div>
+        <span class="game-emoji">🔜</span>
+        <div class="game-title">Classroom Life</div>
+        <div class="game-theme">2. Sınıf · Tema 2</div>
+        <div class="game-desc">Yakında ekleniyor...</div>
+        <div class="game-tags"><span class="game-tag">🔜 Yakında</span></div>
+        <div class="game-btn">Yakında</div>
+      </div>
+    </div>
+
+    <!-- Coming Soon 2 -->
+    <div class="game-card purple coming">
+      <div class="game-card-banner"></div>
+      <div class="game-card-body">
+        <div class="game-badge">🎒 Tema 3</div>
+        <span class="game-emoji">🔜</span>
+        <div class="game-title">Personal Life</div>
+        <div class="game-theme">2. Sınıf · Tema 3</div>
+        <div class="game-desc">Yakında ekleniyor...</div>
+        <div class="game-tags"><span class="game-tag">🔜 Yakında</span></div>
+        <div class="game-btn">Yakında</div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2025 <a href="index.html">Ataberk Hoca İngilizce</a> · Tüm hakları saklıdır.</p>
+</footer>
+
+</body>
+</html>
