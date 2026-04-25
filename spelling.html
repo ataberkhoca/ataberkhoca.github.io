@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spelling Oyunları | Ataberk Hoca İngilizce</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2845;--navy-light:#274472;
+    --orange:#FF6B35;--teal:#2EC4B6;--cream:#FFFBF5;--white:#FFFFFF;
+    --gray-500:#64748B;--gray-100:#F1F5F9;
+    --shadow:0 4px 20px rgba(27,40,69,0.10);
+    --shadow-lg:0 12px 40px rgba(27,40,69,0.15);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Quicksand',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;display:flex;flex-direction:column;}
+  nav{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2);}
+  .nav-brand{font-family:'Baloo 2',sans-serif;font-size:1.1rem;font-weight:800;color:white;text-decoration:none;display:flex;align-items:center;gap:.5rem;}
+  .nav-brand span{color:var(--orange);}
+  .nav-links{display:flex;align-items:center;gap:.3rem;list-style:none;}
+  .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.85rem;font-weight:600;padding:.4rem .7rem;border-radius:8px;transition:all .2s;}
+  .nav-links a:hover{color:white;background:rgba(255,255,255,.1);}
+  .nav-links .nav-cta{background:var(--orange);color:white!important;padding:.4rem .9rem;border-radius:99px;}
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--white);padding:4rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(255,107,53,.08) 0%,transparent 60%),radial-gradient(circle at 80% 50%,rgba(46,196,182,.06) 0%,transparent 60%);}
+  .hero-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+  .hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,107,53,.15);color:var(--orange);border:1px solid rgba(255,107,53,.3);border-radius:99px;padding:.35rem 1rem;font-size:.78rem;font-weight:700;letter-spacing:.05em;margin-bottom:1.2rem;}
+  .hero h1{font-family:'Baloo 2',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;margin-bottom:.6rem;line-height:1.1;}
+  .hero p{font-size:1rem;opacity:.75;max-width:480px;margin:0 auto 1.5rem;line-height:1.6;}
+  .hero-stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;}
+  .hero-stat{text-align:center;}
+  .hero-stat-num{font-family:'Baloo 2',sans-serif;font-size:1.8rem;font-weight:800;color:var(--orange);display:block;}
+  .hero-stat-lbl{font-size:.75rem;opacity:.6;text-transform:uppercase;letter-spacing:.05em;}
+  .breadcrumb{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;max-width:1100px;margin:1.5rem auto 0;padding:0 1.5rem;font-size:.82rem;color:var(--gray-500);}
+  .breadcrumb a{color:var(--gray-500);text-decoration:none;transition:color .2s;}
+  .breadcrumb a:hover{color:var(--orange);}
+  .breadcrumb .sep{color:#CBD5E1;}
+  main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .section-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;margin-top:2.5rem;}
+  .section-head:first-child{margin-top:0;}
+  .section-head h2{font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:800;}
+  .section-line{flex:1;height:2px;background:linear-gradient(90deg,rgba(27,40,69,.12),transparent);}
+  .section-badge{font-size:.72rem;font-weight:700;color:var(--gray-500);background:var(--gray-100);padding:.25rem .75rem;border-radius:99px;white-space:nowrap;}
+  .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+  .game-card{background:var(--white);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;transition:all .25s;border:2px solid transparent;display:flex;flex-direction:column;text-decoration:none;color:var(--navy);}
+  .game-card.active:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--orange);}
+  .game-card.coming{opacity:.55;pointer-events:none;}
+  .card-banner{height:5px;}
+  .card-banner.orange{background:linear-gradient(90deg,#FF6B35,#ff9a5c);}
+  .card-banner.teal{background:linear-gradient(90deg,#2EC4B6,#5ee7df);}
+  .card-banner.purple{background:linear-gradient(90deg,#8B5CF6,#c084fc);}
+  .card-banner.green{background:linear-gradient(90deg,#22C55E,#86efac);}
+  .card-banner.blue{background:linear-gradient(90deg,#3B82F6,#93c5fd);}
+  .card-banner.pink{background:linear-gradient(90deg,#EC4899,#f9a8d4);}
+  .card-body{padding:1.4rem;flex:1;display:flex;flex-direction:column;}
+  .card-theme{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:.2rem .6rem;border-radius:99px;margin-bottom:.8rem;}
+  .card-theme.t1{background:#FFF3EE;color:#FF6B35;}
+  .card-theme.t2{background:#E6FAFA;color:#2EC4B6;}
+  .card-theme.t3{background:#F0EEFF;color:#8B5CF6;}
+  .card-theme.t4{background:#ECFDF5;color:#22C55E;}
+  .card-theme.t5{background:#EFF6FF;color:#3B82F6;}
+  .card-theme.t6{background:#FDF2F8;color:#EC4899;}
+  .card-theme.ct{background:var(--gray-100);color:var(--gray-500);}
+  .card-emoji{font-size:2.8rem;display:block;margin-bottom:.6rem;}
+  .card-title{font-family:'Baloo 2',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.2rem;}
+  .card-subtitle{font-size:.75rem;color:var(--gray-500);font-weight:600;margin-bottom:.6rem;}
+  .card-desc{font-size:.82rem;color:var(--gray-500);line-height:1.5;flex:1;margin-bottom:1rem;}
+  .card-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem;}
+  .card-tag{font-size:.68rem;background:var(--gray-100);color:var(--navy);padding:.2rem .55rem;border-radius:99px;font-weight:600;}
+  .card-btn{display:block;text-align:center;border:none;border-radius:12px;padding:.65rem;font-family:'Baloo 2',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s;text-decoration:none;}
+  .card-btn.orange{background:var(--orange);color:white;box-shadow:0 3px 10px rgba(255,107,53,.3);}
+  .card-btn.orange:hover{background:#e05a28;transform:translateY(-2px);}
+  .coming-chip{display:inline-block;background:#F1F5F9;color:#94A3B8;border:2px solid #E2E8F0;border-radius:10px;padding:.6rem 1rem;font-size:.82rem;font-weight:700;text-align:center;width:100%;}
+  footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:1.5rem;font-size:.82rem;}
+  footer a{color:rgba(255,255,255,.4);text-decoration:none;}
+  footer a:hover{color:var(--orange);}
+  @media(max-width:900px){.games-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:540px){.games-grid{grid-template-columns:1fr;} .nav-links{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand"><span style="font-size:1.3rem;">📚</span>ataberk<span>hoca</span>ingilizce</a>
+  <ul class="nav-links">
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="2-sinif.html">Sınıflar</a></li>
+    <li><a href="index.html#akilli-tahta">Akıllı Tahta</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="2-sinif.html" class="nav-cta">Hemen Başla →</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🔤 Spelling</div>
+    <h1>Spelling Oyunları</h1>
+    <p>Kelimeleri doğru yaz, harfleri doğru sırala! Yazım becerini geliştir.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-lbl">Tema</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-lbl">Aktif Oyun</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">1+</span><span class="hero-stat-lbl">Oyuncu</span></div>
+    </div>
+  </div>
+</div>
+<div class="breadcrumb">
+  <a href="index.html">Ana Sayfa</a><span class="sep">›</span><span>Spelling</span>
+</div>
+<main>
+  <div class="section-head">
+    <h2>🎒 2. Sınıf</h2>
+    <div class="section-line"></div>
+    <span class="section-badge">TYMM 2025 Müfredatı</span>
+  </div>
+  <div class="games-grid">
+    <a href="school-life-word-recall.html" class="game-card active">
+      <div class="card-banner orange"></div>
+      <div class="card-body">
+        <div class="card-theme t1">📚 Tema 1</div>
+        <span class="card-emoji">🧠</span>
+        <div class="card-title">Word Recall</div>
+        <div class="card-subtitle">Okul Hayatı · Bellekten Yaz</div>
+        <div class="card-desc">Görseli gör, kelimeyi bellekten yaz! Alfabeden harfleri seç.</div>
+        <div class="card-tags"><span class="card-tag">🧠 Bellek</span><span class="card-tag">⌨️ Yazma</span><span class="card-tag">🌟 Zenginleştirme</span></div>
+        <div class="card-btn orange">🚀 Oynamaya Başla</div>
+      </div>
+    </a>
+    <a href="school-life-anagram.html" class="game-card active">
+      <div class="card-banner orange"></div>
+      <div class="card-body">
+        <div class="card-theme t1">📚 Tema 1</div>
+        <span class="card-emoji">🪧</span>
+        <div class="card-title">Scrambled School</div>
+        <div class="card-subtitle">Okul Hayatı · Anagram</div>
+        <div class="card-desc">Karışık harfleri swap ederek doğru sıraya koy, tabelayı tamir et!</div>
+        <div class="card-tags"><span class="card-tag">🔀 Anagram</span><span class="card-tag">↔️ Swap</span><span class="card-tag">🌟 Zenginleştirme</span></div>
+        <div class="card-btn orange">🚀 Oynamaya Başla</div>
+      </div>
+    </a>
+    <a href="school-life-word-build.html" class="game-card active">
+      <div class="card-banner orange"></div>
+      <div class="card-body">
+        <div class="card-theme t1">📚 Tema 1</div>
+        <span class="card-emoji">🔤</span>
+        <div class="card-title">Word Build</div>
+        <div class="card-subtitle">Okul Hayatı · Harf Sıralama</div>
+        <div class="card-desc">Harflere doğru sırayla dokun ve kelimeyi inşa et!</div>
+        <div class="card-tags"><span class="card-tag">🔢 Sıra</span><span class="card-tag">💪 Destekleme</span><span class="card-tag">🇹🇷 İpucu</span></div>
+        <div class="card-btn orange">🚀 Oynamaya Başla</div>
+      </div>
+    </a>
+    <div class="game-card coming">
+      <div class="card-banner teal"></div>
+      <div class="card-body">
+        <div class="card-theme ct">🔜 Tema 2</div>
+        <span class="card-emoji">✏️</span>
+        <div class="card-title">Classroom Life</div>
+        <div class="card-subtitle">Sınıf Spelling</div>
+        <div class="card-desc">Sınıf kelimelerini yaz.</div>
+        <div class="card-tags"><span class="card-tag">🔜 Yakında</span></div>
+        <div class="coming-chip">🔜 Yakında Eklenecek</div>
+      </div>
+    </div>
+    <div class="game-card coming">
+      <div class="card-banner purple"></div>
+      <div class="card-body">
+        <div class="card-theme ct">🔜 Tema 3</div>
+        <span class="card-emoji">🧒</span>
+        <div class="card-title">Personal Life</div>
+        <div class="card-subtitle">Kişisel Hayat Spelling</div>
+        <div class="card-desc">Kişisel kelimeleri yaz.</div>
+        <div class="card-tags"><span class="card-tag">🔜 Yakında</span></div>
+        <div class="coming-chip">🔜 Yakında Eklenecek</div>
+      </div>
+    </div>
+    <div class="game-card coming">
+      <div class="card-banner green"></div>
+      <div class="card-body">
+        <div class="card-theme ct">🔜 Tema 4</div>
+        <span class="card-emoji">👨‍👩‍👧</span>
+        <div class="card-title">Family Life</div>
+        <div class="card-subtitle">Aile Spelling</div>
+        <div class="card-desc">Aile kelimelerini yaz.</div>
+        <div class="card-tags"><span class="card-tag">🔜 Yakında</span></div>
+        <div class="coming-chip">🔜 Yakında Eklenecek</div>
+      </div>
+    </div>
+    <div class="game-card coming">
+      <div class="card-banner blue"></div>
+      <div class="card-body">
+        <div class="card-theme ct">🔜 Tema 5</div>
+        <span class="card-emoji">🏠</span>
+        <div class="card-title">Homes & Houses</div>
+        <div class="card-subtitle">Ev Spelling</div>
+        <div class="card-desc">Ev kelimelerini yaz.</div>
+        <div class="card-tags"><span class="card-tag">🔜 Yakında</span></div>
+        <div class="coming-chip">🔜 Yakında Eklenecek</div>
+      </div>
+    </div>
+    <div class="game-card coming">
+      <div class="card-banner pink"></div>
+      <div class="card-body">
+        <div class="card-theme ct">🔜 Tema 6</div>
+        <span class="card-emoji">🌆</span>
+        <div class="card-title">Life in the City</div>
+        <div class="card-subtitle">Şehir Spelling</div>
+        <div class="card-desc">Şehir kelimelerini yaz.</div>
+        <div class="card-tags"><span class="card-tag">🔜 Yakında</span></div>
+        <div class="coming-chip">🔜 Yakında Eklenecek</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+<footer><p>© 2025 <a href="index.html">Ataberk Hoca İngilizce</a> · Tüm hakları saklıdır.</p></footer>
+</body>
+</html>
