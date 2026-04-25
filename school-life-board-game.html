@@ -215,6 +215,9 @@ body{
   .game-container{grid-template-columns:1fr;padding-top:70px}
   .sidebar{position:static}
 }
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes bouncein{0%{transform:scale(.3) translateY(-20px);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+#menu-overlay button:hover{opacity:.9;transform:translateY(-2px);}
 </style>
 </head>
 <body>
@@ -223,13 +226,299 @@ body{
 <div class="cloud cl1"></div>
 <div class="cloud cl2"></div>
 
+<!-- ═══════════════════════════════════════════
+     ANA MENÜ SİSTEMİ
+═══════════════════════════════════════════ -->
+<style>
+.menu-screen{display:none;}
+.menu-screen.active{display:block;}
+.diff-btn{
+  flex:1;border:2.5px solid #E2E8F0;border-radius:14px;
+  padding:.7rem .4rem;background:white;cursor:pointer;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.82rem;
+  color:#64748B;transition:all .2s;text-align:center;line-height:1.3;
+}
+.diff-btn:hover{border-color:#FF6B35;color:#FF6B35;transform:translateY(-2px);}
+.diff-btn.selected{border-color:#FF6B35;background:#FFF8F5;color:#FF6B35;box-shadow:0 4px 12px rgba(255,107,53,.2);}
+.diff-btn .diff-icon{font-size:1.4rem;display:block;margin-bottom:.3rem;}
+.pawn-bounce{display:inline-block;animation:pawnBounce 1.2s ease-in-out infinite;}
+.pawn-bounce-r{display:inline-block;animation:pawnBounce 1.2s ease-in-out infinite .4s;}
+@keyframes pawnBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.accord-content{display:none;overflow:hidden;}
+.accord-content.open{display:block;}
+.accord-btn{
+  width:100%;background:#F8FAFC;border:2px solid #E2E8F0;
+  border-radius:12px;padding:.75rem 1rem;
+  font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;
+  color:#1B2845;cursor:pointer;display:flex;align-items:center;
+  justify-content:space-between;transition:all .2s;
+}
+.accord-btn:hover{background:#F0F4F8;}
+.accord-arrow{transition:transform .25s;}
+.accord-arrow.open{transform:rotate(180deg);}
+.color-pick{display:flex;gap:.5rem;justify-content:center;margin-top:.5rem;}
+.color-dot{
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:all .15s;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.color-dot.picked{border-color:#1B2845;transform:scale(1.15);}
+.stat-chip{
+  display:flex;flex-direction:column;align-items:center;
+  background:#F8FAFC;border-radius:14px;padding:.7rem .5rem;
+  border:1.5px solid #E2E8F0;flex:1;
+}
+.stat-num{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#1B2845;}
+.stat-lbl{font-size:.65rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em;}
+.special-card{
+  display:flex;align-items:center;gap:.7rem;
+  background:#F8FAFC;border-radius:12px;padding:.65rem .9rem;
+  border:1.5px solid #E2E8F0;
+}
+</style>
+
+<div id="menu-overlay" style="
+  position:fixed;inset:0;z-index:500;
+  background:linear-gradient(135deg,#1B2845 0%,#274472 60%,#1a3a6e 100%);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:1.5rem 1rem;overflow-y:auto;">
+
+  <!-- floating decorations -->
+  <div style="position:fixed;font-size:6rem;top:3%;left:2%;opacity:.05;animation:spin 15s linear infinite;pointer-events:none;">🎲</div>
+  <div style="position:fixed;font-size:4rem;bottom:5%;right:3%;opacity:.05;animation:spin 20s linear infinite reverse;pointer-events:none;">🎲</div>
+  <div style="position:fixed;font-size:2rem;top:15%;right:8%;opacity:.06;animation:pawnBounce 2s ease-in-out infinite;pointer-events:none;">⭐</div>
+  <div style="position:fixed;font-size:2rem;bottom:15%;left:6%;opacity:.06;animation:pawnBounce 2s ease-in-out infinite .5s;pointer-events:none;">🏆</div>
+
+  <div style="max-width:480px;width:100%;display:flex;flex-direction:column;gap:1rem;padding-bottom:2rem;">
+
+    <!-- ── EKRAN 1: ANA MENÜ ── -->
+    <div id="menu-main" class="menu-screen active" style="background:white;border-radius:28px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4);">
+
+      <!-- hero banner -->
+      <div style="background:linear-gradient(135deg,#1B2845,#274472);padding:2rem 1.5rem 1.5rem;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22 opacity=%22.04%22>🎲</text></svg>') center/contain no-repeat;"></div>
+        <!-- animated pawns -->
+        <div style="font-size:2.8rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:center;gap:1rem;">
+          <span class="pawn-bounce">🔴</span>
+          <span style="font-size:1.5rem;opacity:.4;color:white;">VS</span>
+          <span class="pawn-bounce-r">🔵</span>
+        </div>
+        <div style="font-family:'Baloo 2',cursive;font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#FF6B35;margin-bottom:.3rem;">School Life</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:white;line-height:1.1;margin-bottom:.4rem;">Board Game</div>
+        <div style="font-size:.8rem;color:rgba(255,255,255,.6);">Zar at · İlerle · Soruları cevapla!</div>
+      </div>
+
+      <div style="padding:1.5rem;">
+
+        <!-- stats strip -->
+        <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;">
+          <div class="stat-chip">
+            <span class="stat-num">24</span>
+            <span class="stat-lbl">Kare</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-num">9</span>
+            <span class="stat-lbl">Soru</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-num">3</span>
+            <span class="stat-lbl">Özel Kare</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-num">2</span>
+            <span class="stat-lbl">Takım</span>
+          </div>
+        </div>
+
+        <!-- special squares preview -->
+        <div style="font-size:.72rem;font-weight:700;color:#94A3B8;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Özel Kareler</div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem;">
+          <div class="special-card">
+            <span style="font-size:1.4rem;">🎉</span>
+            <div><div style="font-weight:800;font-size:.85rem;color:#1B2845;">Well Done!</div><div style="font-size:.75rem;color:#64748B;">2 kare ileri git</div></div>
+          </div>
+          <div class="special-card">
+            <span style="font-size:1.4rem;">🏆</span>
+            <div><div style="font-weight:800;font-size:.85rem;color:#1B2845;">Great Job!</div><div style="font-size:.75rem;color:#64748B;">3 kare ileri git</div></div>
+          </div>
+          <div class="special-card">
+            <span style="font-size:1.4rem;">⭐</span>
+            <div><div style="font-weight:800;font-size:.85rem;color:#1B2845;">Keep Going!</div><div style="font-size:.75rem;color:#64748B;">Tekrar zar at</div></div>
+          </div>
+        </div>
+
+        <!-- difficulty -->
+        <div style="font-size:.72rem;font-weight:700;color:#94A3B8;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Zorluk Seviyesi</div>
+        <div style="display:flex;gap:.5rem;margin-bottom:1.2rem;" id="diff-btns">
+          <button class="diff-btn" data-diff="easy" onclick="selectDiff(this)">
+            <span class="diff-icon">🟢</span>Kolay<br><span style="font-size:.68rem;opacity:.7;">2 şık</span>
+          </button>
+          <button class="diff-btn selected" data-diff="normal" onclick="selectDiff(this)">
+            <span class="diff-icon">🟠</span>Normal<br><span style="font-size:.68rem;opacity:.7;">3 şık</span>
+          </button>
+          <button class="diff-btn" data-diff="hard" onclick="selectDiff(this)">
+            <span class="diff-icon">🔴</span>Zor<br><span style="font-size:.68rem;opacity:.7;">4 şık</span>
+          </button>
+        </div>
+
+        <!-- how to play accordion -->
+        <button class="accord-btn" onclick="toggleAccord(this)" style="margin-bottom:.5rem;">
+          <span>📖 Nasıl Oynanır?</span>
+          <span class="accord-arrow">▼</span>
+        </button>
+        <div class="accord-content" style="margin-bottom:1.2rem;">
+          <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-top:none;border-radius:0 0 12px 12px;padding:1rem;display:flex;flex-direction:column;gap:.6rem;">
+            <div style="display:flex;gap:.7rem;align-items:flex-start;">
+              <span style="font-size:1.2rem;flex-shrink:0;">1️⃣</span>
+              <div style="font-size:.82rem;color:#475569;line-height:1.5;"><b style="color:#1B2845;">Zar at</b> — Çıkan sayı kadar ilerle. Piyon adım adım yürür.</div>
+            </div>
+            <div style="display:flex;gap:.7rem;align-items:flex-start;">
+              <span style="font-size:1.2rem;flex-shrink:0;">2️⃣</span>
+              <div style="font-size:.82rem;color:#475569;line-height:1.5;"><b style="color:#1B2845;">Soruyu cevapla</b> — Görsele bak, İngilizce karşılığını seç.</div>
+            </div>
+            <div style="display:flex;gap:.7rem;align-items:flex-start;">
+              <span style="font-size:1.2rem;flex-shrink:0;">3️⃣</span>
+              <div style="font-size:.82rem;color:#475569;line-height:1.5;"><b style="color:#1B2845;">Özel karelere</b> dikkat et — bonus ilerleyebilir ya da tekrar zar atabilirsin!</div>
+            </div>
+            <div style="display:flex;gap:.7rem;align-items:flex-start;">
+              <span style="font-size:1.2rem;flex-shrink:0;">🏁</span>
+              <div style="font-size:.82rem;color:#475569;line-height:1.5;"><b style="color:#1B2845;">FINISH'e ilk ulaşan</b> takım oyunu kazanır!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- start button -->
+        <button onclick="showMenuNames()" style="
+          width:100%;background:linear-gradient(135deg,#FF6B35,#FF8C42);color:white;
+          border:none;border-radius:16px;padding:1.1rem;
+          font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;
+          cursor:pointer;box-shadow:0 6px 20px rgba(255,107,53,.45);
+          transition:all .2s;letter-spacing:.02em;margin-bottom:.6rem;">
+          🚀 Oyuna Başla
+        </button>
+        <a href="school-life.html" style="display:block;text-align:center;color:#94A3B8;font-size:.8rem;font-weight:600;text-decoration:none;padding:.3rem;transition:color .2s;">
+          ← School Life'a Dön
+        </a>
+      </div>
+    </div>
+
+    <!-- ── EKRAN 2: İSİM GİRİŞİ ── -->
+    <div id="menu-names" class="menu-screen" style="background:white;border-radius:28px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4);">
+
+      <!-- header -->
+      <div style="background:linear-gradient(135deg,#1B2845,#274472);padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:.3rem;">👥</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:white;">Takım İsimleri</div>
+        <div id="diff-badge" style="display:inline-block;background:rgba(255,107,53,.25);color:#FF8C42;border-radius:99px;padding:.2rem .8rem;font-size:.75rem;font-weight:700;margin-top:.4rem;">🟠 Normal Mod</div>
+      </div>
+
+      <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1.2rem;">
+
+        <!-- team A -->
+        <div>
+          <label style="font-size:.72rem;font-weight:700;color:#64748B;letter-spacing:.05em;display:block;margin-bottom:.5rem;">🔴 1. TAKIM</label>
+          <div style="background:#FFF8F5;border-radius:14px;padding:.85rem 1rem;border:2px solid #FFD0BB;display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem;">
+            <span id="icon-a" style="font-size:1.5rem;">🔴</span>
+            <input id="name-a" type="text" maxlength="15" placeholder="Takım adı..."
+              style="flex:1;border:none;background:transparent;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#1B2845;outline:none;"
+              onkeydown="if(event.key==='Enter')document.getElementById('name-b').focus()">
+          </div>
+          <div class="color-pick" id="colors-a">
+            <div class="color-dot picked" data-team="a" data-icon="🔴" style="background:#EF5350;" onclick="pickColor('a',this,'🔴')">🔴</div>
+            <div class="color-dot" data-team="a" data-icon="🟠" style="background:#FF9800;" onclick="pickColor('a',this,'🟠')">🟠</div>
+            <div class="color-dot" data-team="a" data-icon="🟡" style="background:#FDD835;" onclick="pickColor('a',this,'🟡')">🟡</div>
+            <div class="color-dot" data-team="a" data-icon="🟢" style="background:#43A047;" onclick="pickColor('a',this,'🟢')">🟢</div>
+            <div class="color-dot" data-team="a" data-icon="🟣" style="background:#8E24AA;" onclick="pickColor('a',this,'🟣')">🟣</div>
+          </div>
+        </div>
+
+        <!-- team B -->
+        <div>
+          <label style="font-size:.72rem;font-weight:700;color:#64748B;letter-spacing:.05em;display:block;margin-bottom:.5rem;">🔵 2. TAKIM</label>
+          <div style="background:#EEF4FF;border-radius:14px;padding:.85rem 1rem;border:2px solid #BFCFFF;display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem;">
+            <span id="icon-b" style="font-size:1.5rem;">🔵</span>
+            <input id="name-b" type="text" maxlength="15" placeholder="Takım adı..."
+              style="flex:1;border:none;background:transparent;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#1B2845;outline:none;"
+              onkeydown="if(event.key==='Enter')startWithNames()">
+          </div>
+          <div class="color-pick" id="colors-b">
+            <div class="color-dot" data-team="b" data-icon="🔴" style="background:#EF5350;" onclick="pickColor('b',this,'🔴')">🔴</div>
+            <div class="color-dot picked" data-team="b" data-icon="🔵" style="background:#1E88E5;" onclick="pickColor('b',this,'🔵')">🔵</div>
+            <div class="color-dot" data-team="b" data-icon="⚪" style="background:#90A4AE;" onclick="pickColor('b',this,'⚪')">⚪</div>
+            <div class="color-dot" data-team="b" data-icon="🟤" style="background:#6D4C41;" onclick="pickColor('b',this,'🟤')">🟤</div>
+            <div class="color-dot" data-team="b" data-icon="⚫" style="background:#424242;" onclick="pickColor('b',this,'⚫')">⚫</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:.8rem;">
+          <button onclick="showMenuMain()" style="
+            flex:1;background:transparent;color:#64748B;
+            border:2px solid #E2E8F0;border-radius:14px;padding:.85rem;
+            font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;cursor:pointer;">
+            ← Geri
+          </button>
+          <button onclick="startWithNames()" style="
+            flex:2;background:linear-gradient(135deg,#FF6B35,#FF8C42);color:white;
+            border:none;border-radius:14px;padding:.85rem;
+            font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;
+            cursor:pointer;box-shadow:0 4px 16px rgba(255,107,53,.4);">
+            🎲 Oyunu Başlat!
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PAUSE MODAL -->
+<div id="pause-modal" style="
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(15,25,50,.8);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:white;border-radius:24px;padding:2rem 1.8rem;max-width:360px;width:100%;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.4);">
+    <div style="font-size:3rem;margin-bottom:.4rem;">⏸</div>
+    <div style="font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#1B2845;margin-bottom:.3rem;">Oyun Duraklatıldı</div>
+    <div style="font-size:.85rem;color:#94A3B8;margin-bottom:1.8rem;">Ne yapmak istersiniz?</div>
+    <div style="display:flex;flex-direction:column;gap:.7rem;">
+      <button onclick="resumeGame()" style="
+        width:100%;background:linear-gradient(135deg,#FF6B35,#FF8C42);color:white;
+        border:none;border-radius:14px;padding:.9rem;
+        font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;
+        cursor:pointer;box-shadow:0 4px 16px rgba(255,107,53,.4);">
+        ▶ Devam Et
+      </button>
+      <button onclick="restartGame()" style="
+        width:100%;background:#F1F5F9;color:#1B2845;
+        border:2px solid #E2E8F0;border-radius:14px;padding:.85rem;
+        font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;cursor:pointer;">
+        🔄 Yeniden Başla
+      </button>
+      <button onclick="goToMenu()" style="
+        width:100%;background:#F1F5F9;color:#64748B;
+        border:2px solid #E2E8F0;border-radius:14px;padding:.85rem;
+        font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;cursor:pointer;">
+        🏠 Ana Menüye Dön
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <nav class="navbar">
   <a href="index.html" class="nav-brand">
     <div class="nav-logo">📚</div>
     ataberk<span>hoca</span>ingilizce
   </a>
-  <a href="school-life.html" class="nav-back">← School Life</a>
+  <div style="display:flex;align-items:center;gap:.8rem;">
+    <button onclick="pauseGame()" id="pause-btn" style="
+      background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.2);
+      border-radius:10px;padding:.4rem .9rem;font-family:'Baloo 2',cursive;
+      font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;display:none;">
+      ⏸ Duraklat
+    </button>
+    <a href="school-life.html" class="nav-back">← School Life</a>
+  </div>
 </nav>
 
 <div class="game-container">
@@ -255,7 +544,7 @@ body{
         <div class="cp-shadow"></div>
       </div>
       <div class="card-info">
-        <div class="card-name">🔴 Team A</div>
+        <div class="card-name" id="label-a">🔴 Team A</div>
         <div class="card-pos">📍 <span id="pos-a">START</span></div>
         <span class="card-badge badge-on-a" id="badge-a">Your turn! 🎲</span>
       </div>
@@ -271,14 +560,14 @@ body{
         <div class="cp-shadow"></div>
       </div>
       <div class="card-info">
-        <div class="card-name">🔵 Team B</div>
+        <div class="card-name" id="label-b">🔵 Team B</div>
         <div class="card-pos">📍 <span id="pos-b">START</span></div>
         <span class="card-badge badge-off" id="badge-b">Waiting...</span>
       </div>
     </div>
 
     <!-- TURN BAR -->
-    <div class="turn-bar" id="tbar">Turn: <b>Team A 🔴</b> — Roll the dice!</div>
+    <div class="turn-bar" id="tbar">Turn: <b id="tbar-name">Team A 🔴</b> — Roll the dice!</div>
 
     <!-- DICE -->
     <div class="dice-section">
@@ -366,6 +655,98 @@ function renderDice(n){
 const TYPE_CLASS={start:'c-start',finish:'c-finish',place:'c-place',person:'c-person',keepgoing:'c-keepgoing',welldone:'c-welldone',greatjob:'c-greatjob'};
 const JOKERS=new Set(['keepgoing','welldone','greatjob','start']);
 let pos=[0,0],turn=0,busy=false;
+let playerNames=['Team A','Team B'];
+let playerIcons=['🔴','🔵'];
+
+// ── MENU STATE ──
+var selectedDiff='normal';
+var iconA='🔴', iconB='🔵';
+
+// ── DIFFICULTY ──
+function selectDiff(btn){
+  document.querySelectorAll('.diff-btn').forEach(function(b){b.classList.remove('selected');});
+  btn.classList.add('selected');
+  selectedDiff=btn.dataset.diff;
+  var labels={easy:'🟢 Kolay Mod',normal:'🟠 Normal Mod',hard:'🔴 Zor Mod'};
+  var badge=document.getElementById('diff-badge');
+  if(badge) badge.textContent=labels[selectedDiff]||'🟠 Normal Mod';
+}
+
+// ── COLOR PICK ──
+function pickColor(team, el, icon){
+  var container=document.getElementById('colors-'+team);
+  container.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('picked');});
+  el.classList.add('picked');
+  if(team==='a'){ iconA=icon; document.getElementById('icon-a').textContent=icon; }
+  else { iconB=icon; document.getElementById('icon-b').textContent=icon; }
+}
+
+// ── ACCORDION ──
+function toggleAccord(btn){
+  var content=btn.nextElementSibling;
+  var arrow=btn.querySelector('.accord-arrow');
+  content.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// ── MENU NAVIGATION ──
+function showMenuMain(){
+  document.getElementById('menu-names').classList.remove('active');
+  document.getElementById('menu-main').classList.add('active');
+}
+function showMenuNames(){
+  var badge=document.getElementById('diff-badge');
+  var labels={easy:'🟢 Kolay Mod',normal:'🟠 Normal Mod',hard:'🔴 Zor Mod'};
+  if(badge) badge.textContent=labels[selectedDiff]||'🟠 Normal Mod';
+  document.getElementById('menu-main').classList.remove('active');
+  document.getElementById('menu-names').classList.add('active');
+  setTimeout(function(){document.getElementById('name-a').focus();},100);
+}
+function showHowToPlay(){
+  var m=document.getElementById('howtoplay-modal');
+  if(m) m.style.display='flex';
+}
+function closeHowToPlay(){
+  var m=document.getElementById('howtoplay-modal');
+  if(m) m.style.display='none';
+}
+
+// ── START GAME ──
+function startWithNames(){
+  const a=document.getElementById('name-a').value.trim()||'Team A';
+  const b=document.getElementById('name-b').value.trim()||'Team B';
+  playerNames=[a,b];
+  playerIcons=[iconA,iconB];
+  document.getElementById('label-a').textContent=iconA+' '+a;
+  document.getElementById('label-b').textContent=iconB+' '+b;
+  document.getElementById('tbar').innerHTML='Turn: <b>'+a+' '+iconA+'</b> — Roll the dice!';
+  document.getElementById('menu-overlay').style.display='none';
+  document.getElementById('pause-btn').style.display='block';
+}
+
+// ── PAUSE / RESUME ──
+function pauseGame(){
+  var m=document.getElementById('pause-modal');
+  m.style.display='flex';
+}
+function resumeGame(){
+  document.getElementById('pause-modal').style.display='none';
+}
+function restartGame(){
+  document.getElementById('pause-modal').style.display='none';
+  resetGame();
+}
+function goToMenu(){
+  document.getElementById('pause-modal').style.display='none';
+  document.getElementById('pause-btn').style.display='none';
+  pos=[0,0];turn=0;busy=false;
+  closeModal();hideToast();
+  setDisabled(false);
+  buildBoard();renderDice(1);updateCards();
+  document.getElementById('menu-main').classList.add('active');
+  document.getElementById('menu-names').classList.remove('active');
+  document.getElementById('menu-overlay').style.display='flex';
+}
 
 // ── BUILD BOARD ──
 function buildBoard(){
@@ -449,43 +830,62 @@ function roll(){
   },65);
 }
 
-// ── MOVE ──
+// ── MOVE (adım adım yürüme) ──
 function move(n){
-  let cur=pos[turn],steps=0;
-  while(steps<n && cur<CELLS.length-1){
-    cur++;
-    if(!JOKERS.has(CELLS[cur].type)) steps++;
-    if(CELLS[cur].type==='finish') break;
-  }
-  pos[turn]=cur;
-  renderTokens();
-  document.getElementById('tbar').innerHTML=`Landed on: <b>${CELLS[cur].name}</b>`;
+  const stepsToTake=n;
+  let stepsLeft=n;
+  walkStep(stepsLeft,stepsToTake);
+}
 
-  setTimeout(()=>{
-    const cell=CELLS[cur];
-    if(cell.type==='welldone'){
-      showToast('🎉 Well Done!\nMove 2 spaces forward!');
-      setTimeout(()=>{hideToast();move(2);},2000);
-    } else if(cell.type==='greatjob'){
-      showToast('🏆 Great Job!\nMove 3 spaces forward!');
-      setTimeout(()=>{hideToast();move(3);},2000);
-    } else if(cell.type==='keepgoing'){
-      showToast('⭐ Keep Going!\nRoll again!');
-      setTimeout(()=>{hideToast();unlockRoll();},2000);
-    } else if(cell.type==='finish'){
-      endGame();
-    } else if(cell.qKey){
-      showQ(cell.qKey);
+function walkStep(stepsLeft,totalSteps){
+  if(stepsLeft===0||pos[turn]>=CELLS.length-1){
+    // son kareye ulaşıldı — efekt ve aksiyon
+    const cur=pos[turn];
+    document.getElementById('tbar').innerHTML='Landed on: <b>'+CELLS[cur].name+'</b>';
+    setTimeout(()=>{
+      const cell=CELLS[cur];
+      if(cell.type==='welldone'){
+        showToast('🎉 Well Done!\nMove 2 spaces forward!');
+        setTimeout(()=>{hideToast();move(2);},2000);
+      } else if(cell.type==='greatjob'){
+        showToast('🏆 Great Job!\nMove 3 spaces forward!');
+        setTimeout(()=>{hideToast();move(3);},2000);
+      } else if(cell.type==='keepgoing'){
+        showToast('⭐ Keep Going!\nRoll again!');
+        setTimeout(()=>{hideToast();unlockRoll();},2000);
+      } else if(cell.type==='finish'){
+        endGame();
+      } else if(cell.qKey){
+        showQ(cell.qKey);
+      } else {
+        nextTurn();
+      }
+    },400);
+    return;
+  }
+
+  // bir adım ilerle
+  pos[turn]++;
+  // joker kareler adım saymaz
+  if(JOKERS.has(CELLS[pos[turn]].type)){
+    renderTokens();
+    setTimeout(()=>walkStep(stepsLeft,totalSteps),220);
+  } else {
+    renderTokens();
+    const remaining=stepsLeft-1;
+    if(pos[turn]>=CELLS.length-1){
+      setTimeout(()=>walkStep(0,totalSteps),220);
     } else {
-      nextTurn();
+      setTimeout(()=>walkStep(remaining,totalSteps),320);
     }
-  },600);
+  }
 }
 
 function unlockRoll(){
   busy=false;
   setDisabled(false);
-  document.getElementById('tbar').innerHTML=`<b>${turn===0?'Team A 🔴':'Team B 🔵'}</b> — Roll again!`;
+  const n=turn;
+  document.getElementById('tbar').innerHTML='<b>'+playerNames[n]+' '+playerIcons[n]+'</b> — Roll again!';
 }
 
 // ── QUESTION ──
@@ -498,10 +898,17 @@ function showQ(key){
   document.getElementById('mfb').textContent='';
   const opts=document.getElementById('mopts');
   opts.innerHTML='';
-  [...q.opts].sort(()=>Math.random()-.5).forEach(o=>{
+  // filter opts by difficulty
+  var optCount=selectedDiff==='easy'?2:selectedDiff==='normal'?3:4;
+  var shuffled=[...q.opts].sort(()=>Math.random()-.5);
+  // always include correct answer
+  var filtered=[q.answer];
+  shuffled.forEach(function(o){if(o!==q.answer&&filtered.length<optCount)filtered.push(o);});
+  filtered.sort(()=>Math.random()-.5);
+  filtered.forEach(function(o){
     const b=document.createElement('button');
     b.className='mopt';
-    b.innerHTML=q.type==='what'?`It is a<br><b>${o}</b>`:`He / She is a<br><b>${o}</b>`;
+    b.innerHTML=q.type==='what'?'It is a<br><b>'+o+'</b>':'He / She is a<br><b>'+o+'</b>';
     b.onclick=()=>checkAns(b,o,q.answer,opts);
     opts.appendChild(b);
   });
@@ -538,16 +945,17 @@ function nextTurn(){
   turn=turn===0?1:0;
   busy=false;
   setDisabled(false);
-  document.getElementById('tbar').innerHTML=`Turn: <b>${turn===0?'Team A 🔴':'Team B 🔵'}</b> — Roll the dice!`;
+  const n=turn;
+  document.getElementById('tbar').innerHTML='Turn: <b>'+playerNames[n]+' '+playerIcons[n]+'</b> — Roll the dice!';
   updateCards();
 }
 
 function endGame(){
-  const winner=turn===0?'🔴 Team A':'🔵 Team B';
+  const winner=playerIcons[turn]+' '+playerNames[turn];
   document.getElementById('mbadge').textContent='🎉 Game Over!';
   document.getElementById('memoji').textContent='🏆';
-  document.getElementById('mhint').textContent=`${winner} reached FINISH first!\nCongratulations!`;
-  document.getElementById('mopts').innerHTML=`<button class="mopt correct" onclick="resetGame()" style="grid-column:span 2;font-size:15px;padding:14px">🔄 Play Again</button>`;
+  document.getElementById('mhint').textContent=winner+' reached FINISH first!\nCongratulations!';
+  document.getElementById('mopts').innerHTML='<button class="mopt correct" onclick="resetGame()" style="grid-column:span 2;font-size:15px;padding:14px">🔄 Play Again</button>';
   document.getElementById('mfb').textContent='';
   document.getElementById('modal').classList.add('show');
 }
@@ -557,7 +965,8 @@ function resetGame(){
   closeModal();hideToast();
   setDisabled(false);
   document.getElementById('dres').textContent='';
-  document.getElementById('tbar').innerHTML='Turn: <b>Team A 🔴</b> — Roll the dice!';
+  document.getElementById('tbar').innerHTML='Turn: <b>'+playerNames[0]+' '+playerIcons[0]+'</b> — Roll the dice!';
+  document.getElementById('pause-btn').style.display='block';
   updateCards();
   buildBoard();
   renderDice(1);
