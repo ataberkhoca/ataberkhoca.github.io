@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Recall – School Life | Ataberk Hoca</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1a2e4a; --orange:#f4831f; --cream:#fdf6ec; --white:#ffffff;
+    --green:#27ae60; --green-light:#eafaf1; --red:#e74c3c; --red-light:#fdecea;
+    --card-shadow:0 4px 18px rgba(26,46,74,0.13);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Quicksand',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;display:flex;flex-direction:column;}
+
+  nav{background:var(--navy);padding:.75rem 1.5rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+  nav a{color:rgba(255,255,255,.7);text-decoration:none;font-family:'Baloo 2',sans-serif;font-size:.85rem;transition:color .2s;}
+  nav a:hover{color:var(--orange);}
+  nav .sep{color:rgba(255,255,255,.35);font-size:.8rem;}
+  nav .current{color:var(--orange);font-weight:700;}
+
+  header{background:linear-gradient(135deg,var(--navy) 0%,#2c4a72 100%);color:var(--white);text-align:center;padding:2rem 1rem 1.5rem;}
+  header h1{font-family:'Baloo 2',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;margin-bottom:.3rem;}
+  header p{font-size:1rem;opacity:.85;}
+
+  main{flex:1;max-width:680px;width:100%;margin:0 auto;padding:2rem 1rem 3rem;}
+  .screen{display:none;} .screen.active{display:block;}
+
+  /* ── DIFFICULTY ── */
+  .diff-title{font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:700;text-align:center;margin-bottom:1.2rem;}
+  .diff-legend{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:1.5rem;font-size:.78rem;color:#666;}
+  .diff-legend span{display:flex;align-items:center;gap:.3rem;}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  .dot-s{background:var(--green);} .dot-m{background:var(--orange);} .dot-e{background:var(--navy);}
+  .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+  .diff-card{background:var(--white);border:3px solid transparent;border-radius:16px;padding:1.2rem .8rem;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--card-shadow);}
+  .diff-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(26,46,74,.18);}
+  .diff-card.selected{border-color:var(--orange);background:#fff8f2;}
+  .diff-card .diff-emoji{font-size:2rem;margin-bottom:.4rem;}
+  .diff-card .diff-name{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:.25rem;}
+  .diff-card .diff-desc{font-size:.75rem;color:#666;line-height:1.3;}
+  .btn-start{display:block;width:100%;max-width:280px;margin:0 auto;background:var(--orange);color:var(--white);border:none;border-radius:14px;padding:.9rem 1.5rem;font-family:'Baloo 2',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(244,131,31,.35);}
+  .btn-start:hover{background:#e07318;transform:translateY(-2px);}
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap{background:#e0d8ce;border-radius:99px;height:10px;margin-bottom:.5rem;overflow:hidden;}
+  .progress-bar-fill{height:100%;background:var(--orange);border-radius:99px;transition:width .4s ease;}
+  .progress-label{text-align:right;font-size:.78rem;color:#888;margin-bottom:1.5rem;}
+
+  /* ── FLASH CARD ── */
+  .flash-card{
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:var(--card-shadow);
+    padding:1.8rem 1.5rem 1.5rem;
+    text-align:center;
+    margin-bottom:1.2rem;
+    animation:cardIn .35s ease;
+    border-top:5px solid var(--navy);
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  .flash-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#bbb;font-weight:700;margin-bottom:.5rem;}
+  .card-emoji{font-size:5.5rem;display:block;margin:.3rem 0 .8rem;animation:emojiBounce .5s ease;}
+  @keyframes emojiBounce{0%{transform:scale(.7)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+  .card-hint{font-size:.85rem;color:#aaa;margin-bottom:1rem;min-height:1.2em;}
+  .card-hint strong{color:var(--navy);}
+
+  /* lives */
+  .lives-row{display:flex;justify-content:center;gap:.4rem;margin-bottom:.7rem;}
+  .life-dot{width:13px;height:13px;border-radius:50%;background:var(--orange);transition:background .3s;}
+  .life-dot.lost{background:#ddd;}
+
+  /* feedback */
+  .feedback-msg{text-align:center;font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;min-height:1.4em;margin-bottom:.6rem;}
+  .feedback-msg.correct{color:var(--green);} .feedback-msg.wrong{color:var(--red);}
+
+  /* ── LETTER BOXES (the answer display) ── */
+  .letter-boxes{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-bottom:1.2rem;min-height:52px;}
+  .l-box{
+    width:42px;height:42px;
+    border-bottom:3px solid var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:700;
+    color:var(--navy);
+    transition:all .15s;
+    cursor:pointer;
+    position:relative;
+  }
+  .l-box.filled{border-bottom-color:var(--orange);color:var(--orange);}
+  .l-box.filled:hover{border-bottom-color:var(--red);color:var(--red);}
+  .l-box.correct{border-bottom-color:var(--green)!important;color:var(--green)!important;animation:boxGlow .4s ease;}
+  @keyframes boxGlow{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .l-box.shake{animation:boxShake .4s ease;}
+  @keyframes boxShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* ── A-Z KEYBOARD ── */
+  .az-keyboard{margin-bottom:1rem;}
+  .az-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;margin-bottom:.35rem;}
+  .az-key{
+    width:38px;height:38px;
+    background:var(--navy);color:var(--white);
+    border:none;border-radius:8px;
+    font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;
+    cursor:pointer;transition:all .12s;
+    box-shadow:0 3px 0 #0d1e33;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .az-key:hover{background:var(--orange);transform:translateY(-2px);box-shadow:0 5px 0 #b35e10;}
+  .az-key:active{transform:translateY(1px);box-shadow:0 1px 0 #0d1e33;}
+  .az-key.used-key{background:#ccc;color:#999;box-shadow:0 1px 0 #bbb;cursor:default;pointer-events:none;}
+
+  /* backspace key */
+  .az-key.backspace{width:56px;background:#e8eef4;color:var(--navy);box-shadow:0 3px 0 #c5d0db;}
+  .az-key.backspace:hover{background:#d0dce8;transform:translateY(-2px);}
+
+  /* ── EXPANSION: system keyboard input ── */
+  .sys-keyboard-wrap{margin-bottom:1rem;}
+  .sys-input{
+    width:100%;padding:.75rem 1rem;
+    font-family:'Baloo 2',sans-serif;font-size:1.5rem;font-weight:700;
+    text-align:center;border:3px solid #ddd;border-radius:14px;
+    outline:none;letter-spacing:.2em;text-transform:uppercase;
+    transition:border-color .2s;background:var(--white);
+  }
+  .sys-input:focus{border-color:var(--navy);}
+  .sys-input.correct-inp{border-color:var(--green);background:var(--green-light);}
+  .sys-input.wrong-inp{border-color:var(--red);background:var(--red-light);animation:inputShake .4s ease;}
+  @keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
+
+  .btn-check{width:100%;background:var(--navy);color:var(--white);border:none;border-radius:12px;padding:.75rem;font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:.6rem;}
+  .btn-check:hover{background:var(--orange);}
+  .btn-skip{background:none;border:none;color:#bbb;font-size:.8rem;cursor:pointer;text-decoration:underline;font-family:'Quicksand',sans-serif;display:block;margin:0 auto;transition:color .2s;}
+  .btn-skip:hover{color:var(--red);}
+
+  /* ── RESULT ── */
+  .result-card{background:var(--white);border-radius:24px;box-shadow:var(--card-shadow);padding:2.5rem 1.5rem;text-align:center;}
+  .result-trophy{font-size:4rem;margin-bottom:.5rem;}
+  .result-title{font-family:'Baloo 2',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:.3rem;}
+  .result-score{font-size:1rem;color:#666;margin-bottom:1.5rem;}
+  .emoti-title{font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.8rem;color:var(--navy);}
+  .emoti-row{display:flex;justify-content:center;gap:1rem;margin-bottom:1.5rem;}
+  .emoti-btn{font-size:2.2rem;background:none;border:3px solid transparent;border-radius:50%;padding:.3rem;cursor:pointer;transition:all .2s;line-height:1;}
+  .emoti-btn:hover{transform:scale(1.2);}
+  .emoti-btn.chosen{border-color:var(--orange);background:#fff8f2;transform:scale(1.2);}
+  .emoti-feedback{font-size:.9rem;color:var(--navy);min-height:1.3em;margin-bottom:1.5rem;font-weight:600;}
+  .btn-again{display:inline-block;background:var(--orange);color:var(--white);border:none;border-radius:12px;padding:.75rem 2rem;font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;margin:0 .4rem .5rem;transition:all .2s;box-shadow:0 4px 12px rgba(244,131,31,.3);}
+  .btn-again:hover{background:#e07318;transform:translateY(-2px);}
+  .btn-hub{display:inline-block;background:var(--navy);color:var(--white);border:none;border-radius:12px;padding:.75rem 2rem;font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;margin:0 .4rem .5rem;transition:all .2s;text-decoration:none;}
+  .btn-hub:hover{background:#2c4a72;transform:translateY(-2px);}
+
+  footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:1rem;font-size:.8rem;}
+  #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;}
+
+  @media(max-width:480px){
+    .diff-grid{grid-template-columns:1fr;}
+    .az-key{width:32px;height:32px;font-size:.85rem;}
+    .az-key.backspace{width:48px;}
+    .l-box{width:36px;height:36px;font-size:1.1rem;}
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<nav>
+  <a href="../../index.html">🏠 Ana Sayfa</a><span class="sep">›</span>
+  <a href="../../2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+  <a href="school-life.html">Tema 1: School Life</a><span class="sep">›</span>
+  <span class="current">Word Recall</span>
+</nav>
+
+<header>
+  <h1>🧠 Word Recall</h1>
+  <p>Look at the picture — can you remember the word?</p>
+</header>
+
+<main>
+  <!-- DIFFICULTY -->
+  <div id="scr-diff" class="screen active">
+    <p class="diff-title">Choose your level</p>
+    <div class="diff-legend">
+      <span><span class="dot dot-s"></span> Supporting</span>
+      <span><span class="dot dot-m"></span> Standard</span>
+      <span><span class="dot dot-e"></span> Expansion</span>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-card selected" data-d="supporting" onclick="pickDiff(this)">
+        <div class="diff-emoji">🟢</div>
+        <div class="diff-name">Supporting</div>
+        <div class="diff-desc">Tap letters from the alphabet. Letter count shown.</div>
+      </div>
+      <div class="diff-card" data-d="standard" onclick="pickDiff(this)">
+        <div class="diff-emoji">🟠</div>
+        <div class="diff-name">Standard</div>
+        <div class="diff-desc">Tap letters from the alphabet. No count hint.</div>
+      </div>
+      <div class="diff-card" data-d="expansion" onclick="pickDiff(this)">
+        <div class="diff-emoji">🔵</div>
+        <div class="diff-name">Expansion</div>
+        <div class="diff-desc">Type the word yourself. No alphabet shown.</div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startGame()">▶ Start!</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="scr-game" class="screen">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="prog-label">1 / 10</div>
+
+    <div class="flash-card" id="flash-card">
+      <div class="flash-label">What is this?</div>
+      <span class="card-emoji" id="card-emoji">🏫</span>
+      <div class="card-hint" id="card-hint"></div>
+      <div class="lives-row" id="lives-row"></div>
+      <div class="feedback-msg" id="feedback-msg"></div>
+
+      <!-- letter boxes (always shown) -->
+      <div class="letter-boxes" id="letter-boxes"></div>
+
+      <!-- A-Z keyboard (Supporting + Standard) -->
+      <div class="az-keyboard" id="az-keyboard"></div>
+
+      <!-- System keyboard (Expansion) -->
+      <div class="sys-keyboard-wrap" id="sys-keyboard-wrap" style="display:none">
+        <input class="sys-input" id="sys-input" type="text" maxlength="20"
+               autocomplete="off" autocorrect="off" spellcheck="false"
+               placeholder="Type here…"
+               oninput="this.value=this.value.toUpperCase()"
+               onkeydown="if(event.key==='Enter')checkExpansion()">
+      </div>
+
+      <button class="btn-check" id="btn-check" onclick="checkAnswer()" style="display:none">✔ Check</button>
+      <button class="btn-skip" onclick="skipWord()">Skip this word</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="scr-result" class="screen">
+    <div class="result-card">
+      <div class="result-trophy" id="result-trophy">🏆</div>
+      <div class="result-title" id="result-title">Well done!</div>
+      <div class="result-score" id="result-score"></div>
+      <div class="emoti-title">How did you feel about this activity?</div>
+      <div class="emoti-row">
+        <button class="emoti-btn" onclick="pickEmoti(this,'😄','Great! You remembered so many words!')" title="Great">😄</button>
+        <button class="emoti-btn" onclick="pickEmoti(this,'🙂','Good job! Keep practising!')" title="Good">🙂</button>
+        <button class="emoti-btn" onclick="pickEmoti(this,'😐','That is okay. Try again!')" title="Okay">😐</button>
+        <button class="emoti-btn" onclick="pickEmoti(this,'😕','Do not worry. You will get better!')" title="Hard">😕</button>
+      </div>
+      <div class="emoti-feedback" id="emoti-feedback"></div>
+      <button class="btn-again" onclick="resetToMenu()">🔄 Play Again</button>
+      <a class="btn-hub" href="school-life.html">🏠 Back to Theme</a>
+    </div>
+  </div>
+</main>
+
+<footer><p>Ataberk Hoca · 2. Sınıf · Tema 1: School Life · Word Recall</p></footer>
+
+<script>
+var WORDS=[
+  // places
+  {word:'CLASSROOM',   emoji:'📖', tr:'sınıf'},
+  {word:'LIBRARY',     emoji:'📚', tr:'kütüphane'},
+  {word:'PLAYGROUND',  emoji:'🛝', tr:'oyun alanı'},
+  {word:'CANTEEN',     emoji:'🍽️', tr:'kantin'},
+  {word:'SPORTS HALL', emoji:'🏃', tr:'spor salonu'},
+  {word:'GARDEN',      emoji:'🌳', tr:'bahçe'},
+  {word:'SCHOOL',      emoji:'🏫', tr:'okul'},
+  {word:'LUNCH HALL',  emoji:'🥗', tr:'yemekhane'},
+  {word:'PLACE',       emoji:'📍', tr:'yer'},
+  // people
+  {word:'TEACHER',     emoji:'👩‍🏫', tr:'öğretmen'},
+  {word:'PUPIL',       emoji:'🧒', tr:'öğrenci'},
+  {word:'FRIEND',      emoji:'🤝', tr:'arkadaş'},
+  {word:'HEADMASTER',  emoji:'👨‍💼', tr:'erkek okul müdürü'},
+  {word:'HEADMISTRESS',emoji:'👩‍💼', tr:'kadın okul müdürü'},
+  {word:'BOY',         emoji:'👦', tr:'erkek çocuk'},
+  {word:'GIRL',        emoji:'👧', tr:'kız çocuk'},
+  {word:'KID',         emoji:'😊', tr:'çocuk'},
+  {word:'PEOPLE',      emoji:'👥', tr:'insanlar'},
+  // actions
+  {word:'CLAP',        emoji:'👏', tr:'alkışlamak'},
+  {word:'JUMP',        emoji:'🦘', tr:'zıplamak'},
+  {word:'SING',        emoji:'🎵', tr:'şarkı söylemek'},
+  {word:'WAIT',        emoji:'✋', tr:'beklemek'},
+  {word:'FINISH',      emoji:'🏁', tr:'bitirmek'},
+  {word:'START',       emoji:'🚦', tr:'başlamak'},
+  // greetings / expressions
+  {word:'HELLO',       emoji:'👋', tr:'merhaba'},
+  {word:'FINE',        emoji:'😊', tr:'iyi'},
+  {word:'NAME',        emoji:'🏷️', tr:'isim'},
+  {word:'BIG',         emoji:'🐘', tr:'büyük'},
+  {word:'THANK YOU',   emoji:'🙏', tr:'teşekkür ederim'},
+  // days
+  {word:'MONDAY',      emoji:'📅', tr:'Pazartesi'},
+  {word:'TUESDAY',     emoji:'📅', tr:'Salı'},
+  {word:'WEDNESDAY',   emoji:'📅', tr:'Çarşamba'},
+  {word:'THURSDAY',    emoji:'📅', tr:'Perşembe'},
+  {word:'FRIDAY',      emoji:'🎉', tr:'Cuma'},
+  {word:'SATURDAY',    emoji:'📅', tr:'Cumartesi'},
+  {word:'SUNDAY',      emoji:'📅', tr:'Pazar'},
+  {word:'DAY',         emoji:'☀️', tr:'gün'}
+];
+
+var AZ_ROWS=[
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L'],
+  ['Z','X','C','V','B','N','M','⌫']
+];
+
+var QUEUE_SIZE=10;
+var diff='supporting',queue=[],currentIdx=0,currentWord='',currentEmoji='';
+var typed=[],lives=3,score=0,wordDone=false;
+
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');}
+function pickDiff(el){document.querySelectorAll('.diff-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');diff=el.dataset.d;}
+
+function startGame(){
+  queue=shuffle(WORDS).slice(0,QUEUE_SIZE);
+  currentIdx=0;score=0;showScreen('scr-game');loadWord();
+}
+
+function loadWord(){
+  var w=queue[currentIdx];
+  currentWord=w.word.replace(/ /g,'');
+  currentEmoji=w.emoji;
+  typed=[];lives=3;wordDone=false;
+
+  updateProgress();renderLives();clearFeedback();
+
+  document.getElementById('card-emoji').textContent=currentEmoji;
+
+  var hint=document.getElementById('card-hint');
+  if(diff==='supporting'){
+    hint.innerHTML='🇹🇷 <strong>'+w.tr+'</strong> &nbsp;·&nbsp; Starts with <strong>'+currentWord[0]+'</strong>';
+  } else if(diff==='standard'){
+    hint.innerHTML='🇹🇷 <strong>'+w.tr+'</strong>';
+  } else {
+    hint.innerHTML='';
+  }
+
+  // animate card
+  var card=document.getElementById('flash-card');
+  card.style.animation='none';void card.offsetWidth;card.style.animation='cardIn .35s ease';
+
+  if(diff==='expansion'){
+    document.getElementById('az-keyboard').style.display='none';
+    document.getElementById('sys-keyboard-wrap').style.display='block';
+    document.getElementById('btn-check').style.display='block';
+    var inp=document.getElementById('sys-input');
+    inp.value='';inp.className='sys-input';inp.disabled=false;
+    setTimeout(function(){inp.focus();},100);
+    buildLetterBoxes(false);
+  } else {
+    document.getElementById('az-keyboard').style.display='block';
+    document.getElementById('sys-keyboard-wrap').style.display='none';
+    document.getElementById('btn-check').style.display='none';
+    buildLetterBoxes(true);
+    buildKeyboard();
+  }
+}
+
+/* ── LETTER BOXES ── */
+function buildLetterBoxes(empty){
+  var boxes=document.getElementById('letter-boxes');
+  boxes.innerHTML='';
+  for(var i=0;i<currentWord.length;i++){
+    var box=document.createElement('div');
+    box.className='l-box';
+    box.dataset.pos=i;
+    if(!empty) box.textContent='_';
+    boxes.appendChild(box);
+  }
+}
+
+function updateBoxes(){
+  var boxes=document.getElementById('letter-boxes').children;
+  for(var i=0;i<currentWord.length;i++){
+    if(i<typed.length){
+      boxes[i].textContent=typed[i];
+      boxes[i].classList.add('filled');
+    } else {
+      boxes[i].textContent='';
+      boxes[i].classList.remove('filled','correct');
+    }
+  }
+}
+
+/* ── A-Z KEYBOARD ── */
+function buildKeyboard(){
+  var kb=document.getElementById('az-keyboard');
+  kb.innerHTML='';
+  AZ_ROWS.forEach(function(row){
+    var rowDiv=document.createElement('div');
+    rowDiv.className='az-row';
+    row.forEach(function(k){
+      var btn=document.createElement('button');
+      btn.className='az-key'+(k==='⌫'?' backspace':'');
+      btn.textContent=k;
+      btn.dataset.key=k;
+      btn.addEventListener('click',function(){onKey(k);});
+      rowDiv.appendChild(btn);
+    });
+    kb.appendChild(rowDiv);
+  });
+}
+
+function onKey(k){
+  if(wordDone) return;
+  if(k==='⌫'){
+    if(typed.length>0){typed.pop();updateBoxes();clearFeedback();}
+    return;
+  }
+  if(typed.length>=currentWord.length) return;
+
+  typed.push(k);
+  var pos=typed.length-1;
+  var boxes=document.getElementById('letter-boxes').children;
+
+  // instant correct/wrong per letter
+  if(k===currentWord[pos]){
+    boxes[pos].textContent=k;
+    boxes[pos].classList.add('filled','correct');
+    // disable this key
+    markKeyUsed(k, pos);
+    clearFeedback();
+    // check if word complete
+    if(typed.length===currentWord.length){
+      setTimeout(onCorrect,350);
+    }
+  } else {
+    // wrong letter — show briefly then clear
+    boxes[pos].textContent=k;
+    boxes[pos].classList.add('filled','shake');
+    setTimeout(function(){
+      boxes[pos].textContent='';
+      boxes[pos].classList.remove('filled','shake');
+      typed.pop();
+    },450);
+    lives--;renderLives();
+    if(lives<=0){
+      showFeedback('wrong','The word is: '+queue[currentIdx].word);
+      wordDone=true;
+      setTimeout(nextWord,1800);
+    } else {
+      showFeedback('wrong','Not quite! '+lives+' more '+(lives===1?'try':'tries')+' left.');
+      setTimeout(clearFeedback,1100);
+    }
+  }
+}
+
+function markKeyUsed(letter, pos){
+  // only mark as used if all instances of this letter have been placed
+  var remaining=0;
+  for(var i=pos+1;i<currentWord.length;i++){if(currentWord[i]===letter)remaining++;}
+  if(remaining===0){
+    var keys=document.querySelectorAll('.az-key[data-key="'+letter+'"]');
+    keys.forEach(function(k){k.classList.add('used-key');});
+  }
+}
+
+/* ── EXPANSION CHECK ── */
+function checkExpansion(){
+  if(wordDone)return;
+  var val=document.getElementById('sys-input').value.trim().toUpperCase().replace(/ /g,'');
+  if(val===currentWord){
+    // fill boxes green
+    var boxes=document.getElementById('letter-boxes').children;
+    for(var i=0;i<currentWord.length;i++){
+      boxes[i].textContent=currentWord[i];
+      boxes[i].classList.add('filled','correct');
+    }
+    document.getElementById('sys-input').className='sys-input correct-inp';
+    document.getElementById('sys-input').disabled=true;
+    setTimeout(onCorrect,400);
+  } else {
+    document.getElementById('sys-input').className='sys-input wrong-inp';
+    lives--;renderLives();
+    setTimeout(function(){
+      document.getElementById('sys-input').className='sys-input';
+      document.getElementById('sys-input').value='';
+    },500);
+    if(lives<=0){
+      showFeedback('wrong','The word is: '+queue[currentIdx].word);
+      document.getElementById('btn-check').disabled=true;
+      wordDone=true;
+      setTimeout(nextWord,1800);
+    } else {
+      showFeedback('wrong','Not quite! '+lives+' more '+(lives===1?'try':'tries')+' left.');
+      setTimeout(clearFeedback,1100);
+    }
+  }
+}
+
+function checkAnswer(){checkExpansion();}
+
+function onCorrect(){
+  score++;wordDone=true;
+  showFeedback('correct','⭐ Correct!');
+  setTimeout(nextWord,900);
+}
+
+function skipWord(){
+  showFeedback('wrong','The word was: '+queue[currentIdx].word);
+  wordDone=true;
+  setTimeout(nextWord,1300);
+}
+
+function nextWord(){
+  currentIdx++;
+  if(currentIdx>=queue.length)showResult();
+  else loadWord();
+}
+
+function updateProgress(){
+  document.getElementById('prog-fill').style.width=((currentIdx/queue.length)*100)+'%';
+  document.getElementById('prog-label').textContent=(currentIdx+1)+' / '+queue.length;
+}
+function renderLives(){
+  var row=document.getElementById('lives-row');row.innerHTML='';
+  for(var i=0;i<3;i++){var d=document.createElement('div');d.className='life-dot'+(i>=lives?' lost':'');row.appendChild(d);}
+}
+function showFeedback(t,m){var el=document.getElementById('feedback-msg');el.textContent=m;el.className='feedback-msg '+t;}
+function clearFeedback(){var el=document.getElementById('feedback-msg');el.textContent='';el.className='feedback-msg';}
+
+function showResult(){
+  showScreen('scr-result');
+  var pct=score/queue.length;
+  document.getElementById('result-trophy').textContent=pct>=.8?'🏆':pct>=.5?'⭐':'💪';
+  document.getElementById('result-title').textContent=pct>=.8?'Amazing Memory!':pct>=.5?'Well Done!':'Keep Practising!';
+  document.getElementById('result-score').textContent='You got '+score+' out of '+queue.length+' words correct!';
+  document.getElementById('emoti-feedback').textContent='';
+  document.querySelectorAll('.emoti-btn').forEach(function(b){b.classList.remove('chosen');});
+  if(pct>=.8)launchConfetti();
+}
+function pickEmoti(btn,emoji,msg){document.querySelectorAll('.emoti-btn').forEach(function(b){b.classList.remove('chosen');});btn.classList.add('chosen');document.getElementById('emoti-feedback').textContent=emoji+' '+msg;}
+function resetToMenu(){showScreen('scr-diff');}
+
+function launchConfetti(){
+  var canvas=document.getElementById('confetti-canvas'),ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  var pieces=[],colors=['#f4831f','#1a2e4a','#27ae60','#f1c40f','#e74c3c','#9b59b6'];
+  for(var i=0;i<120;i++)pieces.push({x:Math.random()*canvas.width,y:-10-Math.random()*200,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,w:8+Math.random()*8,h:4+Math.random()*4,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  var frames=0;
+  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(function(p){ctx.save();ctx.translate(p.x+p.w/2,p.y+p.h/2);ctx.rotate(p.rot);ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.x+=p.vx;p.y+=p.vy;p.rot+=p.rv;});frames++;if(frames<120)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}
+  draw();
+}
+</script>
+</body>
+</html>
