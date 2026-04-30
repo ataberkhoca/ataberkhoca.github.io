@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Quiz — School Life | Ataberk Hoca</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:        #1B2845;
+  --navy-light:  #274472;
+  --orange:      #FF6B35;
+  --orange-glow: #FF8C5A;
+  --yellow:      #FFC857;
+  --yellow-hl:   #FFF3C4;
+  --teal:        #2EC4B6;
+  --teal-light:  #CBF3F0;
+  --cream:       #FFF9F0;
+  --purple:      #8B5CF6;
+  --purple-light:#EDE9FE;
+  --green:       #3CB371;
+  --white:       #FFFFFF;
+  --gray-100:    #F7F7F7;
+  --gray-200:    #E8E8E8;
+  --gray-400:    #AAAAAA;
+  --gray-500:    #888888;
+  --gray-700:    #444444;
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --shadow-soft: 0 4px 20px rgba(27,40,69,0.08);
+  --shadow-md:   0 8px 30px rgba(27,40,69,0.12);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--cream);
+  color: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,.brand { font-family:'Baloo 2', cursive; }
+
+/* ── SCREENS ── */
+.screen { display:none; width:100%; max-width:720px; padding:20px; animation: fadeUp .4s ease; }
+.screen.active { display:flex; flex-direction:column; align-items:center; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  background: var(--navy); padding: 0 24px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18); transition: box-shadow .3s;
+}
+.navbar.scrolled { box-shadow: 0 4px 20px rgba(27,40,69,.18); }
+.nav-brand {
+  font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 1.1rem;
+  color: white; text-decoration: none; display: flex; align-items: center; gap: 8px;
+}
+.nav-brand em { color: var(--orange); font-style: normal; }
+.nav-back {
+  font-size: .82rem; font-weight: 700; color: rgba(255,255,255,.75);
+  text-decoration: none; display: flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,.2);
+  transition: all .2s;
+}
+.nav-back:hover { background: rgba(255,255,255,.12); color: white; border-color: rgba(255,255,255,.4); }
+
+/* ════════════════════════════════
+   LEVEL SELECT
+════════════════════════════════ */
+#screen-level { gap:20px; padding-top:36px; }
+
+.level-hero { font-size:3.8rem; animation:floatBounce 3s ease-in-out infinite; }
+@keyframes floatBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.level-title { font-size:2rem; font-weight:800; color:var(--navy); text-align:center; line-height:1.2; }
+.level-title span { color:var(--orange); }
+.level-sub { font-size:.92rem; color:var(--gray-500); font-weight:600; text-align:center; line-height:1.5; }
+
+.level-cards { display:flex; flex-direction:column; gap:14px; width:100%; margin-top:8px; }
+.level-card {
+  background:white; border-radius:var(--radius-md); padding:18px 22px;
+  display:flex; align-items:center; gap:14px;
+  border:2px solid var(--gray-200); cursor:pointer;
+  transition:all .22s ease; box-shadow:var(--shadow-soft);
+  -webkit-tap-highlight-color:transparent; user-select:none;
+}
+.level-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:transparent; }
+.level-card.g:hover { box-shadow:0 8px 28px rgba(60,179,113,.25); }
+.level-card.b:hover { box-shadow:0 8px 28px rgba(46,196,182,.25); }
+.level-card.p:hover { box-shadow:0 8px 28px rgba(139,92,246,.25); }
+
+.lc-dot { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0; }
+.lc-dot.g { background:rgba(60,179,113,.12); }
+.lc-dot.b { background:rgba(46,196,182,.12); }
+.lc-dot.p { background:rgba(139,92,246,.12); }
+.lc-info { flex:1; }
+.lc-name { font-family:'Baloo 2',cursive; font-size:1.05rem; font-weight:800; color:var(--navy); margin-bottom:2px; }
+.lc-desc { font-size:.78rem; color:var(--gray-500); font-weight:600; line-height:1.4; }
+.lc-arrow { font-size:1.2rem; color:var(--gray-200); transition:all .2s; }
+.level-card:hover .lc-arrow { color:var(--orange); transform:translateX(4px); }
+
+/* ════════════════════════════════
+   GAME SCREEN
+════════════════════════════════ */
+#screen-game { gap:0; padding-top:16px; }
+
+/* story progress dots */
+.story-dots { display:flex; gap:10px; align-items:center; margin-bottom:18px; }
+.story-dot {
+  width:32px; height:32px; border-radius:50%;
+  font-family:'Baloo 2',cursive; font-size:.78rem; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .3s ease;
+}
+.story-dot.done    { background:var(--green);  color:white; }
+.story-dot.active  { background:var(--orange); color:white; box-shadow:0 2px 10px rgba(255,107,53,.35); }
+.story-dot.inactive{ background:var(--gray-200); color:var(--gray-500); }
+.story-dot-line { flex:1; height:2px; background:var(--gray-200); border-radius:99px; overflow:hidden; position:relative; }
+.story-dot-fill { position:absolute; top:0; left:0; height:100%; background:var(--green); width:0%; transition:width .5s ease; }
+
+/* meta row */
+.game-meta { width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.turn-badge { font-family:'Baloo 2',cursive; font-size:.82rem; font-weight:700; background:var(--navy); color:white; padding:4px 14px; border-radius:50px; }
+.score-badge { font-family:'Baloo 2',cursive; font-size:.82rem; font-weight:700; background:white; color:var(--orange); padding:4px 14px; border-radius:50px; border:2px solid var(--orange); }
+.lvl-badge { font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:50px; }
+.lvl-badge.g { background:rgba(60,179,113,.1);  color:var(--green);  }
+.lvl-badge.b { background:rgba(46,196,182,.1);  color:var(--teal);   }
+.lvl-badge.p { background:rgba(139,92,246,.1);  color:var(--purple); }
+
+/* ── story card ── */
+.story-card {
+  width:100%; background:white; border-radius:var(--radius-lg);
+  padding:22px 22px 20px; margin-bottom:16px;
+  box-shadow:var(--shadow-md);
+  border-left:5px solid var(--orange);
+  transition:border-color .4s;
+}
+.story-card.teal   { border-left-color:var(--teal);   }
+.story-card.purple { border-left-color:var(--purple); }
+
+/* cast panel */
+.cast-panel { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.cast-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:.75rem; font-weight:700; padding:4px 12px;
+  border-radius:50px; background:var(--gray-100); color:var(--navy);
+  border:1px solid var(--gray-200);
+}
+
+/* story text */
+.story-text {
+  font-size:1.05rem; font-weight:600; line-height:1.9;
+  color:var(--navy);
+}
+.story-text .s {
+  display:inline;
+  border-radius:4px;
+  padding:1px 3px;
+  transition:background .35s ease, box-shadow .35s ease;
+}
+.story-text .s.hl {
+  background: var(--yellow-hl);
+  box-shadow: 0 0 0 2px var(--yellow);
+}
+
+/* ── question card ── */
+.question-card {
+  width:100%; background:var(--navy); border-radius:var(--radius-lg);
+  padding:22px 20px 20px; margin-bottom:0;
+  box-shadow:var(--shadow-md);
+}
+.q-label {
+  font-size:.72rem; font-weight:700; color:rgba(255,255,255,.45);
+  letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px;
+}
+.q-text {
+  font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:800;
+  color:white; line-height:1.3; margin-bottom:16px;
+}
+
+/* hint */
+.hint-wrap { margin-bottom:14px; min-height:30px; display:flex; justify-content:flex-start; }
+.hint-btn {
+  font-size:.76rem; font-weight:700; color:var(--gray-400);
+  background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.15);
+  border-radius:50px; padding:5px 14px; cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; gap:5px;
+  -webkit-tap-highlight-color:transparent;
+}
+.hint-btn:hover { background:rgba(255,200,87,.15); border-color:var(--yellow); color:var(--yellow); }
+.hint-visible {
+  font-size:.82rem; font-weight:700; color:var(--yellow);
+  background:rgba(255,200,87,.12); border:1.5px solid rgba(255,200,87,.3);
+  border-radius:50px; padding:5px 14px;
+  animation:popIn .2s ease;
+}
+@keyframes popIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* choices */
+.choices-grid { display:grid; gap:10px; width:100%; }
+.choices-grid.c2 { grid-template-columns:1fr 1fr; }
+.choices-grid.c3 { grid-template-columns:1fr 1fr 1fr; }
+.choices-grid.c4 { grid-template-columns:1fr 1fr; }
+
+.choice-btn {
+  background:white; border:2px solid transparent;
+  border-radius:var(--radius-md); padding:14px 10px;
+  font-family:'Baloo 2',cursive; font-size:.95rem; font-weight:700;
+  color:var(--navy); cursor:pointer; min-height:58px;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; line-height:1.3;
+  transition:all .2s ease; box-shadow:var(--shadow-soft);
+  -webkit-tap-highlight-color:transparent; user-select:none;
+}
+.choice-btn:hover:not(:disabled) { border-color:var(--orange); color:var(--orange); transform:translateY(-2px); box-shadow:0 6px 18px rgba(255,107,53,.18); }
+.choice-btn.correct { background:var(--green); border-color:var(--green); color:white; animation:correctPop .4s ease; }
+.choice-btn.wrong   { animation:shake .4s ease; border-color:#E53E3E; background:#FFF5F5; color:#E53E3E; }
+.choice-btn.reveal  { background:var(--green); border-color:var(--green); color:white; opacity:.7; }
+.choice-btn:disabled { cursor:default; }
+
+@keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.06)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+
+/* ════════════════════════════════
+   RESULT SCREEN
+════════════════════════════════ */
+#screen-result { gap:18px; padding-top:40px; text-align:center; }
+.res-emoji { font-size:5rem; animation:floatBounce 2s ease-in-out infinite; }
+.res-title { font-size:2rem; font-weight:800; color:var(--navy); }
+.res-score { font-size:3.5rem; font-weight:800; color:var(--orange); font-family:'Baloo 2',cursive; line-height:1; }
+.res-label { font-size:.88rem; color:var(--gray-500); font-weight:600; margin-top:4px; }
+.res-stars { display:flex; gap:8px; justify-content:center; font-size:2rem; }
+.res-msg { font-size:.98rem; font-weight:600; color:var(--gray-700); line-height:1.6; max-width:380px; }
+.res-btns { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+.res-btn {
+  font-family:'Baloo 2',cursive; font-size:1rem; font-weight:700;
+  padding:14px 26px; border-radius:var(--radius-md); border:none; cursor:pointer;
+  transition:all .2s; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+  -webkit-tap-highlight-color:transparent;
+}
+.res-btn.primary   { background:var(--orange); color:white; box-shadow:0 4px 16px rgba(255,107,53,.3); }
+.res-btn.primary:hover { background:var(--orange-glow); transform:translateY(-2px); }
+.res-btn.secondary { background:white; color:var(--navy); border:2px solid var(--gray-200); }
+.res-btn.secondary:hover { border-color:var(--navy); transform:translateY(-2px); }
+
+/* ── confetti ── */
+.confetti-wrap { position:fixed; inset:0; pointer-events:none; z-index:999; overflow:hidden; }
+.cp { position:absolute; top:-12px; border-radius:2px; animation:cfFall linear forwards; }
+@keyframes cfFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 80%{opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .level-title { font-size:1.6rem; }
+  .story-text  { font-size:.95rem; }
+  .q-text      { font-size:1.05rem; }
+  .choice-btn  { font-size:.85rem; padding:11px 8px; min-height:52px; }
+  .choices-grid.c3 { grid-template-columns:1fr 1fr; }
+}
+
+/* ── GAME HEADER (gradient banner) ── */
+.game-header{padding:90px 40px 28px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);position:relative;overflow:hidden;text-align:center}
+.game-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.game-header-content{position:relative;z-index:1}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-size:.8rem;font-weight:600}
+.breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.breadcrumb a:hover{color:var(--orange)}
+.breadcrumb .sep{color:rgba(255,255,255,.25)}
+.breadcrumb .current{color:var(--yellow)}
+.game-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:6px}
+.game-title .hl{color:var(--orange)}
+.game-subtitle{font-size:.9rem;color:rgba(255,255,255,.55);font-weight:600}
+
+/* ── START SCREEN (diff-card style) ── */
+.start-screen{padding:40px 20px 60px;max-width:760px;margin:0 auto;text-align:center}
+.story-box{background:var(--white);border-radius:var(--radius-lg);padding:36px 32px;margin-bottom:32px;box-shadow:var(--shadow-soft);border:2px solid var(--gray-200);position:relative;overflow:hidden}
+.story-box::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--orange),var(--yellow),var(--teal))}
+.story-emoji{font-size:3.5rem;margin-bottom:12px;display:block;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.story-title{font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:10px}
+.story-text{font-size:1rem;color:var(--gray-700);line-height:1.7;font-weight:500;max-width:520px;margin:0 auto}
+.story-text strong{color:var(--orange)}
+.diff-label{font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:16px}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
+.diff-card{background:var(--white);border-radius:var(--radius-lg);padding:22px 16px;cursor:pointer;transition:all .25s;border:3px solid var(--gray-200);text-align:center}
+.diff-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.diff-card.selected{border-color:var(--orange);background:rgba(255,107,53,.04)}
+.diff-card .di{font-size:2rem;margin-bottom:8px;display:block}
+.diff-card .dn{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:4px}
+.diff-card .dd{font-size:.78rem;color:var(--gray-500);font-weight:600;line-height:1.4}
+.diff-card .db{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.diff-card[data-d="easy"] .db{background:#DCFCE7;color:#16A34A}
+.diff-card[data-d="medium"] .db{background:#FEF3C7;color:#D97706}
+.diff-card[data-d="hard"] .db{background:#FEE2E2;color:#DC2626}
+.start-btn{display:inline-flex;align-items:center;gap:10px;font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;padding:16px 40px;border-radius:var(--radius-lg);border:none;background:var(--orange);color:var(--white);cursor:pointer;box-shadow:0 4px 15px rgba(255,107,53,.3);transition:all .25s}
+.start-btn:hover{background:var(--orange-glow);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+.footer{background:var(--navy);padding:28px 40px;text-align:center}
+.footer-brand{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px}
+.footer-brand span{color:var(--orange)}
+.footer-text{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500}
+
+/* ── FULL NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:70px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(27,40,69,0.06);transition:all .3s}
+.navbar.scrolled{box-shadow:var(--shadow-soft)}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:42px;height:42px;background:linear-gradient(135deg,var(--orange),var(--yellow));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 3px 12px rgba(255,107,53,.25)}
+.brand-name{font-size:1.25rem;font-weight:800;color:var(--navy);line-height:1.1}
+.brand-name span{color:var(--orange)}
+.nav-links{display:flex;align-items:center;gap:8px;list-style:none}
+.nav-links a{text-decoration:none;font-weight:600;font-size:.9rem;color:var(--gray-700);padding:8px 16px;border-radius:10px;transition:all .2s}
+.nav-links a:hover{background:var(--cream);color:var(--orange)}
+.nav-cta{background:var(--navy)!important;color:var(--white)!important;padding:10px 22px!important;border-radius:12px!important;font-weight:700!important}
+.nav-cta:hover{background:var(--orange)!important;transform:translateY(-1px)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.nav-hamburger span{width:24px;height:2.5px;background:var(--navy);border-radius:2px}
+@media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}.game-header{padding:80px 20px 24px}.game-title{font-size:1.5rem}.diff-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="school-life.html" class="nav-cta">← School Life</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="game-header">
+  <div class="game-header-content">
+    <div class="breadcrumb">
+      <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+      <a href="school-life.html">School Life</a><span class="sep">›</span>
+      <span class="current">Reading Quiz</span>
+    </div>
+    <div class="game-title">📖 <span class="hl">Reading Quiz</span></div>
+    <div class="game-subtitle">Theme 1: School Life · Reading Game</div>
+  </div>
+</div>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<!-- ═══════════════════════════
+     SCREEN: LEVEL SELECT
+═══════════════════════════ -->
+<div class="screen active" id="screen-level">
+  <div class="start-screen">
+    <div class="story-box">
+      <span class="story-emoji">📖</span>
+      <div class="story-title">Read & Answer!</div>
+      <div class="story-text">Mrs. Hopkins's class has three exciting stories. Read carefully and answer the questions! <strong>Seviyeni seç:</strong></div>
+    </div>
+    <div class="diff-label">Seviyeni seç:</div>
+    <div class="diff-grid">
+      <div class="diff-card selected" data-d="easy" onclick="pickDiff(this, "startGame('supporting')")">
+        <span class="di">🌱</span>
+        <div class="dn">Supporting</div>
+        <div class="dd">2 seçenek · Türkçe ipucu · Cümle vurgusu kalıcı</div>
+        <span class="db">Başlangıç</span>
+      </div>
+      <div class="diff-card" data-d="medium" onclick="pickDiff(this, "startGame('standard')")">
+        <span class="di">⭐</span>
+        <div class="dn">Standard</div>
+        <div class="dd">3 seçenek · İpucuna tıkla · Vurgu 3 sn sonra söner</div>
+        <span class="db">Standart</span>
+      </div>
+      <div class="diff-card" data-d="hard" onclick="pickDiff(this, "startGame('expansion')")">
+        <span class="di">🔥</span>
+        <div class="dn">Expansion</div>
+        <div class="dd">4 seçenek · İpucu yok · Vurgu yok — kendin oku!</div>
+        <span class="db">İleri</span>
+      </div>
+    </div>
+    <button class="start-btn" id="mainStartBtn" onclick="doStart()">🚀 Start Reading!</button>
+  </div>
+</div>
+<!-- ═══════════════════════════
+     SCREEN: GAME
+═══════════════════════════ -->
+<div class="screen" id="screen-game">
+
+  <!-- story progress dots -->
+  <div class="story-dots" id="story-dots">
+    <div class="story-dot active" id="sdot0">1</div>
+    <div class="story-dot-line"><div class="story-dot-fill" id="sfill0"></div></div>
+    <div class="story-dot inactive" id="sdot1">2</div>
+    <div class="story-dot-line"><div class="story-dot-fill" id="sfill1"></div></div>
+    <div class="story-dot inactive" id="sdot2">3</div>
+  </div>
+
+  <!-- meta -->
+  <div class="game-meta">
+    <div class="turn-badge" id="turn-badge">Q 1 / 4</div>
+    <div class="lvl-badge g" id="lvl-badge">🟢 Supporting</div>
+    <div class="score-badge" id="score-badge">⭐ 0</div>
+  </div>
+
+  <!-- story card -->
+  <div class="story-card" id="story-card">
+    <div class="cast-panel" id="cast-panel"></div>
+    <div class="story-text" id="story-text"></div>
+  </div>
+
+  <!-- question card -->
+  <div class="question-card">
+    <div class="q-label" id="q-label">Question 1</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="hint-wrap" id="hint-wrap"></div>
+    <div class="choices-grid c2" id="choices-grid"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════
+     SCREEN: RESULT
+═══════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="res-emoji" id="res-emoji">🎉</div>
+  <h2 class="res-title" id="res-title">Well done!</h2>
+  <div class="res-score" id="res-score">12</div>
+  <div class="res-label">out of 12 points</div>
+  <div class="res-stars" id="res-stars">⭐⭐⭐</div>
+  <p class="res-msg" id="res-msg"></p>
+  <div class="res-btns">
+    <button class="res-btn primary" onclick="retryGame()">🔄 Try Again</button>
+    <a href="school-life.html" class="res-btn secondary">🏠 Back to Games</a>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const STORIES = [
+  {
+    id: 0,
+    accent: '',        // orange (default)
+    cast: [
+      { emoji:'👧', name:'Ruby' },
+      { emoji:'👦', name:'Bobby' },
+      { emoji:'👩‍🏫', name:'Mrs Hopkins' },
+    ],
+    sentences: [
+      "Hi! My name is Ruby.",
+      "I am a pupil.",
+      "Mrs Hopkins is my teacher.",
+      "She is in the classroom.",
+      "Bobby is my friend.",
+      "He is a boy.",
+      "Bobby is in the garden.",
+      "The garden is big.",
+      "My school is nice.",
+      "I am happy at school."
+    ],
+    questions: [
+      {
+        text:    "Who is Ruby?",
+        correct: "pupil",
+        wrong:   ["teacher","friend","girl"],
+        hint:    "Ruby kim?",
+        hl:      [1]
+      },
+      {
+        text:    "Who is Mrs Hopkins?",
+        correct: "teacher",
+        wrong:   ["headmistress","friend","pupil"],
+        hint:    "Mrs Hopkins kim?",
+        hl:      [2]
+      },
+      {
+        text:    "Where is Bobby?",
+        correct: "in the garden",
+        wrong:   ["in the classroom","in the library","in the canteen"],
+        hint:    "Bobby nerede?",
+        hl:      [6]
+      },
+      {
+        text:    "Is Bobby a girl?",
+        correct: "No, he isn't!",
+        wrong:   ["Yes, he is!","He is a pupil.","He is a teacher."],
+        hint:    "Bobby kız mı?",
+        hl:      [5]
+      }
+    ]
+  },
+  {
+    id: 1,
+    accent: 'teal',
+    cast: [
+      { emoji:'👨‍💼', name:'Mr Green' },
+      { emoji:'👦',   name:'Sam' },
+      { emoji:'👧',   name:'Lily' },
+    ],
+    sentences: [
+      "My name is Mr Green.",
+      "I am the headmaster.",
+      "This is my school.",
+      "Sam is a pupil.",
+      "He is in the library.",
+      "Sam is a good kid.",
+      "Lily is a pupil too.",
+      "She is in the canteen.",
+      "The canteen is nice.",
+      "Sam and Lily are friends."
+    ],
+    questions: [
+      {
+        text:    "Who is Mr Green?",
+        correct: "headmaster",
+        wrong:   ["teacher","pupil","headmistress"],
+        hint:    "Mr Green kim?",
+        hl:      [1]
+      },
+      {
+        text:    "Where is Sam?",
+        correct: "in the library",
+        wrong:   ["in the garden","in the canteen","in the classroom"],
+        hint:    "Sam nerede?",
+        hl:      [4]
+      },
+      {
+        text:    "Who is Lily?",
+        correct: "a pupil",
+        wrong:   ["a teacher","a friend","a headmistress"],
+        hint:    "Lily kim?",
+        hl:      [6]
+      },
+      {
+        text:    "Where is Lily?",
+        correct: "in the canteen",
+        wrong:   ["in the library","in the playground","in the classroom"],
+        hint:    "Lily nerede?",
+        hl:      [7]
+      }
+    ]
+  },
+  {
+    id: 2,
+    accent: 'purple',
+    cast: [
+      { emoji:'👦',   name:'Tom' },
+      { emoji:'👧',   name:'Anna' },
+      { emoji:'👩‍💼',  name:'Miss White' },
+    ],
+    sentences: [
+      "Hi! My name is Tom.",
+      "I am a new pupil.",
+      "This is my new school.",
+      "Anna is my friend.",
+      "She is a girl.",
+      "Anna is my new friend.",
+      "Miss White is the headmistress.",
+      "She is in the teacher's room.",
+      "The teacher's room is big.",
+      "Anna is in the sports hall.",
+      "The sports hall is great!"
+    ],
+    questions: [
+      {
+        text:    "Who is Tom?",
+        correct: "a pupil",
+        wrong:   ["a teacher","a headmaster","a friend"],
+        hint:    "Tom kim?",
+        hl:      [1]
+      },
+      {
+        text:    "Who is Miss White?",
+        correct: "headmistress",
+        wrong:   ["teacher","headmaster","pupil"],
+        hint:    "Miss White kim?",
+        hl:      [6]
+      },
+      {
+        text:    "Where is Miss White?",
+        correct: "in the teacher's room",
+        wrong:   ["in the library","in the canteen","in the classroom"],
+        hint:    "Miss White nerede?",
+        hl:      [7]
+      },
+      {
+        text:    "Where is Anna?",
+        correct: "in the sports hall",
+        wrong:   ["in the garden","in the playground","in the lunch hall"],
+        hint:    "Anna nerede?",
+        hl:      [9]
+      }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════
+//  LEVEL CONFIG
+// ═══════════════════════════════════════════════
+const LEVEL_CFG = {
+  supporting: { choices:2, hint:'always', hl:'always', badge:'🟢 Supporting', cls:'g' },
+  standard:   { choices:3, hint:'tap',    hl:'fade3',  badge:'🔵 Standard',   cls:'b' },
+  expansion:  { choices:4, hint:'none',   hl:'none',   badge:'🟣 Expansion',  cls:'p' },
+};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let level        = 'supporting';
+let storyIdx     = 0;
+let questionIdx  = 0;
+let score        = 0;
+let attempts     = 0;
+let locked       = false;
+let hlTimer      = null;
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════════
+function startGame(lvl) {
+  level       = lvl;
+  storyIdx    = 0;
+  questionIdx = 0;
+  score       = 0;
+  locked      = false;
+  showScreen('screen-game');
+  renderStory();
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER STORY
+// ═══════════════════════════════════════════════
+function renderStory() {
+  const story = STORIES[storyIdx];
+  const cfg   = LEVEL_CFG[level];
+
+  // accent
+  const card = document.getElementById('story-card');
+  card.className = 'story-card' + (story.accent ? ` ${story.accent}` : '');
+
+  // cast
+  const castPanel = document.getElementById('cast-panel');
+  castPanel.innerHTML = story.cast.map(c =>
+    `<span class="cast-pill">${c.emoji} ${c.name}</span>`
+  ).join('');
+
+  // text — wrap each sentence in a span.s with data-i
+  const textEl = document.getElementById('story-text');
+  textEl.innerHTML = story.sentences.map((s,i) =>
+    `<span class="s" data-i="${i}">${s}</span> `
+  ).join('');
+
+  // story progress dots
+  for (let i = 0; i < 3; i++) {
+    const dot  = document.getElementById(`sdot${i}`);
+    const fill = document.getElementById(`sfill${i}`);
+    if (i < storyIdx)       { dot.className = 'story-dot done';    dot.textContent = '✓'; }
+    else if (i === storyIdx) { dot.className = 'story-dot active';  dot.textContent = i+1; }
+    else                    { dot.className = 'story-dot inactive'; dot.textContent = i+1; }
+    if (fill) fill.style.width = i < storyIdx ? '100%' : '0%';
+  }
+
+  // level badge
+  const lb = document.getElementById('lvl-badge');
+  lb.textContent = cfg.badge;
+  lb.className   = `lvl-badge ${cfg.cls}`;
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER QUESTION
+// ═══════════════════════════════════════════════
+function renderQuestion() {
+  const story = STORIES[storyIdx];
+  const q     = story.questions[questionIdx];
+  const cfg   = LEVEL_CFG[level];
+  const total = STORIES.reduce((a,s)=>a+s.questions.length,0);
+  const qNum  = STORIES.slice(0,storyIdx).reduce((a,s)=>a+s.questions.length,0) + questionIdx + 1;
+
+  attempts = 0;
+  locked   = false;
+
+  // turn badge
+  document.getElementById('turn-badge').textContent = `Q ${qNum} / ${total}`;
+  document.getElementById('score-badge').textContent = `⭐ ${score}`;
+
+  // question
+  document.getElementById('q-label').textContent = `Question ${questionIdx+1}`;
+  document.getElementById('q-text').textContent  = q.text;
+
+  // highlight
+  applyHighlight(q.hl, cfg);
+
+  // hint
+  renderHint(q.hint, cfg);
+
+  // choices
+  renderChoices(q, cfg);
+}
+
+// ═══════════════════════════════════════════════
+//  HIGHLIGHT
+// ═══════════════════════════════════════════════
+function applyHighlight(hlIndices, cfg) {
+  clearTimeout(hlTimer);
+  // clear all
+  document.querySelectorAll('#story-text .s').forEach(s => s.classList.remove('hl'));
+
+  if (cfg.hl === 'none') return;
+
+  hlIndices.forEach(i => {
+    const el = document.querySelector(`#story-text .s[data-i="${i}"]`);
+    if (el) el.classList.add('hl');
+  });
+
+  if (cfg.hl === 'fade3') {
+    hlTimer = setTimeout(() => {
+      document.querySelectorAll('#story-text .s').forEach(s => s.classList.remove('hl'));
+    }, 3000);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  HINT
+// ═══════════════════════════════════════════════
+function renderHint(hintText, cfg) {
+  const wrap = document.getElementById('hint-wrap');
+  if (cfg.hint === 'none') {
+    wrap.innerHTML = '';
+    return;
+  }
+  if (cfg.hint === 'always') {
+    wrap.innerHTML = `<div class="hint-visible">💡 ${hintText}</div>`;
+  } else {
+    wrap.innerHTML = `<button class="hint-btn" onclick="revealHint('${hintText.replace(/'/g,"\\'")}')">💡 İpucu göster</button>`;
+  }
+}
+function revealHint(text) {
+  document.getElementById('hint-wrap').innerHTML = `<div class="hint-visible">💡 ${text}</div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  CHOICES
+// ═══════════════════════════════════════════════
+function renderChoices(q, cfg) {
+  const grid = document.getElementById('choices-grid');
+  const pool = shuffle([q.correct, ...q.wrong.slice(0, cfg.choices-1)]);
+
+  const colClass = cfg.choices === 2 ? 'c2' : cfg.choices === 3 ? 'c3' : 'c4';
+  grid.className = `choices-grid ${colClass}`;
+  grid.innerHTML = '';
+
+  pool.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className   = 'choice-btn';
+    btn.textContent = val;
+    btn.dataset.correct = (val === q.correct) ? '1' : '0';
+    btn.addEventListener('click', handleChoice);
+    btn.addEventListener('touchend', e => { e.preventDefault(); handleChoice.call(btn, e); });
+    grid.appendChild(btn);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  HANDLE CHOICE
+// ═══════════════════════════════════════════════
+function handleChoice(e) {
+  if (locked) return;
+  const btn = this;
+  const correct = btn.dataset.correct === '1';
+
+  if (correct) {
+    locked = true;
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('score-badge').textContent = `⭐ ${score}`;
+    setTimeout(() => advanceQuestion(), 750);
+  } else {
+    attempts++;
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    setTimeout(() => btn.classList.remove('wrong'), 420);
+
+    if (attempts >= 2) {
+      locked = true;
+      clearTimeout(hlTimer);
+      // keep highlight visible
+      const story = STORIES[storyIdx];
+      const q     = story.questions[questionIdx];
+      document.querySelectorAll('#story-text .s').forEach(s => s.classList.remove('hl'));
+      q.hl.forEach(i => {
+        const el = document.querySelector(`#story-text .s[data-i="${i}"]`);
+        if (el) el.classList.add('hl');
+      });
+      setTimeout(() => {
+        document.querySelectorAll('.choice-btn').forEach(b => {
+          if (b.dataset.correct === '1') b.classList.add('reveal');
+        });
+        setTimeout(() => advanceQuestion(), 1100);
+      }, 300);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  ADVANCE
+// ═══════════════════════════════════════════════
+function advanceQuestion() {
+  const story = STORIES[storyIdx];
+  clearTimeout(hlTimer);
+  document.querySelectorAll('#story-text .s').forEach(s => s.classList.remove('hl'));
+
+  questionIdx++;
+
+  if (questionIdx < story.questions.length) {
+    renderQuestion();
+  } else {
+    // story done
+    storyIdx++;
+    questionIdx = 0;
+
+    if (storyIdx < STORIES.length) {
+      // brief story-complete flash before next story
+      flashStoryComplete(() => {
+        renderStory();
+        renderQuestion();
+      });
+    } else {
+      showResult();
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  STORY COMPLETE FLASH
+// ═══════════════════════════════════════════════
+function flashStoryComplete(cb) {
+  // update dot for completed story
+  const doneDot = document.getElementById(`sdot${storyIdx-1}`);
+  if (doneDot) { doneDot.className = 'story-dot done'; doneDot.textContent = '✓'; }
+  const fill = document.getElementById(`sfill${storyIdx-1}`);
+  if (fill) fill.style.width = '100%';
+  setTimeout(cb, 600);
+}
+
+// ═══════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════
+function showResult() {
+  showScreen('screen-result');
+  const max = STORIES.reduce((a,s)=>a+s.questions.length,0); // 12
+  const pct = score / max;
+
+  let emoji, title, stars, msg;
+  if (pct === 1)      { emoji='🏆'; title='Perfect!';    stars='⭐⭐⭐'; msg="Amazing! You read all three stories and got every answer right!"; }
+  else if (pct>=.75)  { emoji='🎉'; title='Well done!';  stars='⭐⭐⭐'; msg="Great reading! You understood the stories really well!"; }
+  else if (pct>=.5)   { emoji='😊'; title='Good try!';   stars='⭐⭐';  msg="You're getting there! Read the stories again and try once more."; }
+  else                { emoji='💪'; title='Keep going!'; stars='⭐';    msg="Practice makes perfect! Give it another go — you can do it!"; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent   = msg;
+
+  if (pct >= .75) setTimeout(launchConfetti, 350);
+}
+
+function retryGame() { showScreen('screen-level'); }
+
+// ═══════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════
+function launchConfetti() {
+  const wrap   = document.getElementById('confetti-wrap');
+  wrap.innerHTML = '';
+  const colors = ['#FF6B35','#FFC857','#2EC4B6','#8B5CF6','#3CB371','#FF8C5A','#FFE4A0'];
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('div');
+    p.className = 'cp';
+    p.style.cssText = [
+      `left:${Math.random()*100}vw`,
+      `background:${colors[Math.floor(Math.random()*colors.length)]}`,
+      `width:${Math.random()*8+5}px`,
+      `height:${Math.random()*8+5}px`,
+      `border-radius:${Math.random()>.5?'50%':'2px'}`,
+      `animation-duration:${Math.random()*2+2.5}s`,
+      `animation-delay:${Math.random()*1.2}s`,
+    ].join(';');
+    wrap.appendChild(p);
+  }
+  setTimeout(() => { wrap.innerHTML = ''; }, 5500);
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+var _pendingLevel = null;
+function pickDiff(el, lvlCall) {
+  document.querySelectorAll('.diff-card').forEach(function(d){ d.classList.remove('selected'); });
+  el.classList.add('selected');
+  _pendingLevel = lvlCall;
+}
+function doStart() {
+  if (_pendingLevel) eval(_pendingLevel);
+  else startGame('supporting');
+}
+
+</script>
+
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">2. Sınıf · Tema 1: School Life · Reading Quiz</p>
+</footer>
+</body>
+</html>

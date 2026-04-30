@@ -237,18 +237,11 @@ h1, h2, h3, h4, .brand-name {
 
 .activity-card.active:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14);
   border-color: transparent;
 }
-
-/* Per-card hover glow */
-.activities-grid .activity-card:nth-child(1).active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14); }
-.activities-grid .activity-card:nth-child(2).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
-.activities-grid .activity-card:nth-child(3).active:hover { box-shadow: 0 12px 36px rgba(139,92,246,0.28),  0 4px 14px rgba(139,92,246,0.14); }
-.activities-grid .activity-card:nth-child(4).active:hover { box-shadow: 0 12px 36px rgba(255,107,53,0.28), 0 4px 14px rgba(255,107,53,0.14); }
-.activities-grid .activity-card:nth-child(5).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
-.activities-grid .activity-card:nth-child(6).active:hover { box-shadow: 0 12px 36px rgba(59,130,246,0.28),  0 4px 14px rgba(59,130,246,0.14); }
-.activities-grid .activity-card:nth-child(7).active:hover { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+.activity-card.teal.active:hover   { box-shadow: 0 12px 36px rgba(46,196,182,0.28),  0 4px 14px rgba(46,196,182,0.14); }
+.activity-card.purple.active:hover { box-shadow: 0 12px 36px rgba(139,92,246,0.28),  0 4px 14px rgba(139,92,246,0.14); }
 
 /* Emoji bounce on card hover */
 @keyframes emojiBounce {
@@ -289,6 +282,8 @@ h1, h2, h3, h4, .brand-name {
 }
 .badge-memory { background: rgba(255,107,53,0.1); color: var(--orange); }
 .badge-quiz { background: rgba(46,196,182,0.1); color: var(--teal); }
+.badge-reading { background: rgba(59,130,246,0.1); color: #3B82F6; }
+.badge-dialogue { background: rgba(139,92,246,0.1); color: #8B5CF6; }
 .badge-drag { background: rgba(139,92,246,0.1); color: #8B5CF6; }
 .badge-coming { background: var(--gray-100); color: var(--gray-500); }
 .badge-sound { background: rgba(59,130,246,0.1); color: #3B82F6; }
@@ -639,7 +634,7 @@ h1, h2, h3, h4, .brand-name {
   <div class="section-label reveal">
     <h2>🎮 School Life Oyunları</h2>
     <div class="label-line"></div>
-    <span class="label-count">14 etkinlik</span>
+    <span class="label-count">17 etkinlik</span>
   </div>
 
   <!-- DIFF LEGEND -->
@@ -1004,6 +999,97 @@ h1, h2, h3, h4, .brand-name {
       </div>
     </div>
 
+
+    <!-- KART 12: Reading Quiz — Okuma -->
+    <div class="activity-card active reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-reading">📖 Okuma</div>
+        <span class="activity-emoji">📚</span>
+        <div class="activity-title">Reading Quiz</div>
+        <div class="activity-desc">
+          Kısa hikayeleri oku ve sorulara cevap ver! Üç zorluk seviyesi: Supporting, Standard ve Expansion.
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">📖 Okuma</span>
+          <span class="feature-tag">❓ Anlama</span>
+          <span class="feature-tag">3️⃣ Seviye</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot"></div>
+            </div>
+          </div>
+          <div class="play-count">⭐ Yeni</div>
+        </div>
+        <a href="school-life-reading-quiz.html" class="activity-btn">🚀 Oynamaya Başla</a>
+      </div>
+    </div>
+
+    <!-- KART 13: Jungle School Reading — Okuma -->
+    <div class="activity-card active teal reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-reading">📖 Okuma</div>
+        <span class="activity-emoji">🌿</span>
+        <div class="activity-title">Jungle School Reading</div>
+        <div class="activity-desc">
+          Orman okulundan hikayeler oku! Hayvanlarla tanış, sorulara cevap ver ve okuma becerini geliştir.
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">🐾 Hikaye</span>
+          <span class="feature-tag">🌿 Jungle</span>
+          <span class="feature-tag">❓ Anlama</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot"></div>
+            </div>
+          </div>
+          <div class="play-count">⭐ Yeni</div>
+        </div>
+        <a href="school-life-reading-jungle.html" class="activity-btn teal">🚀 Oynamaya Başla</a>
+      </div>
+    </div>
+
+    <!-- KART 14: Dialogue Scenes — Konuşma -->
+    <div class="activity-card active purple reveal">
+      <div class="activity-card-banner"></div>
+      <div class="activity-card-body">
+        <div class="activity-type-badge badge-dialogue">💬 Konuşma</div>
+        <span class="activity-emoji">🎭</span>
+        <div class="activity-title">Dialogue Scenes</div>
+        <div class="activity-desc">
+          Okul sahnelerindeki diyalogları tamamla! Karakterlerin yerine konuş ve doğru cevabı bul.
+        </div>
+        <div class="activity-features">
+          <span class="feature-tag">💬 Diyalog</span>
+          <span class="feature-tag">🎭 Sahne</span>
+          <span class="feature-tag">3️⃣ Seviye</span>
+        </div>
+        <div class="activity-meta">
+          <div class="difficulty">
+            <span>Zorluk</span>
+            <div class="difficulty-dots">
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot filled"></div>
+              <div class="difficulty-dot"></div>
+            </div>
+          </div>
+          <div class="play-count">⭐ Yeni</div>
+        </div>
+        <a href="school-life-dialogue-scenes.html" class="activity-btn purple">🚀 Oynamaya Başla</a>
+      </div>
+    </div>
+
   </div>
 
   <!-- ZENGİNLEŞTİRME & DESTEKLEME BÖLÜMÜ -->
@@ -1015,7 +1101,7 @@ h1, h2, h3, h4, .brand-name {
 
   <div class="activities-grid">
 
-    <!-- KART 12: Word Recall — Zenginleştirme -->
+    <!-- KART 15: Word Recall — Zenginleştirme -->
     <div class="activity-card active reveal">
       <div class="activity-card-banner"></div>
       <div class="activity-card-body">
@@ -1045,7 +1131,7 @@ h1, h2, h3, h4, .brand-name {
       </div>
     </div>
 
-    <!-- KART 13: Scrambled School — Zenginleştirme -->
+    <!-- KART 16: Scrambled School — Zenginleştirme -->
     <div class="activity-card active teal reveal">
       <div class="activity-card-banner"></div>
       <div class="activity-card-body">
@@ -1075,7 +1161,7 @@ h1, h2, h3, h4, .brand-name {
       </div>
     </div>
 
-    <!-- KART 14: Word Build — Destekleme -->
+    <!-- KART 17: Word Build — Destekleme -->
     <div class="activity-card active purple reveal">
       <div class="activity-card-banner"></div>
       <div class="activity-card-body">

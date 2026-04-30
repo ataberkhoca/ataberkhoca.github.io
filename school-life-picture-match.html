@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Picture Match — School Life | Ataberk Hoca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:#1B2845; --navy-light:#274472;
+      --orange:#FF6B35; --orange-light:#FF8C5A;
+      --cream:#FFF9F0; --cream-dark:#FFF3E0;
+      --green:#3CB371; --red:#EF4444;
+      --yellow:#FFC857;
+      --c0-bg:#deeeff; --c0-br:#7ab4f5;
+      --c1-bg:#f5e0ff; --c1-br:#c97be8;
+      --c2-bg:#d6f5e0; --c2-br:#5ecb7a;
+      --c3-bg:#fff3d0; --c3-br:#f0b429;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Quicksand',sans-serif;background:var(--cream);min-height:100vh;color:var(--navy)}
+
+    /* NAVBAR */
+    .navbar{background:var(--navy);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:box-shadow .3s;}
+    .navbar.scrolled{box-shadow:0 4px 20px rgba(27,40,69,.18);}
+    .nav-brand{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.1rem;color:white;text-decoration:none;display:flex;align-items:center;gap:8px;}
+    .nav-brand em{color:var(--orange);font-style:normal;}
+    .nav-back{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;}
+    .nav-back:hover{background:rgba(255,255,255,.12);color:white;border-color:rgba(255,255,255,.4);}
+
+    .main{max-width:620px;margin:0 auto;padding:28px 16px 60px}
+
+    /* BUTTONS */
+    .btn{font-family:'Quicksand',sans-serif;font-weight:700;font-size:.92rem;border:none;border-radius:12px;padding:10px 22px;cursor:pointer;transition:transform .15s,box-shadow .15s;display:inline-flex;align-items:center;gap:6px}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+    .btn:active{transform:translateY(0)}
+    .btn-primary{background:var(--orange);color:white}
+    .btn-secondary{background:var(--navy);color:white}
+    .btn-back{background:#b0bec5;color:white}
+
+    /* MENU */
+    #menuScreen{animation:fadeIn .4s ease}
+    .menu-header{text-align:center;margin-bottom:32px}
+    .menu-header .back-row{display:flex;margin-bottom:16px}
+    .menu-header .title-emoji{font-size:2.8rem;display:block;margin-bottom:8px}
+    .menu-header h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:2rem;color:var(--navy)}
+    .menu-header p{color:#5a7a9a;font-size:.95rem;margin-top:6px}
+    .round-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .round-card{background:white;border-radius:20px;padding:22px 14px 18px;box-shadow:0 4px 14px rgba(30,58,95,.13);cursor:pointer;border:2px solid transparent;position:relative;overflow:hidden;text-align:center;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .2s;animation:fadeIn .4s ease both}
+    .round-card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:var(--orange);border-radius:20px 20px 0 0}
+    .round-card:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 16px 32px rgba(30,58,95,.2);border-color:var(--orange)}
+    .round-card:nth-child(1){animation-delay:.05s}.round-card:nth-child(2){animation-delay:.12s}.round-card:nth-child(3){animation-delay:.19s}
+    .round-num{width:34px;height:34px;background:var(--orange);color:white;border-radius:50%;font-family:'Baloo 2',cursive;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+    .round-emojis{font-size:1.6rem;margin-bottom:8px;line-height:1.5}
+    .round-title{font-family:'Baloo 2',cursive;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:3px}
+    .round-sub{font-size:.76rem;color:#7a99bb;font-style:italic;margin-bottom:12px}
+    .round-meta{display:flex;justify-content:center;gap:8px;font-size:.74rem}
+    .pairs-badge{background:var(--cream-dark);padding:2px 8px;border-radius:10px;color:var(--navy);font-weight:600}
+    .round-stars{color:var(--orange)}
+
+    /* GAME */
+    #gameScreen{display:none;animation:fadeIn .4s ease}
+    .game-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .game-header h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:1.15rem;flex:1}
+    .progress-pill{display:flex;align-items:center;gap:7px;background:white;border-radius:20px;padding:6px 14px;box-shadow:0 2px 8px rgba(30,58,95,.12);font-weight:600;font-size:.85rem}
+    .pill-stars{display:flex;gap:3px}
+    .pill-star{font-size:1rem;filter:grayscale(1) opacity(.3);transition:filter .3s;display:inline-block}
+    .pill-star.lit{filter:none;animation:starLight .5s cubic-bezier(.34,1.56,.64,1)}
+    .pill-count{font-weight:700;color:var(--orange)}
+
+    .difficulty-bar{display:flex;gap:8px;margin-bottom:12px}
+    .diff-btn{font-family:'Quicksand',sans-serif;font-weight:600;font-size:.82rem;border:2px solid transparent;border-radius:20px;padding:6px 14px;cursor:pointer;background:white;color:#7a99bb;transition:all .2s}
+    .diff-btn:hover{border-color:var(--orange);color:var(--orange)}
+    .diff-btn.active-diff{background:var(--orange);color:white;border-color:var(--orange)}
+
+    .diff-info{border-radius:14px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;font-size:.87rem;animation:infoSlide .3s ease;position:relative;overflow:hidden}
+    .diff-info.supporting{background:linear-gradient(135deg,#fff9e6,#fff3cc);border:1px solid #ffe082}
+    .diff-info.standard{background:linear-gradient(135deg,#e8f4fd,#d0e8f8);border:1px solid #90caf9}
+    .diff-info.expansion{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:1px solid var(--orange-light)}
+    .diff-info.expansion::after{content:'';position:absolute;top:0;left:-100%;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:shimmer 2.5s infinite}
+    .diff-icon{font-size:1.4rem;flex-shrink:0;animation:bounceIcon .4s ease}
+    .diff-text-en{font-weight:700;color:var(--navy)}
+    .diff-text-tr{color:#5a7a9a;font-style:italic;font-size:.8rem}
+
+    .card-counter{text-align:center;font-size:.82rem;font-weight:700;color:#8aaacc;margin-bottom:14px;letter-spacing:.5px}
+
+    /* PICTURE CARD */
+    .picture-card{border-radius:24px;padding:28px 24px 26px;text-align:center;position:relative;overflow:hidden;margin-bottom:20px;box-shadow:0 6px 24px rgba(30,58,95,.13);border:3px solid transparent;animation:cardIn .45s cubic-bezier(.34,1.56,.64,1);transition:border-color .3s,box-shadow .3s}
+    .picture-card[data-cidx="0"]{background:var(--c0-bg);border-color:var(--c0-br)}
+    .picture-card[data-cidx="1"]{background:var(--c1-bg);border-color:var(--c1-br)}
+    .picture-card[data-cidx="2"]{background:var(--c2-bg);border-color:var(--c2-br)}
+    .picture-card[data-cidx="3"]{background:var(--c3-bg);border-color:var(--c3-br)}
+    .picture-card.correct{border-color:var(--green)!important;box-shadow:0 0 0 4px rgba(76,175,80,.25),0 8px 28px rgba(30,58,95,.14)}
+    .picture-card.wrong{border-color:var(--red)!important;animation:shake .5s ease}
+    .card-tick{position:absolute;top:14px;right:16px;font-size:1.6rem;opacity:0;transition:opacity .3s}
+    .picture-card.correct .card-tick{opacity:1}
+    .card-pic-emoji{font-size:3.4rem;line-height:1;margin-bottom:14px;display:block}
+    .card-question{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.3rem;color:var(--navy);margin-bottom:16px;padding:8px 20px;background:rgba(255,255,255,.65);border-radius:14px;display:inline-block}
+
+    /* WORD BANK MODE */
+    .card-sentence{font-family:'Baloo 2',cursive;font-weight:700;font-size:1.2rem;color:var(--navy);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;line-height:1.6}
+    .drop-blank{display:inline-flex;align-items:center;justify-content:center;min-width:120px;height:42px;border-radius:10px;border:3px dashed rgba(30,58,95,.3);background:rgba(255,255,255,.65);font-family:'Baloo 2',cursive;font-weight:700;font-size:1.05rem;color:rgba(30,58,95,.35);cursor:pointer;transition:border-color .2s,background .2s,color .2s;padding:0 12px}
+    .drop-blank.drag-over{border-color:var(--orange);background:rgba(247,147,30,.12);color:var(--orange)}
+    .drop-blank.filled{border-style:solid;background:white;color:var(--navy);border-color:var(--orange)}
+    .drop-blank.correct-fill{border-color:var(--green);background:#e8f5e9;color:var(--green)}
+    .drop-blank.wrong-fill{border-color:var(--red);background:#ffebee;color:var(--red)}
+
+    .word-bank-label{text-align:center;font-weight:700;font-size:.78rem;color:#8aaacc;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+    .word-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;background:white;border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(30,58,95,.08);min-height:62px}
+    .word-chip{font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;padding:8px 20px;background:var(--navy);color:white;border-radius:22px;cursor:grab;border:none;transition:transform .15s,box-shadow .15s,background .2s,opacity .2s;user-select:none;-webkit-user-select:none;touch-action:none}
+    .word-chip:hover:not(.used){transform:translateY(-3px) scale(1.05);box-shadow:0 6px 16px rgba(30,58,95,.25);background:var(--orange)}
+    .word-chip.selected-chip{background:var(--orange);transform:scale(1.08);box-shadow:0 4px 14px rgba(247,147,30,.4)}
+    .word-chip.used{opacity:.2;pointer-events:none}
+    .word-chip.distractor{background:#607d8b}
+    .word-chip.distractor:hover:not(.used){background:#455a64}
+    .word-chip.dragging{opacity:.4;cursor:grabbing}
+
+    /* YES/NO MODE */
+    .yesno-area{display:flex;gap:16px;justify-content:center;margin-top:8px}
+    .yesno-btn{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.4rem;padding:16px 36px;border:none;border-radius:20px;cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s;box-shadow:0 4px 16px rgba(0,0,0,.15);user-select:none}
+    .yesno-btn:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 10px 26px rgba(0,0,0,.2)}
+    .yesno-btn:active{transform:scale(.97)}
+    .yesno-btn.yes{background:var(--green);color:white}
+    .yesno-btn.no{background:var(--red);color:white}
+    .yesno-btn.disabled{opacity:.4;pointer-events:none}
+
+    /* FEEDBACK */
+    .feedback-overlay{position:fixed;inset:0;background:rgba(15,30,60,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:300}
+    .feedback-overlay.show{display:flex}
+    .feedback-modal{background:white;border-radius:24px;padding:36px 30px 28px;max-width:400px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.28);animation:modalPop .4s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+    .feedback-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--orange),var(--orange-light))}
+    .fb-emoji{font-size:3rem;margin-bottom:10px;animation:bounceIcon .6s ease}
+    .fb-title{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.6rem;color:var(--navy);margin-bottom:4px}
+    .fb-sub{font-size:.9rem;color:#5a7a9a;font-style:italic;margin-bottom:14px}
+    .fb-stats{background:var(--cream);border-radius:12px;padding:10px 14px;font-size:.87rem;font-weight:600;color:var(--navy);margin-bottom:18px}
+    .fb-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    .hint-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--navy);color:white;padding:9px 20px;border-radius:20px;font-size:.84rem;font-weight:600;opacity:0;transition:opacity .3s,transform .3s;z-index:150;pointer-events:none;white-space:nowrap}
+    .hint-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .confetti-piece{position:fixed;top:-10px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:400}
+    .sparkle{position:fixed;pointer-events:none;z-index:200;font-size:1.2rem;animation:sparkleUp .7s ease forwards}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes cardIn{from{opacity:0;transform:scale(.88) translateY(18px)}to{opacity:1;transform:none}}
+    @keyframes modalPop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+    @keyframes infoSlide{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+    @keyframes bounceIcon{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+    @keyframes shimmer{0%{left:-100%}100%{left:200%}}
+    @keyframes starLight{0%{transform:scale(.4) rotate(-30deg)}60%{transform:scale(1.5) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}30%{transform:translateX(8px)}45%{transform:translateX(-6px)}60%{transform:translateX(6px)}75%{transform:translateX(-3px)}90%{transform:translateX(3px)}}
+    @keyframes confettiFall{to{top:110vh;transform:rotate(720deg);opacity:0}}
+    @keyframes sparkleUp{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}60%{opacity:1;transform:translate(-50%,-200%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-290%) scale(.8)}}
+    @keyframes allDoneShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+    @media(max-width:600px){
+      .round-grid{grid-template-columns:1fr}
+      .card-pic-emoji{font-size:2.8rem}
+      .card-question{font-size:1.05rem}
+      .card-sentence{font-size:1rem}
+      .drop-blank{min-width:90px;height:36px;font-size:.9rem}
+      .word-chip{font-size:.88rem;padding:7px 14px}
+      .yesno-btn{font-size:1.1rem;padding:13px 26px}
+    }
+    @media(max-width:400px){
+      .navbar-links a{font-size:.72rem;padding:4px 8px}
+      .main{padding:14px 10px 40px}
+    }
+  
+/* ── GAME HEADER (gradient banner) ── */
+.game-header-banner{padding:90px 40px 28px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light,#274472) 100%);position:relative;overflow:hidden;text-align:center;margin-bottom:0}
+.game-header-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.ghb-content{position:relative;z-index:1}
+.ghb-breadcrumb{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-size:.8rem;font-weight:600}
+.ghb-breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none}
+.ghb-breadcrumb .sep{color:rgba(255,255,255,.25)}
+.ghb-breadcrumb .current{color:#FFC857}
+.ghb-title{font-size:2rem;font-weight:800;color:#fff;font-family:'Baloo 2',cursive;margin-bottom:6px}
+.ghb-title .hl{color:#FF6B35}
+.ghb-sub{font-size:.9rem;color:rgba(255,255,255,.55);font-weight:600}
+
+/* ── FULL NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:70px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(27,40,69,0.06);transition:all .3s}
+.navbar.scrolled{box-shadow:0 4px 20px rgba(27,40,69,.08)}
+.nav-brand-full{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:42px;height:42px;background:linear-gradient(135deg,#FF6B35,#FFC857);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.brand-name-full{font-size:1.25rem;font-weight:800;color:var(--navy);line-height:1.1;font-family:'Baloo 2',cursive}
+.brand-name-full span{color:var(--orange)}
+.nav-links-full{display:flex;align-items:center;gap:8px;list-style:none}
+.nav-links-full a{text-decoration:none;font-weight:600;font-size:.9rem;color:#444;padding:8px 16px;border-radius:10px;transition:all .2s}
+.nav-links-full a:hover{background:var(--cream);color:var(--orange)}
+.nav-cta-full{background:var(--navy)!important;color:white!important;padding:10px 22px!important;border-radius:12px!important;font-weight:700!important}
+.nav-hamburger-full{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.nav-hamburger-full span{width:24px;height:2.5px;background:var(--navy);border-radius:2px}
+
+/* ── FOOTER ── */
+.footer{background:var(--navy);padding:28px 40px;text-align:center}
+.footer-brand{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px}
+.footer-brand span{color:var(--orange)}
+.footer-text{font-size:.78rem;color:rgba(255,255,255,.4);font-weight:500}
+
+@media(max-width:700px){.nav-links-full{display:none}.nav-hamburger-full{display:flex}.game-header-banner{padding:80px 20px 24px}.ghb-title{font-size:1.5rem}}
+
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-brand-full">
+    <div class="nav-logo">📚</div>
+    <div class="brand-name-full">ataberk<span>hoca</span><br>ingilizce</div>
+  </a>
+  <ul class="nav-links-full">
+    <li><a href="index.html">Ana Sayfa</a></li>
+    <li><a href="2-sinif.html">2. Sınıf</a></li>
+    <li><a href="index.html#ozellikler">Özellikler</a></li>
+    <li><a href="school-life.html" class="nav-cta-full">← School Life</a></li>
+  </ul>
+  <div class="nav-hamburger-full"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="game-header-banner">
+  <div class="ghb-content">
+    <div class="ghb-breadcrumb">
+      <a href="index.html">Ana Sayfa</a><span class="sep">›</span>
+      <a href="2-sinif.html">2. Sınıf</a><span class="sep">›</span>
+      <a href="school-life.html">School Life</a><span class="sep">›</span>
+      <span class="current">Picture Match</span>
+    </div>
+    <div class="ghb-title">🖼️ <span class="hl">Picture Match</span></div>
+    <div class="ghb-sub">Theme 1: School Life · Picture & Word Matching Game</div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- MENU -->
+  <div id="menuScreen">
+    <div class="menu-header">
+      <div class="back-row"><a href="school-life.html" class="btn btn-back">← Geri</a></div>
+      <span class="title-emoji">🖼️</span>
+      <h1>Picture Match</h1>
+      <p>Look at the picture and answer the question!</p>
+    </div>
+    <div class="round-grid" id="roundGrid"></div>
+  </div>
+
+  <!-- GAME -->
+  <div id="gameScreen">
+    <div class="game-header">
+      <button class="btn btn-back" id="backBtn">← Menü</button>
+      <h2 id="gameTitle"></h2>
+      <div class="progress-pill">
+        <div class="pill-stars" id="pillStars"></div>
+        <span class="pill-count" id="pillCount">0 / 4</span>
+      </div>
+    </div>
+    <div class="difficulty-bar">
+      <button class="diff-btn active-diff" data-level="supporting" onclick="setDifficulty('supporting')">💡 Supporting</button>
+      <button class="diff-btn" data-level="standard" onclick="setDifficulty('standard')">🎯 Standard</button>
+      <button class="diff-btn" data-level="expansion" onclick="setDifficulty('expansion')">🚀 Expansion</button>
+    </div>
+    <div class="diff-info" id="diffInfo"></div>
+    <div class="card-counter" id="cardCounter"></div>
+    <div id="cardArea"></div>
+    <div id="wordBankSection">
+      <div class="word-bank-label">Word Bank</div>
+      <div class="word-bank" id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<div class="feedback-overlay" id="feedbackOverlay">
+  <div class="feedback-modal">
+    <div class="fb-emoji" id="fbEmoji">🎉</div>
+    <div class="fb-title" id="fbTitle"></div>
+    <div class="fb-sub" id="fbSub"></div>
+    <div class="fb-stats" id="fbStats"></div>
+    <div class="fb-btns" id="fbBtns"></div>
+  </div>
+</div>
+<div class="hint-toast" id="hintToast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// QUESTION POOLS
+// ═══════════════════════════════════════════════
+
+// All place names used as distractors come from this set (Theme 1 MEB)
+const PLACES = ['school','classroom','library','canteen','playground','sports hall','garden',"teacher's room"];
+
+// ── ROUND 1 POOL: Who is he/she? ──────────────
+// Each item: { emoji, question, template, keyword, gender }
+// gender used to pick correct pronoun in template
+const POOL_R1 = [
+  { emoji:'👨‍🏫', question:'Who is he?',   template:'He is a ___.', keyword:'teacher' },
+  { emoji:'👩‍🏫', question:'Who is she?',  template:'She is a ___.', keyword:'teacher' },
+  { emoji:'👦',   question:'Who is he?',   template:'He is a ___.', keyword:'boy' },
+  { emoji:'👧',   question:'Who is she?',  template:'She is a ___.', keyword:'girl' },
+  { emoji:'👨‍💼', question:'Who is he?',   template:'He is a ___.', keyword:'headmaster' },
+  { emoji:'👩‍💼', question:'Who is she?',  template:'She is a ___.', keyword:'headmistress' },
+  { emoji:'🧒',   question:'Who is he?',   template:'He is a ___.', keyword:'pupil' },
+  { emoji:'👧🎒', question:'Who is she?',  template:'She is a ___.', keyword:'pupil' },
+  { emoji:'👩',   question:'Who is she?',  template:'She is a ___.', keyword:'teacher' },
+  { emoji:'👨',   question:'Who is he?',   template:'He is a ___.', keyword:'teacher' },
+  { emoji:'👦🎒', question:'Who is he?',   template:'He is a ___.', keyword:'pupil' },
+  { emoji:'👧📚', question:'Who is she?',  template:'She is a ___.', keyword:'girl' },
+];
+
+// ── ROUND 2 POOL: Is this a ___? Yes/No ───────
+// answer: true = Yes it is, false = No it isn't
+// Each card: an image with a question about a place
+// Half yes, half no — selected 4 at random ensuring 2 yes + 2 no
+const POOL_R2_YES = [
+  { emoji:'📚',  question:'Is this a library?',       answer:true },
+  { emoji:'🏐',  question:'Is this a sports hall?',   answer:true },
+  { emoji:'🍱',  question:'Is this a canteen?',       answer:true },
+  { emoji:'🛝',  question:'Is this a playground?',    answer:true },
+  { emoji:'🏫',  question:'Is this a school?',        answer:true },
+  { emoji:'🌳',  question:'Is this a garden?',        answer:true },
+  { emoji:'🚪',  question:"Is this a teacher's room?", answer:true },
+  { emoji:'🪑',  question:'Is this a classroom?',     answer:true },
+];
+const POOL_R2_NO = [
+  { emoji:'📚',  question:'Is this a canteen?',       answer:false },
+  { emoji:'🏐',  question:'Is this a library?',       answer:false },
+  { emoji:'🍱',  question:'Is this a sports hall?',   answer:false },
+  { emoji:'🛝',  question:'Is this a classroom?',     answer:false },
+  { emoji:'🏫',  question:'Is this a library?',       answer:false },
+  { emoji:'🌳',  question:'Is this a playground?',    answer:false },
+  { emoji:'🚪',  question:'Is this a canteen?',       answer:false },
+  { emoji:'🪑',  question:'Is this a sports hall?',   answer:false },
+  { emoji:'📚',  question:"Is this a teacher's room?", answer:false },
+  { emoji:'🛝',  question:'Is this a library?',       answer:false },
+];
+
+// ── ROUND 3 POOL: Where is he/she? ────────────
+const POOL_R3 = [
+  { emoji:'👩‍🏫📚', question:'Where is the teacher?',    template:'She is in the ___.', keyword:'library' },
+  { emoji:'👦🛝',   question:'Where is the boy?',        template:'He is in the ___.',  keyword:'playground' },
+  { emoji:'👧🌳',   question:'Where is the girl?',       template:'She is in the ___.', keyword:'garden' },
+  { emoji:'👨‍💼🚪',  question:'Where is the headmaster?', template:"He is in the ___.",  keyword:"teacher's room" },
+  { emoji:'👧📚',   question:'Where is the girl?',       template:'She is in the ___.', keyword:'library' },
+  { emoji:'👦🏫',   question:'Where is the boy?',        template:'He is in the ___.',  keyword:'school' },
+  { emoji:'👩‍🏫🪑',  question:'Where is the teacher?',    template:'She is in the ___.', keyword:'classroom' },
+  { emoji:'🧒🍱',   question:'Where is the pupil?',      template:'He is in the ___.',  keyword:'canteen' },
+  { emoji:'👧🏐',   question:'Where is the girl?',       template:'She is in the ___.', keyword:'sports hall' },
+  { emoji:'👨‍💼🏫',  question:'Where is the headmaster?', template:'He is in the ___.',  keyword:'school' },
+  { emoji:'👩‍💼🪑',  question:'Where is the headmistress?', template:'She is in the ___.', keyword:'classroom' },
+  { emoji:'👦🌳',   question:'Where is the boy?',        template:'He is in the ___.',  keyword:'garden' },
+  { emoji:'👧🛝',   question:'Where is the girl?',       template:'She is in the ___.', keyword:'playground' },
+  { emoji:'👩‍🏫🚪',  question:'Where is the teacher?',    template:"She is in the ___.", keyword:"teacher's room" },
+  { emoji:'🧒📚',   question:'Where is the pupil?',      template:'He is in the ___.',  keyword:'library' },
+  { emoji:'👦🪑',   question:'Where is the boy?',        template:'He is in the ___.',  keyword:'classroom' },
+];
+
+// ── ROUND META ────────────────────────────────
+const ROUNDS = [
+  { id:1, title:"Who is he / she?",  subtitle:"O kim?",      emojis:"👨‍🏫 👧 👦 👩‍🏫", mode:'wordbank', pool:POOL_R1 },
+  { id:2, title:"Is this a...?",     subtitle:"Bu ... mı?",  emojis:"📚 🏐 🍱 🛝",    mode:'yesno',    poolYes:POOL_R2_YES, poolNo:POOL_R2_NO },
+  { id:3, title:"Where is he / she?",subtitle:"O nerede?",   emojis:"👩‍🏫 👦 👧 👨‍💼",  mode:'wordbank', pool:POOL_R3 },
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentRound   = null;
+let currentDiff    = 'supporting';
+let activeCards    = [];   // 4 randomly selected items for this session
+let cardIndex      = 0;
+let completedCount = 0;
+let wrongAttempts  = 0;
+let selectedChip   = null;
+let currentFilled  = null;
+let dragWord       = null;
+let touchGhost     = null;
+let touchDragWord  = null;
+let yesnoLocked    = false;
+
+// ═══════════════════════════════════════════════
+// MENU
+// ═══════════════════════════════════════════════
+function buildMenu() {
+  const grid = document.getElementById('roundGrid');
+  grid.innerHTML = '';
+  ROUNDS.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'round-card';
+    card.innerHTML = `
+      <div class="round-num">${r.id}</div>
+      <div class="round-emojis">${r.emojis}</div>
+      <div class="round-title">${r.title}</div>
+      <div class="round-sub">${r.subtitle}</div>
+      <div class="round-meta">
+        <span class="pairs-badge">📝 4 cards</span>
+        <span class="round-stars">⭐⭐⭐⭐</span>
+      </div>`;
+    card.addEventListener('click', () => startRound(r.id));
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// PICK 4 RANDOM CARDS
+// ═══════════════════════════════════════════════
+function pickCards(round) {
+  if (round.mode === 'yesno') {
+    // Always 2 yes + 2 no for balance
+    const yes = shuffleArr([...round.poolYes]).slice(0, 2);
+    const no  = shuffleArr([...round.poolNo ]).slice(0, 2);
+    return shuffleArr([...yes, ...no]);
+  }
+  // wordbank: pick 4 unique from pool (no duplicate keywords in same session)
+  const pool = shuffleArr([...round.pool]);
+  const picked = [];
+  const usedKeywords = new Set();
+  for (const item of pool) {
+    if (!usedKeywords.has(item.keyword)) {
+      picked.push(item);
+      usedKeywords.add(item.keyword);
+    }
+    if (picked.length === 4) break;
+  }
+  return picked;
+}
+
+// ═══════════════════════════════════════════════
+// DISTRACTORS for word bank
+// ═══════════════════════════════════════════════
+function getDistr(keyword, count) {
+  // For R1 (people): use other people words
+  const peopleWords = ['teacher','boy','girl','headmaster','headmistress','pupil','friend','kid'];
+  // For R3 (places): use other place words
+  const placeWords  = PLACES;
+
+  const isPlace = placeWords.includes(keyword);
+  const pool = (isPlace ? placeWords : peopleWords).filter(w => w !== keyword);
+  return shuffleArr(pool).slice(0, count);
+}
+
+// ═══════════════════════════════════════════════
+// START / NAVIGATION
+// ═══════════════════════════════════════════════
+function startRound(id) {
+  currentRound   = ROUNDS.find(r => r.id === id);
+  activeCards    = pickCards(currentRound);
+  cardIndex      = 0;
+  completedCount = 0;
+  wrongAttempts  = 0;
+  selectedChip   = null;
+  currentFilled  = null;
+  yesnoLocked    = false;
+
+  document.getElementById('menuScreen').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'block';
+  document.getElementById('gameTitle').textContent    = `Round ${currentRound.id}: ${currentRound.title}`;
+  renderDiffInfo();
+  updateProgress();
+  showCard(0);
+}
+
+function returnToMenu() {
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('menuScreen').style.display = 'block';
+  document.getElementById('feedbackOverlay').classList.remove('show');
+}
+
+document.getElementById('backBtn').addEventListener('click', returnToMenu);
+
+// ═══════════════════════════════════════════════
+// DIFFICULTY
+// ═══════════════════════════════════════════════
+function setDifficulty(level) {
+  currentDiff = level;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.toggle('active-diff', b.dataset.level === level));
+  renderDiffInfo();
+  if (currentRound) {
+    activeCards = pickCards(currentRound);
+    cardIndex = 0; completedCount = 0; wrongAttempts = 0;
+    selectedChip = null; currentFilled = null; yesnoLocked = false;
+    updateProgress();
+    showCard(0);
+  }
+}
+
+function renderDiffInfo() {
+  const el = document.getElementById('diffInfo');
+  el.className = 'diff-info ' + currentDiff;
+  const c = {
+    supporting:{ icon:'💡', en:'Drag or tap a word to fill the blank!',      tr:'Kelimeyi sürükle ya da dokun — boşluğu doldur!' },
+    standard:  { icon:'🎯', en:'No hints — read and answer!',                 tr:'İpucu yok — oku ve cevapla!' },
+    expansion: { icon:'🚀', en:'Extra words in the bank — choose carefully!', tr:'Fazladan kelimeler var — dikkatli seç!' },
+  }[currentDiff];
+  el.innerHTML = `<span class="diff-icon">${c.icon}</span><div><div class="diff-text-en">${c.en}</div><div class="diff-text-tr">${c.tr}</div></div>`;
+}
+
+// ═══════════════════════════════════════════════
+// SHOW CARD
+// ═══════════════════════════════════════════════
+function showCard(idx) {
+  selectedChip  = null;
+  currentFilled = null;
+  dragWord      = null;
+  yesnoLocked   = false;
+  cardIndex     = idx;
+
+  const pair = activeCards[idx];
+  document.getElementById('cardCounter').textContent = `Card ${idx + 1} of 4`;
+
+  const area = document.getElementById('cardArea');
+  area.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'picture-card';
+  card.id = 'pictureCard';
+  card.dataset.cidx = idx;
+
+  if (currentRound.mode === 'wordbank') {
+    const parts = pair.template.split('___');
+    const sentenceHTML = `
+      <span class="sentence-part">${parts[0].trim()}</span>
+      <span class="drop-blank" id="dropBlank"><span style="opacity:.4;font-size:.85em;">_ _ _ _</span></span>
+      ${parts[1] && parts[1].trim() ? `<span class="sentence-part">${parts[1].trim()}</span>` : ''}`;
+    card.innerHTML = `
+      <span class="card-tick">✓</span>
+      <span class="card-pic-emoji">${pair.emoji}</span>
+      <div class="card-question">${pair.question}</div>
+      <div class="card-sentence">${sentenceHTML}</div>`;
+    area.appendChild(card);
+
+    const blank = document.getElementById('dropBlank');
+    blank.addEventListener('click',     onBlankClick);
+    blank.addEventListener('dragover',  e => { e.preventDefault(); blank.classList.add('drag-over'); });
+    blank.addEventListener('dragleave', () => blank.classList.remove('drag-over'));
+    blank.addEventListener('drop',      onBlankDrop);
+
+    document.getElementById('wordBankSection').style.display = 'block';
+    buildWordBank(pair);
+
+  } else {
+    // YES / NO
+    card.innerHTML = `
+      <span class="card-tick">✓</span>
+      <span class="card-pic-emoji">${pair.emoji}</span>
+      <div class="card-question">${pair.question}</div>
+      <div class="yesno-area">
+        <button class="yesno-btn yes" id="btnYes">Yes, it is.</button>
+        <button class="yesno-btn no"  id="btnNo">No, it isn't.</button>
+      </div>`;
+    area.appendChild(card);
+    document.getElementById('btnYes').addEventListener('click', () => onYesNo(true));
+    document.getElementById('btnNo' ).addEventListener('click', () => onYesNo(false));
+    document.getElementById('wordBankSection').style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// WORD BANK
+// ═══════════════════════════════════════════════
+function buildWordBank(pair) {
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  const distCount = currentDiff === 'expansion' ? 3 : 2;
+  const dists = getDistr(pair.keyword, distCount);
+  const words = shuffleArr([pair.keyword, ...dists]);
+
+  words.forEach(word => {
+    const chip = document.createElement('button');
+    const isDist = word !== pair.keyword;
+    chip.className = 'word-chip' + (isDist && currentDiff === 'expansion' ? ' distractor' : '');
+    chip.textContent = word;
+    chip.dataset.word = word;
+    chip.draggable = true;
+    chip.addEventListener('click',      () => onChipClick(word));
+    chip.addEventListener('dragstart',  e  => { dragWord = word; e.dataTransfer.setData('text/plain', word); chip.classList.add('dragging'); });
+    chip.addEventListener('dragend',    () => { chip.classList.remove('dragging'); dragWord = null; });
+    chip.addEventListener('touchstart', e  => onChipTouchStart(e, word, chip), { passive:false });
+    chip.addEventListener('touchmove',  onChipTouchMove, { passive:false });
+    chip.addEventListener('touchend',   e  => onChipTouchEnd(e, word), { passive:false });
+    bank.appendChild(chip);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// TAP
+// ═══════════════════════════════════════════════
+function onChipClick(word) {
+  if (selectedChip === word) { selectedChip = null; refreshChips(); return; }
+  selectedChip = word; refreshChips();
+}
+function onBlankClick() {
+  if (!selectedChip) { showToast('Tap a word first!'); return; }
+  placeWord(selectedChip);
+  selectedChip = null; refreshChips();
+}
+function refreshChips() {
+  document.querySelectorAll('.word-chip').forEach(c => {
+    c.classList.toggle('selected-chip', c.dataset.word === selectedChip && !c.classList.contains('used'));
+  });
+}
+
+// ═══════════════════════════════════════════════
+// DRAG (mouse)
+// ═══════════════════════════════════════════════
+function onBlankDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropBlank').classList.remove('drag-over');
+  const word = e.dataTransfer.getData('text/plain') || dragWord;
+  if (word) placeWord(word);
+}
+
+// ═══════════════════════════════════════════════
+// TOUCH DRAG
+// ═══════════════════════════════════════════════
+function onChipTouchStart(e, word, chip) {
+  e.preventDefault();
+  touchDragWord = word;
+  const t = e.touches[0];
+  touchGhost = chip.cloneNode(true);
+  touchGhost.style.cssText = `position:fixed;pointer-events:none;z-index:500;opacity:.85;left:${t.clientX - chip.offsetWidth/2}px;top:${t.clientY - chip.offsetHeight/2}px;transform:scale(1.1);transition:none;`;
+  document.body.appendChild(touchGhost);
+}
+function onChipTouchMove(e) {
+  e.preventDefault();
+  if (!touchGhost) return;
+  const t = e.touches[0];
+  touchGhost.style.left = (t.clientX - touchGhost.offsetWidth/2)  + 'px';
+  touchGhost.style.top  = (t.clientY - touchGhost.offsetHeight/2) + 'px';
+  const blank = document.getElementById('dropBlank');
+  if (blank) {
+    const br = blank.getBoundingClientRect();
+    blank.classList.toggle('drag-over', t.clientX>=br.left && t.clientX<=br.right && t.clientY>=br.top && t.clientY<=br.bottom);
+  }
+}
+function onChipTouchEnd(e, word) {
+  e.preventDefault();
+  if (touchGhost) { touchGhost.remove(); touchGhost = null; }
+  const blank = document.getElementById('dropBlank');
+  if (blank) {
+    blank.classList.remove('drag-over');
+    const t = e.changedTouches[0];
+    const br = blank.getBoundingClientRect();
+    if (t.clientX>=br.left && t.clientX<=br.right && t.clientY>=br.top && t.clientY<=br.bottom) placeWord(touchDragWord);
+  }
+  touchDragWord = null;
+}
+
+// ═══════════════════════════════════════════════
+// PLACE WORD & CHECK
+// ═══════════════════════════════════════════════
+function placeWord(word) {
+  currentFilled = word;
+  const blank = document.getElementById('dropBlank');
+  if (!blank) return;
+  blank.classList.remove('drag-over','correct-fill','wrong-fill');
+  blank.classList.add('filled');
+  blank.textContent = word;
+  checkWordAnswer(word);
+}
+
+function checkWordAnswer(word) {
+  const pair  = activeCards[cardIndex];
+  const card  = document.getElementById('pictureCard');
+  const blank = document.getElementById('dropBlank');
+  if (!card || !blank) return;
+
+  if (word === pair.keyword) {
+    blank.classList.remove('filled');
+    blank.classList.add('correct-fill');
+    card.classList.add('correct');
+    document.querySelectorAll('.word-chip').forEach(c => { if (c.dataset.word === word) c.classList.add('used'); });
+    spawnSparkles(card);
+    completedCount++;
+    updateProgress();
+    setTimeout(() => cardIndex < 3 ? showCard(cardIndex + 1) : finishRound(), 900);
+  } else {
+    wrongAttempts++;
+    blank.classList.remove('filled');
+    blank.classList.add('wrong-fill');
+    card.classList.add('wrong');
+    showToast('Try again!');
+    setTimeout(() => {
+      card.classList.remove('wrong');
+      blank.classList.remove('wrong-fill');
+      blank.innerHTML = '<span style="opacity:.4;font-size:.85em;">_ _ _ _</span>';
+      currentFilled = null; selectedChip = null; refreshChips();
+    }, 800);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// YES / NO
+// ═══════════════════════════════════════════════
+function onYesNo(userAnswer) {
+  if (yesnoLocked) return;
+  yesnoLocked = true;
+  const pair   = activeCards[cardIndex];
+  const card   = document.getElementById('pictureCard');
+  const btnYes = document.getElementById('btnYes');
+  const btnNo  = document.getElementById('btnNo');
+  btnYes.classList.add('disabled');
+  btnNo.classList.add('disabled');
+
+  if (userAnswer === pair.answer) {
+    card.classList.add('correct');
+    spawnSparkles(card);
+    completedCount++;
+    updateProgress();
+    setTimeout(() => cardIndex < 3 ? showCard(cardIndex + 1) : finishRound(), 900);
+  } else {
+    wrongAttempts++;
+    card.classList.add('wrong');
+    showToast('Try again!');
+    setTimeout(() => {
+      card.classList.remove('wrong');
+      btnYes.classList.remove('disabled');
+      btnNo.classList.remove('disabled');
+      yesnoLocked = false;
+    }, 800);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════
+function updateProgress() {
+  const stars = document.getElementById('pillStars');
+  const count = document.getElementById('pillCount');
+  stars.innerHTML = '';
+  for (let i=0;i<4;i++) {
+    const s = document.createElement('span');
+    s.className = 'pill-star' + (i < completedCount ? ' lit' : '');
+    s.textContent = '⭐';
+    stars.appendChild(s);
+  }
+  count.textContent = `${completedCount} / 4`;
+  if (completedCount === 4) {
+    const pill = stars.closest('.progress-pill');
+    if (pill) { pill.style.background='linear-gradient(90deg,#fff9e6,#ffe082,#fff9e6)'; pill.style.backgroundSize='200% 200%'; pill.style.animation='allDoneShimmer 2s ease infinite'; }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════
+function finishRound() {
+  setTimeout(() => {
+    fireConfetti();
+    document.getElementById('fbEmoji').textContent = '🎉';
+    document.getElementById('fbTitle').textContent = 'Excellent!';
+    document.getElementById('fbSub').textContent   = 'Mükemmel! Hepsini tamamladın!';
+    document.getElementById('fbStats').innerHTML   = `✓ 4 / 4 correct &nbsp;·&nbsp; ✗ ${wrongAttempts} wrong attempt${wrongAttempts!==1?'s':''}`;
+    const btns = document.getElementById('fbBtns');
+    btns.innerHTML = '';
+    const next = ROUNDS.find(r => r.id === currentRound.id + 1);
+    if (next) {
+      const nb = document.createElement('button');
+      nb.className = 'btn btn-primary'; nb.textContent = '→ Sonraki Tur';
+      nb.onclick = () => { document.getElementById('feedbackOverlay').classList.remove('show'); startRound(next.id); };
+      btns.appendChild(nb);
+    }
+    const cb = document.createElement('button'); cb.className='btn btn-secondary'; cb.textContent='Devam';
+    cb.onclick = () => document.getElementById('feedbackOverlay').classList.remove('show');
+    btns.appendChild(cb);
+    const mb = document.createElement('button'); mb.className='btn btn-back'; mb.textContent='⌂ Menü';
+    mb.onclick = returnToMenu; btns.appendChild(mb);
+    document.getElementById('feedbackOverlay').classList.add('show');
+  }, 400);
+}
+
+// ═══════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════
+function fireConfetti() {
+  const cols=['#FF6B35','#FFC857','#2EC4B6','#3CB371','#8B5CF6','#FF8C5A','#1B2845','#FFE4A0'];
+  for(let i=0;i<90;i++) setTimeout(()=>{
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}vw;background:${cols[Math.floor(Math.random()*cols.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.4}s;opacity:${.7+Math.random()*.3};transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),3500);
+  },i*18);
+}
+function spawnSparkles(el) {
+  if(!el) return;
+  const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+  ['✨','⭐','🌟','💫','✨'].forEach((em,i)=>{
+    const s=document.createElement('div'); s.className='sparkle'; s.textContent=em;
+    s.style.cssText=`left:${cx+(Math.random()-.5)*80}px;top:${cy}px;animation-delay:${i*80}ms`;
+    document.body.appendChild(s); setTimeout(()=>s.remove(),900);
+  });
+}
+let toastTimer=null;
+function showToast(msg) {
+  const t=document.getElementById('hintToast'); t.textContent=msg; t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2000);
+}
+function shuffleArr(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+document.addEventListener('DOMContentLoaded', buildMenu);
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+</script>
+
+<footer class="footer">
+  <div class="footer-brand">ataberk<span>hoca</span>ingilizce</div>
+  <p class="footer-text">2. Sınıf · Tema 1: School Life · Picture Match</p>
+</footer>
+</body>
+</html>
